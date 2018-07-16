@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="/common/common.css :: commonCssHead(${title}+' - 主页')">
+</head>
+
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow: hidden">
+    <div id="wrapper">
+        <!--左侧导航开始-->
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="nav-close"><i class="fa fa-times-circle"></i>
+            </div>
+            <div class="sidebar-collapse">
+                <ul class="nav" id="side-menu">
+                    <li class="nav-header">
+                        <div class="dropdown profile-element">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#" style="cursor:default">
+                                <span class="clear">
+                                    <span class="block m-t-xs" style="font-size:18px;">
+                                        <i class="fa fa-user"></i>
+                                        <strong class="font-bold" th:text="${navi}">hAdmin</strong>
+                                    </span>
+                                    <span style="float: right;">
+                                        <i id="uinfo" class="fa fa-newspaper-o" aria-hidden="true"></i>
+                                        &nbsp;
+                                        <i id="logout" class="fa fa-power-off" aria-hidden="true"></i>
+                                    </span>
+                                </span>
+                            </a>
+                        </div>
+                        <div class="logo-element"><i class="fa fa-user"></i></div>
+                    </li>
+                    <!-- 首页iframe -->
+                    <li class="line dk"></li>
+                    <li>
+                        <a class="J_menuItem" href="/${ctxa}/index/main" th:href="${ctxa}+'/index/main'">
+                            <i class="fa fa-home"></i>
+                            <span class="nav-label">主页</span>
+                        </a>
+                    </li>
+                    <!--
+                    <li>
+                        <a href="#">
+                            <i class="fa fa fa-bar-chart-o"></i>
+                            <span class="nav-label">统计图表</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a class="J_menuItem" href="graph_echarts.html">百度ECharts</a>
+                            </li>
+                        </ul>
+                    </li>
+                    -->
+                    <div th:fragment="menu_div" th:remove="tag">
+                    	<li th:each="menu : ${leftMenu}" th:if="${not #lists.isEmpty(leftMenu) }">
+                            <a th:href="@{ ${#strings.isEmpty(menu.href) ? '#': ctxa + menu.href } }" th:class="@{ ${menu.children != null and (not #lists.isEmpty(menu.children)) ? '': 'J_menuItem' } }" >
+                                <i th:class="@{ ${not #strings.isEmpty(menu.icon) ? 'fa ' + {menu.icon}: ''}}"></i>
+                                <span class="nav-label" th:text="${menu.text}">菜单 </span>
+                                <span class="fa arrow" th:if="${(menu.children != null) and (not #lists.isEmpty(menu.children))}"></span>
+                            </a>
+                            <div th:if="${menu.children != null and (not #lists.isEmpty(menu.children))}" th:remove="tag">
+                                <ul class="nav nav-second-level">
+                                    <div th:remove="tag" th:if="${menu.children != null}" th:include="::menu_div" th:with="leftMenu=${menu.children }">
+                                    </div>
+                                </ul>
+                            </div>
+                        </li>
+                    </div>
+                    
+                </ul>
+            </div>
+        </nav>
+        <!--左侧导航结束-->
+        <!--右侧部分开始-->
+        <div id="page-wrapper" class="gray-bg dashbard-1">
+            <div class="row border-bottom">
+                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0;">
+                    <div class="navbar-header">
+                        <a class="navbar-minimalize minimalize-styl-2 btn btn-info " href="#"><i class="fa fa-bars"></i> </a>
+                    </div>
+                </nav>
+            </div>
+            <!-- 定制窗体内容 -->
+            <div class="row J_mainContent" id="content-main">
+                <iframe id="J_iframe" width="100%" height="100%" src="/${ctxa}/index/main" th:attr="src=${ctxa}+'/index/main'" frameborder="0" data-id="/${ctxa}/index/main" seamless=''></iframe>
+            </div>
+        </div>
+        <!--右侧部分结束-->
+    </div>
+
+    <div th:replace="/common/common.js :: commonJsFooter"></div>
+    
+    <script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    $(document).ready(function(){
+    	$("#uinfo").css({cursor:"pointer"}).attr("title","个人信息").on("click", function(){
+    		$("#J_iframe").attr("src",[[${ctxa}]] + "/user/form");
+    	});
+    	$("#logout").css({cursor:"pointer"}).attr("title","注销").on("click", function(){
+    		window.location.href= [[${ctxa}]] + "/logout";
+    	});
+    }); 
+    /*]]>*/
+    </script>
+    
+</body>
+
+</html>

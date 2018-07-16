@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
+<hibernate-reverse-engineering >
+    
+    <type-mapping >
+        <sql-type hibernate-type="byte []" jdbc-type="BLOB" />
+        <sql-type jdbc-type="CLOB" hibernate-type="String"></sql-type>
+        <sql-type hibernate-type="java.lang.String" jdbc-type="VARCHAR" />
+        <sql-type hibernate-type="java.lang.String" jdbc-type="CHAR" />
+        
+		<sql-type jdbc-type="DATE" hibernate-type="java.util.Date"></sql-type>
+		<sql-type jdbc-type="TIMESTAMP" hibernate-type="java.util.Date"></sql-type>
+		<sql-type jdbc-type="TIME" hibernate-type="java.util.Date" />
+	        
+        
+        <sql-type jdbc-type="NUMERIC" hibernate-type="Integer" precision="1" scale="0"/>  
+	    <sql-type jdbc-type="NUMERIC" hibernate-type="Integer" precision="2" scale="0"/>  
+	    <sql-type jdbc-type="NUMERIC" hibernate-type="Integer" precision="3" scale="0"/>  
+	    <sql-type jdbc-type="NUMERIC" hibernate-type="Integer" precision="4" scale="0"/>  
+	    <sql-type jdbc-type="NUMERIC" hibernate-type="Integer" precision="5" scale="0"/>  
+	    <sql-type jdbc-type="NUMERIC" hibernate-type="Integer" precision="6" scale="0"/>  
+	    <sql-type jdbc-type="NUMERIC" hibernate-type="Integer" precision="7" scale="0"/>  
+	    <sql-type jdbc-type="NUMERIC" hibernate-type="Integer" precision="8" scale="0"/> 
+	     
+	    <sql-type jdbc-type="NUMERIC" hibernate-type="Long" precision="9" scale="0"/> 
+	    <sql-type jdbc-type="NUMERIC" hibernate-type="Long" precision="10" scale="0"/> 
+	    <sql-type jdbc-type="NUMERIC" hibernate-type="Long" precision="11" scale="0"/> 
+	    <sql-type jdbc-type="NUMERIC" hibernate-type="Long" precision="12" scale="0"/> 
+	    <sql-type jdbc-type="NUMERIC" hibernate-type="Long" precision="13" scale="0"/> 
+	    <sql-type jdbc-type="NUMERIC" hibernate-type="Long" precision="14" scale="0"/> 
+	    <sql-type jdbc-type="NUMERIC" hibernate-type="Long" precision="15" scale="0"/> 
+	    <sql-type jdbc-type="NUMERIC" hibernate-type="Long" precision="16" scale="0"/> 
+	    <sql-type jdbc-type="NUMERIC" hibernate-type="Long" precision="17" scale="0"/> 
+	    <sql-type jdbc-type="NUMERIC" hibernate-type="Long" precision="18" scale="0"/> 
+	    <sql-type jdbc-type="NUMERIC" hibernate-type="Long" precision="19" scale="0"/> 
+		<sql-type jdbc-type="NUMERIC" hibernate-type="Integer" precision="22" scale="0"/><!-- 此为oracle INTEGER 数据类型 -->
+		
+		<sql-type jdbc-type="DECIMAL" hibernate-type="Integer" precision="1" scale="0"/>  
+	    <sql-type jdbc-type="DECIMAL" hibernate-type="Integer" precision="2" scale="0"/>  
+	    <sql-type jdbc-type="DECIMAL" hibernate-type="Integer" precision="3" scale="0"/>  
+	    <sql-type jdbc-type="DECIMAL" hibernate-type="Integer" precision="4" scale="0"/>  
+	    <sql-type jdbc-type="DECIMAL" hibernate-type="Integer" precision="5" scale="0"/>  
+	    <sql-type jdbc-type="DECIMAL" hibernate-type="Integer" precision="6" scale="0"/>  
+	    <sql-type jdbc-type="DECIMAL" hibernate-type="Integer" precision="7" scale="0"/>  
+	    <sql-type jdbc-type="DECIMAL" hibernate-type="Integer" precision="8" scale="0"/> 
+	     
+	    <sql-type jdbc-type="DECIMAL" hibernate-type="Long" precision="9" scale="0"/> 
+	    <sql-type jdbc-type="DECIMAL" hibernate-type="Long" precision="10" scale="0"/> 
+	    <sql-type jdbc-type="DECIMAL" hibernate-type="Long" precision="11" scale="0"/> 
+	    <sql-type jdbc-type="DECIMAL" hibernate-type="Long" precision="12" scale="0"/> 
+	    <sql-type jdbc-type="DECIMAL" hibernate-type="Long" precision="13" scale="0"/> 
+	    <sql-type jdbc-type="DECIMAL" hibernate-type="Long" precision="14" scale="0"/> 
+	    <sql-type jdbc-type="DECIMAL" hibernate-type="Long" precision="15" scale="0"/> 
+	    <sql-type jdbc-type="DECIMAL" hibernate-type="Long" precision="16" scale="0"/> 
+	    <sql-type jdbc-type="DECIMAL" hibernate-type="Long" precision="17" scale="0"/> 
+	    <sql-type jdbc-type="DECIMAL" hibernate-type="Long" precision="18" scale="0"/> 
+	    <sql-type jdbc-type="DECIMAL" hibernate-type="Long" precision="19" scale="0"/>
+	    <sql-type jdbc-type="DECIMAL" hibernate-type="Double" precision="23" scale="15"/>
+    </type-mapping>
+  
+</hibernate-reverse-engineering>

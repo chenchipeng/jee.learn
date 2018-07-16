@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+    <div th:fragment="commonJsFooter">
+        
+        <!-- jquery -->
+        <script src="../../../static/common/js/jquery.min.js?v=2.1.4" th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
+        <script src="https://cdn.bootcss.com/jquery-migrate/3.0.1/jquery-migrate.js" th:src="@{/webjars/jquery-migrate/1.2.1/jquery-migrate.js}"></script>
+        <script src="https://cdn.bootcss.com/jquery-validate/1.17.0/jquery.validate.js" th:src="@{/jquery/jquery-validate-1.17.0.js}"></script>
+
+        <script src="../../../static/common/js/plugins/metisMenu/jquery.metisMenu.js" th:src="@{/webjars/metisMenu/2.7.0/metisMenu.js}"></script>
+        <script src="../../../static/common/js/plugins/slimscroll/jquery.slimscroll.min.js" th:src="@{/webjars/jQuery-slimScroll/1.3.8/jquery.slimscroll.min.js}"></script>
+
+        <!-- bootstrap -->
+        <script src="../../../static/common/js/bootstrap.min.js?v=3.3.6" th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+
+        <!-- layer -->
+        <script src="../../../static/common/js/plugins/layer/layer.min.js" th:src="@{/static/layer-v3.1.1/layer/layer.js}"></script>
+
+        <!-- 第三方插件 -->
+        <script src="../../../static/common/js/plugins/pace/pace.min.js" th:src="@{/webjars/pace/1.0.2/pace.min.js}"></script>
+    
+        <!-- 自定义js -->
+        <script src="../../../static/common/js/hAdmin.js?v=4.1.0"></script>
+        <script src="../../../static/common/js/index.js"></script>
+        <!-- 浮动主页按钮
+        <script src="../../../static/common/js/content.js"></script> -->
+        
+    </div>
+    
+</body>
+</html>

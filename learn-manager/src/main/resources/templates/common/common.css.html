@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- /*title:页面标题*/ -->
+<head th:fragment="commonCssHead(title)">
+
+<meta charset="utf-8" />
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title th:text="${title}"></title>
+
+<!--[if lt IE 9]><meta http-equiv="refresh" content="0;ie.html" /><![endif]-->
+
+<!-- bootstrap -->
+<link href="../../../static/common/css/bootstrap.min.css?v=4.1.0" rel="stylesheet" th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.css}" />
+<link href="../../../static/common/css/font-awesome.css?v=4.4.0" rel="stylesheet" th:href="@{/webjars/font-awesome/4.4.0/css/font-awesome.css}" />
+<link href="../../../static/common/css/animate.css" rel="stylesheet" th:href="@{/webjars/animate.css/3.5.2/animate.css}" />
+
+<link th:if="${#strings.contains(title,'list')}  " href="../../../static/bootstrap-table-v1.11.1/bootstrap-table.css" rel="stylesheet" th:href="@{/webjars/bootstrap-table/1.9.1/bootstrap-table.css}" />
+
+<!-- customer -->
+<link href="../../../static/common/favicon.ico" rel="shortcut icon" th:href="@{/common/favicon.ico}" />
+<link href="../../../static/common/css/style.css?v=4.1.0" rel="stylesheet" />
+
+</head>
+</html>

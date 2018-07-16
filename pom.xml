@@ -1,0 +1,39 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.jee</groupId>
+	<artifactId>learn</artifactId>
+	<version>0.0.1</version>
+	<packaging>pom</packaging>
+
+	<name>learn</name>
+	<description>自学后台系统</description>
+	<url>http://maven.apache.org</url>
+
+	<modules>
+		<module>learn-common</module>
+		<module>learn-manager</module>
+		<module>learn-interfaces</module>
+		<module>learn-monitor</module>
+	</modules>
+
+	<!-- 设定主仓库，按设定顺序进行查找。 -->
+	<repositories>
+		<!-- 阿里maven仓库 -->
+		<repository>
+			<id>aliyun</id>
+			<name>ali nexus</name>
+			<url>http://maven.aliyun.com/nexus/content/groups/public</url>
+		</repository>
+	</repositories>
+
+	<!-- 设定插件仓库 -->
+	<pluginRepositories>
+		<pluginRepository>
+			<id>aliyun</id>
+			<name>aliyun Repository</name>
+			<url>http://maven.aliyun.com/nexus/content/groups/public</url>
+		</pluginRepository>
+	</pluginRepositories>
+</project>

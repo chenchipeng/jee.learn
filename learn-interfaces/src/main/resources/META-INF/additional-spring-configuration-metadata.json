@@ -1,0 +1,42 @@
+{"properties": [
+  {
+    "name": "spring.datasource.druid.write.url",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.write.url'"
+  },
+  {
+    "name": "spring.datasource.druid.write.driver-class-name",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.write.driver-class-name'"
+  },
+  {
+    "name": "spring.datasource.druid.write.username",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.write.username'"
+  },
+  {
+    "name": "spring.datasource.druid.write.password",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.write.password'"
+  },
+  {
+    "name": "spring.datasource.druid.read.url",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.read.url'"
+  },
+  {
+    "name": "spring.datasource.druid.read.driver-class-name",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.read.driver-class-name'"
+  },
+  {
+    "name": "spring.datasource.druid.read.username",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.read.username'"
+  },
+  {
+    "name": "spring.datasource.druid.read.password",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.read.password'"
+  }
+]}

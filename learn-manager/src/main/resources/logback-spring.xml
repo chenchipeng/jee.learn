@@ -1,0 +1,50 @@
+<!-- see http://blog.csdn.net/appleyk/article/details/78717388 -->
+<configuration>
+
+	<!-- 变量定义 -->
+	<property name="file.name" value="manager"/>
+	<property name="package" value="com.jee.learn"/>
+
+	<!-- ConsoleAppender：把日志输出到控制台 -->
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>
+				<!-- %d{yyyy-MM-dd HH:mm:ss.SSS} %p %logger{36} - %m%n -->
+				%d{yyyy-MM-dd HH:mm:ss.SSS} -%5p ${PID:-} [%15.15t] %-40.40logger{39} : %m%n
+			</pattern>
+			<!-- 控制台也要使用UTF-8，不要使用GBK，否则会中文乱码 -->
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+
+	<!-- RollingFileAppender：滚动记录文件 -->
+	<appender name="DAILYFILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>logs/${file.name}.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>logs/${file.name}.%d.%i.log</fileNamePattern>
+			<maxHistory>30</maxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>5MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>
+				<!-- 这里的格式切勿换行 -->
+				<!-- %d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n -->
+				%d{yyyy-MM-dd HH:mm:ss.SSS} -%5p ${PID:-} [%15.15t] %-40.40logger{39} : %m%n
+			</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+
+	<!-- 控制台输出日志级别 -->
+	<root level="INFO">
+		<appender-ref ref="CONSOLE" />
+	</root>
+	<!-- 文件日志级别 -->
+	<logger name="${package}" level="INFO">
+		<appender-ref ref="DAILYFILE" />
+	</logger>
+</configuration>  

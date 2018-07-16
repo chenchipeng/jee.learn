@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+    <div th:fragment="listJsFooter">
+
+        <!-- bootstrap-table -->
+        <script src="../../../static/common/js/plugins/bootstrap-table/bootstrap-table.min.js" th:src="@{/webjars/bootstrap-table/1.9.1/bootstrap-table.js}"></script>
+        <script src="../../../static/common/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js" th:src="@{/webjars/bootstrap-table/1.9.1/extensions/mobile/bootstrap-table-mobile.js}"></script>
+        <!-- put your locale files after bootstrap-table.js -->
+        <script src="../../../static/common/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.js" th:src="@{/webjars/bootstrap-table/1.9.1/locale/bootstrap-table-zh-CN.js}"></script>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="/common/common.css :: commonCssHead(${title}+' - 登录')">
+</head>
+
+<body class="gray-bg">
+
+    <div class="middle-box text-center loginscreen  animated fadeInDown">
+        <div style="margin-top: 100px;" >
+            <!-- <div><h1 class="logo-name">h</h1></div> -->
+            <h3 th:text="${title}">欢迎使用</h3>
+
+            <form class="m-t" role="form" id="loginForm" th:action="@{${ctxa}+'/login'}" action="/a/login" method="post" style="padding: 10px;border: 1px solid #c6c6c6;border-radius: 5px">
+                <div class="form-group">
+                    <input type="text" id="username" name="username" class="form-control" placeholder="用户名" required="required" />
+                </div>
+                <div class="form-group">
+                    <input type="password" id="password" name="password" class="form-control" placeholder="密码" required="required" autocomplete="on"/>
+                </div>
+                
+                <div class="form-group" style="text-align: left;display: none;" id="validateDvi" >
+                    验证码:&nbsp;
+                    <img src="http://localhost:8080/servlet/validateCodeServlet" onclick="$('#refreshValidateCode').click();" id="validateCodeImg" style="padding-bottom: 5px;" />
+                    <a href="javascript:" onclick="$('#validateCodeImg').attr('src','/servlet/validateCodeServlet?'+new Date().getTime());" id="refreshValidateCode">看不清</a>
+                    <input type="text" id="validateCode" name="validateCode" class="form-control" placeholder="请输入验证码" required="required" />
+                </div>
+                
+                <div class="form-group" style="text-align: left;">
+                    <input type="checkbox" id="rememberMe" name="rememberMe" />&nbsp;记住我
+                </div>
+                
+                <button type="submit" class="btn btn-primary block full-width m-b">登 录</button>
+                <!-- <p class="text-muted text-center">
+                    <a href="login.html#"><small>忘记密码了？</small></a> | <a href="register.html">注册一个新账号</a>
+                </p> -->
+
+            </form>
+            <div id="messageBox" style="color: #cc5965;">
+                <span th:if="${message} ne null" th:text="${message}"></span>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="/common/common.js :: commonJsFooter"></div>
+    <script>if(window.top !== window.self){ window.top.location = window.location;}</script>
+    <script type="text/javascript"  th:inline="javascript">
+    /*<![CDATA[*/
+        $(document).ready(function() {
+        	
+            //默认隐藏验证码div
+            var isValidateCodeLogin = /*[[${isValidateCodeLogin}]]*/ 'false';
+            if(isValidateCodeLogin){
+            	$("#validateDvi").css({ display: ""});
+        	}
+            
+            //表单校验
+            $("#loginForm").validate({
+                rules: {
+                    validateCode: {
+                        remote: "/servlet/validateCodeServlet"
+                    }
+                },
+                messages: {
+                    username: {
+                        required: "请填写用户名."
+                    },
+                    password: {
+                        required: "请填写密码."
+                    },
+                    validateCode: {
+                        remote: "",// java代码已控制 - 验证码不正确.
+                        required: "请填写验证码."
+                    }
+                },
+                errorLabelContainer: "#messageBox",
+                errorPlacement: function(error,element) {
+                    error.appendTo($("#loginError").parent());
+                }
+            });
+        });
+    /*]]>*/
+    </script>
+</body>
+</html>
