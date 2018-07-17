@@ -16,6 +16,7 @@
 		<module>learn-manager</module>
 		<module>learn-interfaces</module>
 		<module>learn-monitor</module>
+		<module>learn-eureka</module>
 	</modules>
 
 	<!-- 设定主仓库，按设定顺序进行查找。 -->
