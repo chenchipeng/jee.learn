@@ -6,3 +6,4 @@
 20180626 spring boot jpa(Hibernate)读写分离
 
 #待办事项
+20180720 jpa封装测试

@@ -1,4 +1,4 @@
-package com.jee.learn.interfaces.domain.api;
+package com.jee.learn.interfaces.domain;
 
 import java.io.Serializable;
 import java.util.Date;

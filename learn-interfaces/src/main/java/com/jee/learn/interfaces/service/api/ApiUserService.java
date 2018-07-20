@@ -6,7 +6,7 @@ import com.jee.learn.interfaces.dto.api.UserDto;
 import com.jee.learn.interfaces.service.BaseService;
 import com.jee.learn.interfaces.util.exception.IntfcException;
 
-public interface ApiUserService extends BaseService{
+public interface ApiUserService extends BaseService {
 
     /**
      * 根据id查询一条记录
