@@ -1,15 +1,18 @@
 package com.jee.learn.interfaces.dto.api;
 
 import java.io.Serializable;
+import java.util.List;
 
-public class UserDto implements Serializable{
+public class ApiUserDto implements Serializable {
 
     private static final long serialVersionUID = 190913149670387421L;
-    
+
     private Integer f;// 功能标识
     private String id;
     private String loginName;
     private String token;
+
+    private List<ApiUserDto> l;
 
     public Integer getF() {
         return f;
@@ -41,6 +44,14 @@ public class UserDto implements Serializable{
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public List<ApiUserDto> getL() {
+        return l;
+    }
+
+    public void setL(List<ApiUserDto> l) {
+        this.l = l;
     }
 
 }

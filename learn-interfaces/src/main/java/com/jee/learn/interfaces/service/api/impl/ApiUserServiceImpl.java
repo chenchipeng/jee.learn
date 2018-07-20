@@ -1,5 +1,9 @@
 package com.jee.learn.interfaces.service.api.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,13 +11,15 @@ import org.springframework.transaction.annotation.Transactional;
 import com.jee.learn.interfaces.domain.ApiUser;
 import com.jee.learn.interfaces.dto.RequestDto;
 import com.jee.learn.interfaces.dto.ResponseDto;
-import com.jee.learn.interfaces.dto.api.UserDto;
+import com.jee.learn.interfaces.dto.api.ApiUserDto;
 import com.jee.learn.interfaces.repository.ApiUserRepository;
 import com.jee.learn.interfaces.service.BaseServiceImpl;
 import com.jee.learn.interfaces.service.api.ApiUserService;
 import com.jee.learn.interfaces.util.WebConstants;
 import com.jee.learn.interfaces.util.cache.EhcacheService;
 import com.jee.learn.interfaces.util.exception.IntfcException;
+import com.jee.learn.interfaces.util.support.Criteria;
+import com.jee.learn.interfaces.util.support.Restrictions;
 
 @Service
 @Transactional(readOnly = true)
@@ -26,9 +32,9 @@ public class ApiUserServiceImpl extends BaseServiceImpl implements ApiUserServic
     private EhcacheService ehcacheService;
 
     @Override
-    public ResponseDto<UserDto> get(RequestDto<UserDto> requestDto) {
-        ResponseDto<UserDto> rd = new ResponseDto<UserDto>();
-        UserDto d = new UserDto();
+    public ResponseDto<ApiUserDto> get(RequestDto<ApiUserDto> requestDto) {
+        ResponseDto<ApiUserDto> rd = new ResponseDto<ApiUserDto>();
+        ApiUserDto d = new ApiUserDto();
 
         ApiUser apiUser = apiUserRepository.findOneById(requestDto.getD().getId());
         if (apiUser == null) {
@@ -44,8 +50,8 @@ public class ApiUserServiceImpl extends BaseServiceImpl implements ApiUserServic
 
     @Transactional(readOnly = false)
     @Override
-    public ResponseDto<UserDto> save(RequestDto<UserDto> requestDto) {
-        ResponseDto<UserDto> rd = new ResponseDto<UserDto>();
+    public ResponseDto<ApiUserDto> save(RequestDto<ApiUserDto> requestDto) {
+        ResponseDto<ApiUserDto> rd = new ResponseDto<ApiUserDto>();
 
         String id = requestDto.getD().getId();
         ApiUser apiUser = apiUserRepository.findOneById(id);
@@ -55,6 +61,29 @@ public class ApiUserServiceImpl extends BaseServiceImpl implements ApiUserServic
         apiUser.setRemarks(String.valueOf(System.currentTimeMillis()));
         apiUser = apiUserRepository.save(apiUser);
 
+        rd.setC(WebConstants.SUCCESS_CODE);
+        return rd;
+    }
+
+    @Override
+    public ResponseDto<ApiUserDto> findList(RequestDto<ApiUserDto> requestDto) {
+        ResponseDto<ApiUserDto> rd = new ResponseDto<ApiUserDto>();
+        ApiUserDto d = new ApiUserDto();
+
+        Criteria<ApiUser> criteria = new Criteria<>();
+        criteria.add(Restrictions.eq("loginName", requestDto.getD().getLoginName()));
+        List<ApiUser> list = apiUserRepository.findAll(criteria);
+
+        List<ApiUserDto> dtos = new ArrayList<>(list.size());
+        ApiUserDto dto = null;
+        for (ApiUser u : list) {
+            dto = new ApiUserDto();
+            BeanUtils.copyProperties(u, dto);
+            dtos.add(dto);
+        }
+
+        d.setL(dtos);
+        rd.setD(d);
         rd.setC(WebConstants.SUCCESS_CODE);
         return rd;
     }
