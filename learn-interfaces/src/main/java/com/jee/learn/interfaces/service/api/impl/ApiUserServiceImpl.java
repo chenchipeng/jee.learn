@@ -1,15 +1,16 @@
-package com.jee.learn.interfaces.service.impl;
+package com.jee.learn.interfaces.service.api.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.jee.learn.interfaces.domain.ApiUser;
+import com.jee.learn.interfaces.domain.api.ApiUser;
 import com.jee.learn.interfaces.dto.RequestDto;
 import com.jee.learn.interfaces.dto.ResponseDto;
-import com.jee.learn.interfaces.dto.user.UserDto;
-import com.jee.learn.interfaces.repository.ApiUserRepository;
-import com.jee.learn.interfaces.service.ApiUserService;
+import com.jee.learn.interfaces.dto.api.UserDto;
+import com.jee.learn.interfaces.repository.api.ApiUserRepository;
+import com.jee.learn.interfaces.service.BaseServiceImpl;
+import com.jee.learn.interfaces.service.api.ApiUserService;
 import com.jee.learn.interfaces.util.WebConstants;
 import com.jee.learn.interfaces.util.cache.EhcacheService;
 import com.jee.learn.interfaces.util.exception.IntfcException;

@@ -1,4 +1,4 @@
-package com.jee.learn.interfaces.dto.user;
+package com.jee.learn.interfaces.dto.api;
 
 import java.io.Serializable;
 

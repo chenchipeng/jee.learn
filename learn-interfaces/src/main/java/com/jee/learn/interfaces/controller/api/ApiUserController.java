@@ -1,4 +1,4 @@
-package com.jee.learn.interfaces.controller;
+package com.jee.learn.interfaces.controller.api;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -10,10 +10,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jee.learn.interfaces.controller.BaseController;
 import com.jee.learn.interfaces.dto.RequestDto;
 import com.jee.learn.interfaces.dto.ResponseDto;
-import com.jee.learn.interfaces.dto.user.UserDto;
-import com.jee.learn.interfaces.service.ApiUserService;
+import com.jee.learn.interfaces.dto.api.UserDto;
+import com.jee.learn.interfaces.service.api.ApiUserService;
 import com.jee.learn.interfaces.util.CacheConstants;
 import com.jee.learn.interfaces.util.cache.EhcacheService;
 import com.jee.learn.interfaces.util.codec.Md5Utils;

@@ -1,12 +1,15 @@
-package com.jee.learn.interfaces.repository;
+package com.jee.learn.interfaces.repository.api;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.jee.learn.interfaces.config.datasource.DataSourceConfig;
 import com.jee.learn.interfaces.config.datasource.dynamic.TargetDataSource;
-import com.jee.learn.interfaces.domain.ApiUser;
+import com.jee.learn.interfaces.domain.api.ApiUser;
 
-public interface ApiUserRepository extends JpaRepository<ApiUser, String> {
+public interface ApiUserRepository extends JpaSpecificationExecutor<ApiUser>, JpaRepository<ApiUser, String>,
+        PagingAndSortingRepository<ApiUser, String> {
 
     @TargetDataSource(dataSource = DataSourceConfig.READ_DATASOURCE_KEY)
     ApiUser findOneById(String id);
