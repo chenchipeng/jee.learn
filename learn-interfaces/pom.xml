@@ -34,7 +34,6 @@
 			<artifactId>spring-boot-admin-starter-client</artifactId>
 			<version>${spring-boot-admin.version}</version>
 		</dependency>
-		
 		<!-- spring -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
