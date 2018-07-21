@@ -17,7 +17,8 @@
 		<module>learn-interfaces</module>
 		<module>learn-monitor</module>
 		<module>learn-eureka</module>
-		<module>learn-demo</module>
+		<module>learn-eureka-provider</module>
+		<module>learn-eureka-consumer</module>
 	</modules>
 
 	<!-- 设定主仓库，按设定顺序进行查找。 -->

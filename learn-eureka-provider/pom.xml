@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.jee</groupId>
-	<artifactId>learn-eureka</artifactId>
+	<artifactId>learn-eureka-provider</artifactId>
 	<version>0.0.1</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
-	<name>learn-eureka</name>
-	<description>learn-eureka注册中心</description>
+	<name>learn-eureka-provider</name>
+	<description>learn-eureka-provider</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -42,42 +42,18 @@
 		<!-- spring -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
+			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<!-- cloud -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-eureka-server</artifactId>
+			<artifactId>spring-cloud-starter-eureka</artifactId>
 			<version>${eureka.version}</version>
 		</dependency>
-
 	</dependencies>
 
-	<!-- 设定主仓库，按设定顺序进行查找。 -->
-	<repositories>
-		<repository>
-			<id>aliyun</id>
-			<name>ali nexus</name>
-			<url>http://maven.aliyun.com/nexus/content/groups/public</url>
-		</repository>
-	</repositories>
-
-	<!-- 设定插件仓库 -->
-	<pluginRepositories>
-		<pluginRepository>
-			<id>aliyun</id>
-			<name>aliyun Repository</name>
-			<url>http://maven.aliyun.com/nexus/content/groups/public</url>
-		</pluginRepository>
-	</pluginRepositories>
-
 	<build>
-		<finalName>learn-eureka</finalName>
+		<finalName>learn-eureka-provider</finalName>
 		<plugins>
 			<!-- Compiler 插件, 设定JDK版本 -->
 			<plugin>
