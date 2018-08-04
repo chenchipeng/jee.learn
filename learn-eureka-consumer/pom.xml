@@ -37,6 +37,8 @@
 		<!-- cloud -->
 		<eureka.version>1.4.5.RELEASE</eureka.version>
 		<feign.version>1.4.5.RELEASE</feign.version>
+		<!-- 工具 -->
+		<spring-boot-admin.version>2.0.0</spring-boot-admin.version>
 	</properties>
 
 	<dependencies>
@@ -56,7 +58,12 @@
 			<artifactId>spring-cloud-starter-feign</artifactId>
 			<version>${feign.version}</version>
 		</dependency>
-
+		<!-- monitor -->
+		<dependency>
+			<groupId>de.codecentric</groupId>
+			<artifactId>spring-boot-admin-starter-client</artifactId>
+			<version>${spring-boot-admin.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>
