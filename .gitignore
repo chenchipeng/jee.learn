@@ -1,6 +1,10 @@
+### dir ###
 target/
 temp/
 logs/
+learn-oss/
+
+### file ###
 !.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
