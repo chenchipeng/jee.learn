@@ -1,5 +1,6 @@
 package com.jee.learn.interfaces.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurer;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
@@ -28,13 +29,16 @@ import net.sf.ehcache.config.PersistenceConfiguration.Strategy;
  */
 @Configuration
 public class EhCacheConfig implements CachingConfigurer {
+    
+    @Value("${spring.ehcache.disk-store-path}")
+    private String diskStorePath;
 
     @Bean(destroyMethod = "shutdown")
     public net.sf.ehcache.CacheManager ehCacheManager() {
 
         // 缓存路径
         DiskStoreConfiguration diskStore = new DiskStoreConfiguration();
-        diskStore.setPath("temp/ehcache");
+        diskStore.setPath(diskStorePath);
         // 当堆内存或者非堆内存里面的元素已经满了的时候，将其中的元素临时的存放在磁盘上，一旦重启就会消失
         PersistenceConfiguration persistence = new PersistenceConfiguration();
         persistence.strategy(Strategy.LOCALTEMPSWAP);
