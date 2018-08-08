@@ -8,5 +8,8 @@
 20180619 md5构造缓存KEY
 20180626 spring boot jpa(Hibernate)读写分离
 20180720 jpa封装测试
+20180804 logback整理
 
 #待办事项
+sql 无法打印
+EntityDaoImpl 有建议警告

@@ -41,10 +41,10 @@ public class ApiUserController extends BaseController {
             rd = JsonMapper.fromJson(data, ResponseDto.class, ApiUserDto.class);
             return CompletableFuture.completedFuture(rd);
         }
-        
+
         // 没有缓存时从数据库中获取数据
         rd = apiUserService.get(params);
-        
+
         // 写入缓存
         ehcacheService.put(CacheConstants.EHCACHE_DEFAULT, cacheKey, JsonMapper.toJson(rd));
         return CompletableFuture.completedFuture(rd);
@@ -56,7 +56,7 @@ public class ApiUserController extends BaseController {
         ResponseDto<ApiUserDto> rd = apiUserService.save(params);
         return CompletableFuture.completedFuture(rd);
     }
-    
+
     @Async
     @PostMapping(path = "/rest/learn.user.list", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public CompletableFuture<ResponseDto<ApiUserDto>> list(@RequestBody RequestDto<ApiUserDto> params) {

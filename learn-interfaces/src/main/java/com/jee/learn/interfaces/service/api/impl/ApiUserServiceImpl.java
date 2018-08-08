@@ -3,6 +3,7 @@ package com.jee.learn.interfaces.service.api.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,23 +14,18 @@ import com.jee.learn.interfaces.dto.RequestDto;
 import com.jee.learn.interfaces.dto.ResponseDto;
 import com.jee.learn.interfaces.dto.api.ApiUserDto;
 import com.jee.learn.interfaces.repository.ApiUserRepository;
-import com.jee.learn.interfaces.service.BaseServiceImpl;
 import com.jee.learn.interfaces.service.api.ApiUserService;
 import com.jee.learn.interfaces.util.WebConstants;
-import com.jee.learn.interfaces.util.cache.EhcacheService;
 import com.jee.learn.interfaces.util.exception.IntfcException;
 import com.jee.learn.interfaces.util.support.Criteria;
 import com.jee.learn.interfaces.util.support.Restrictions;
 
 @Service
 @Transactional(readOnly = true)
-public class ApiUserServiceImpl extends BaseServiceImpl implements ApiUserService {
+public class ApiUserServiceImpl implements ApiUserService {
 
     @Autowired
     private ApiUserRepository apiUserRepository;
-    @SuppressWarnings("unused")
-    @Autowired
-    private EhcacheService ehcacheService;
 
     @Override
     public ResponseDto<ApiUserDto> get(RequestDto<ApiUserDto> requestDto) {
@@ -86,6 +82,14 @@ public class ApiUserServiceImpl extends BaseServiceImpl implements ApiUserServic
         rd.setD(d);
         rd.setC(WebConstants.SUCCESS_CODE);
         return rd;
+    }
+
+    @Override
+    public ApiUser get(String id) {
+        if (StringUtils.isBlank(id)) {
+            return null;
+        }
+        return apiUserRepository.findOneById(id);
     }
 
 }
