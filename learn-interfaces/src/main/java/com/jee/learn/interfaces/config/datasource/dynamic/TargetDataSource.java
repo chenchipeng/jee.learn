@@ -6,7 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.jee.learn.interfaces.config.datasource.DS;
+import com.jee.learn.interfaces.config.datasource.DsConstants;
 
 /**
  * 目标数据源
@@ -21,6 +21,6 @@ import com.jee.learn.interfaces.config.datasource.DS;
 @Documented
 public @interface TargetDataSource {
 
-    String dataSource() default DS.SLAVE;// 数据源
+    String dataSource() default DsConstants.SLAVE;// 数据源
 
 }
