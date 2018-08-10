@@ -1,51 +1,53 @@
 package com.jee.learn.interfaces.config.datasource;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.persistence.EntityManagerFactory;
 
-import javax.sql.DataSource;
-
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import com.jee.learn.interfaces.config.datasource.dynamic.DynamicDataSource;
 
-/**
- * 自定义注入AbstractRoutingDataSource以便动态切换数据源
- * 
- * @author 1002360
- * @version 1.0<br/>
- *          修改记录:<br/>
- *          1.2018年6月27日 上午9:27:35 1002360 新建
- */
 @Configuration
+@EnableJpaRepositories(value = "com.jee.learn.interfaces.repository", entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef = "transactionManager")
 public class DataSourceConfig {
-    
-    public final static String WRITE_DATASOURCE_KEY = "writeDruidDataSource";
-    public final static String READ_DATASOURCE_KEY = "readDruidDataSource";
 
     /**
-     * 注入AbstractRoutingDataSource
+     * Jpa Entity Manager 配置
      * 
-     * @param readDruidDataSource
-     * @param writeDruidDataSource
      * @return
-     * @throws Exception
      */
-    @Bean
-    public AbstractRoutingDataSource routingDataSource(@Qualifier(READ_DATASOURCE_KEY) DataSource readDruidDataSource,
-            @Qualifier(WRITE_DATASOURCE_KEY) DataSource writeDruidDataSource) throws Exception {
+    @Bean(name = "entityManagerFactory")
+    public EntityManagerFactory entityManagerFactory(DynamicDataSource dataSource, JpaProperties jpaProperties) {
+        LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
 
-        // 准备数据库资源
-        Map<Object, Object> targetDataSources = new HashMap<>();
-        targetDataSources.put(WRITE_DATASOURCE_KEY, writeDruidDataSource);
-        targetDataSources.put(READ_DATASOURCE_KEY, readDruidDataSource);
+        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        factory.setJpaVendorAdapter(vendorAdapter);
 
-        DynamicDataSource dataSource = new DynamicDataSource();
-        dataSource.setDefaultTargetDataSource(writeDruidDataSource);
-        dataSource.setTargetDataSources(targetDataSources);
-        return dataSource;
+        factory.setPackagesToScan("com.jee.learn.interfaces.domain");
+        factory.setJpaPropertyMap(jpaProperties.getProperties());
+        // 数据源
+        factory.setDataSource(dataSource);
+        // 在完成了其它所有相关的配置加载以及属性设置后,才初始化
+        factory.afterPropertiesSet();
+        return factory.getObject();
     }
+
+    /**
+     * 配置事物管理器
+     * 
+     * @return
+     */
+    @Bean(name = "transactionManager")
+    public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+        JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
+        jpaTransactionManager.setEntityManagerFactory(entityManagerFactory);
+        return jpaTransactionManager;
+    }
+
 }

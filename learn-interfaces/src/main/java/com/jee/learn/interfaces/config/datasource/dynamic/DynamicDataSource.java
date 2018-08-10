@@ -20,6 +20,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
     protected Object determineCurrentLookupKey() {
         // 可以做一个简单的负载均衡策略
         String lookupKey = DynamicDataSourceHolder.getDataSource();
+        
         logger.debug("------------ the lookupKey is {} ------------", lookupKey);
         return lookupKey;
     }

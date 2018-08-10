@@ -11,5 +11,4 @@
 20180804 logback整理
 
 #待办事项
-sql 无法打印
 EntityDaoImpl 有建议警告

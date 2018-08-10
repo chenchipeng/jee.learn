@@ -6,7 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.jee.learn.interfaces.config.datasource.DataSourceConfig;
+import com.jee.learn.interfaces.config.datasource.DS;
 
 /**
  * 目标数据源
@@ -19,15 +19,8 @@ import com.jee.learn.interfaces.config.datasource.DataSourceConfig;
 @Target({ ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface DataSourceTarget {
+public @interface TargetDataSource {
 
-    /**
-     * 指定使用的数据库,默认DataSourceConfig.READ_DATASOURCE_KEY<br/>
-     * 具体的值请参考:<br/>
-     * {@link com.jee.learn.interfaces.config.datasource.DataSourceConfig}
-     * 
-     * @return
-     */
-    String dataSource() default DataSourceConfig.READ_DATASOURCE_KEY;// 数据源
+    String dataSource() default DS.SLAVE;// 数据源
 
 }

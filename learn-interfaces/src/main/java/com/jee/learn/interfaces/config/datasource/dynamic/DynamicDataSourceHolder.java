@@ -1,5 +1,7 @@
 package com.jee.learn.interfaces.config.datasource.dynamic;
 
+import com.jee.learn.interfaces.config.datasource.DS;
+
 /**
  * 数据源动态路由切换工具
  * 
@@ -11,17 +13,25 @@ package com.jee.learn.interfaces.config.datasource.dynamic;
 public class DynamicDataSourceHolder {
 
     // 使用ThreadLocal把数据源与当前线程绑定
-    private static final ThreadLocal<String> DATA_SOURCE = new ThreadLocal<String>();
+    private static final ThreadLocal<String> DATA_SOURCE_HOLDER = new ThreadLocal<String>() {
+
+        @Override
+        protected String initialValue() {
+            return DS.MASTER;
+        }
+
+    };
 
     public static void setDataSource(String dataSourceName) {
-        DATA_SOURCE.set(dataSourceName);
+        DATA_SOURCE_HOLDER.set(dataSourceName);
     }
 
     public static String getDataSource() {
-        return (String) DATA_SOURCE.get();
+        return DATA_SOURCE_HOLDER.get();
     }
 
     public static void clearDataSource() {
-        DATA_SOURCE.remove();
+        DATA_SOURCE_HOLDER.remove();
     }
+
 }

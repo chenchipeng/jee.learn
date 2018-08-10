@@ -5,6 +5,6 @@ import com.jee.learn.interfaces.support.BaseService;
 
 public interface TestService extends BaseService<ApiUser> {
 
-    
+    void test1();
 
 }

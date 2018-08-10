@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 public abstract class BaseServiceImpl<T> implements BaseService<T> {
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
