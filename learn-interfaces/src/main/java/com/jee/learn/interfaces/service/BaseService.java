@@ -1,4 +1,4 @@
-package com.jee.learn.interfaces.support;
+package com.jee.learn.interfaces.service;
 
 import java.io.Serializable;
 

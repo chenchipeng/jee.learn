@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,19 +28,32 @@ public class DynamicDataSourceAspect {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Around("execution(public * com.jee.learn.interfaces.service..*.*(..))")
-    public Object around(ProceedingJoinPoint pjp) throws Throwable {
+    // @Pointcut("execution(public * com.jee.learn.interfaces.service..*.*(..))")
+    public void publicService() {
+    };
 
-        MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
-        Method targetMethod = methodSignature.getMethod();
+    // @Pointcut("execution(public * com.jee.learn.interfaces.repository..*.*(..))")
+    public void repository() {
+    };
+
+    @Pointcut("@annotation(com.jee.learn.interfaces.config.datasource.dynamic.TargetDataSource)")
+    public void targetDataSource() {
+    };
+
+    @Around("targetDataSource() && @annotation(anno)")
+    public Object around(ProceedingJoinPoint pjp, TargetDataSource anno) throws Throwable {
 
         try {
-            if (targetMethod.isAnnotationPresent(TargetDataSource.class)) {
-                String targetDataSource = targetMethod.getAnnotation(TargetDataSource.class).dataSource();
+            String targetDataSource = anno.dsType().value();
+            DynamicDataSourceHolder.setDataSource(targetDataSource);
+
+            if (logger.isDebugEnabled()) {
+                MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
+                Method targetMethod = methodSignature.getMethod();
                 logger.debug(">>>>>> {}.{} used {}", methodSignature.getDeclaringTypeName(), targetMethod.getName(),
                         targetDataSource);
-                DynamicDataSourceHolder.setDataSource(targetDataSource);
             }
+
             // 执行方法
             Object result = pjp.proceed();
             return result;

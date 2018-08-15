@@ -34,7 +34,7 @@ public class RedisConfig {
      *
      * @return
      */
-    @Bean(name = "normalRedisTemplate")
+    @Bean(name = "redisTemplate")
     public RedisTemplate<String, Object> functionDomainRedisTemplate() {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         initDomainRedisTemplate(redisTemplate, redisConnectionFactory);

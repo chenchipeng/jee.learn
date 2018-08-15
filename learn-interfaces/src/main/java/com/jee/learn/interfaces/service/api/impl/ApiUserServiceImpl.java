@@ -85,8 +85,8 @@ public class ApiUserServiceImpl implements ApiUserService {
         return rd;
     }
 
-    @TargetDataSource
     @Override
+    @TargetDataSource
     public ApiUser get(String id) {
         if (StringUtils.isBlank(id)) {
             return null;

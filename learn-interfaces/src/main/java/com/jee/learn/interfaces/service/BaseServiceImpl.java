@@ -1,4 +1,4 @@
-package com.jee.learn.interfaces.support;
+package com.jee.learn.interfaces.service;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.jee.learn.interfaces.support.EntityDao;
 
 @Transactional(readOnly = true)
 public abstract class BaseServiceImpl<T> implements BaseService<T> {

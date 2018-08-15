@@ -28,7 +28,7 @@ import org.springframework.stereotype.Service;
 public class RedisService {
 
     @Autowired
-    private RedisTemplate<String, Object> normalRedisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
     @Resource
     private HashOperations<String, String, String> hashOperations;
     @Resource
@@ -56,7 +56,7 @@ public class RedisService {
         try {
             hashOperations.put(hashKey, key, values);
             if (expire != -1) {
-                normalRedisTemplate.expire(hashKey, expire, TimeUnit.SECONDS);
+                redisTemplate.expire(hashKey, expire, TimeUnit.SECONDS);
             }
         } catch (Exception e) {
             logger.warn("", e);
@@ -67,7 +67,7 @@ public class RedisService {
         try {
             hashOperationsObj.put(hashKey, key, values);
             if (expire != -1) {
-                normalRedisTemplate.expire(hashKey, expire, TimeUnit.SECONDS);
+                redisTemplate.expire(hashKey, expire, TimeUnit.SECONDS);
             }
         } catch (Exception e) {
             logger.warn("", e);
@@ -78,7 +78,7 @@ public class RedisService {
         try {
             valueOperationsObj.set(key, values);
             if (expire != -1) {
-                normalRedisTemplate.expire(key, expire, TimeUnit.SECONDS);
+                redisTemplate.expire(key, expire, TimeUnit.SECONDS);
             }
         } catch (Exception e) {
             logger.warn("", e);
@@ -101,7 +101,7 @@ public class RedisService {
      * @param key
      */
     public void remove(String key) {
-        normalRedisTemplate.delete(key);
+        redisTemplate.delete(key);
     }
 
     /**
@@ -189,7 +189,7 @@ public class RedisService {
      */
     public void flushExpire(String hashKey, long expire, TimeUnit timeUnit) {
         if (expire != -1) {
-            normalRedisTemplate.expire(hashKey, expire, timeUnit);
+            redisTemplate.expire(hashKey, expire, timeUnit);
         }
     }
 

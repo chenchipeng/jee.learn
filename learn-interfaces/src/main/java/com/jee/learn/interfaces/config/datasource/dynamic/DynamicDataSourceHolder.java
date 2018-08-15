@@ -1,6 +1,6 @@
 package com.jee.learn.interfaces.config.datasource.dynamic;
 
-import com.jee.learn.interfaces.config.datasource.DsConstants;
+import com.jee.learn.interfaces.config.datasource.DsTypeEnum;
 
 /**
  * 数据源动态路由切换工具
@@ -17,9 +17,9 @@ public class DynamicDataSourceHolder {
 
         @Override
         protected String initialValue() {
-            return DsConstants.MASTER;
+            return DsTypeEnum.MASTER.value();
         }
-
+        
     };
 
     public static void setDataSource(String dataSourceName) {
