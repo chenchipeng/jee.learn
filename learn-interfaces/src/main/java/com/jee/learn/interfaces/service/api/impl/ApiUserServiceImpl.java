@@ -86,8 +86,17 @@ public class ApiUserServiceImpl implements ApiUserService {
     }
 
     @Override
-    @TargetDataSource
     public ApiUser get(String id) {
+        if (StringUtils.isBlank(id)) {
+            return null;
+        }
+        ApiUser u = apiUserRepository.findOneById(id);
+        return u;
+    }
+    
+    @TargetDataSource
+    @Override
+    public ApiUser getById(String id) {
         if (StringUtils.isBlank(id)) {
             return null;
         }

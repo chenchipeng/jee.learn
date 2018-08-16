@@ -7,12 +7,14 @@ import com.jee.learn.interfaces.dto.api.ApiUserDto;
 
 public interface ApiUserService {
 
-    ApiUser get(String id);
-
     ResponseDto<ApiUserDto> get(RequestDto<ApiUserDto> requestDto);
 
     ResponseDto<ApiUserDto> save(RequestDto<ApiUserDto> requestDto);
 
     ResponseDto<ApiUserDto> findList(RequestDto<ApiUserDto> requestDto);
+
+    ApiUser get(String id);
+
+    ApiUser getById(String id);
 
 }

@@ -29,7 +29,10 @@ public class JpaTest {
     @Test
     public void findOneTest() {
         ApiUser u = apiUserService.get("1");
-        logger.debug("{}", u.getLoginName());
+        logger.debug("repository 拦截 {}", u.getLoginName());
+        
+        u = apiUserService.getById("1");
+        logger.debug("service 拦截 {}", u.getLoginName());
     }
 
 }

@@ -21,18 +21,14 @@ import org.springframework.stereotype.Component;
  *          修改记录:<br/>
  *          1.2018年6月27日 下午8:14:15 1002360 新建
  */
+@Order(Ordered.LOWEST_PRECEDENCE - 1)
 @Aspect
 @Component
-@Order(Ordered.LOWEST_PRECEDENCE - 1)
 public class DynamicDataSourceAspect {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    // @Pointcut("execution(public * com.jee.learn.interfaces.service..*.*(..))")
-    public void publicService() {
-    };
-
-    // @Pointcut("execution(public * com.jee.learn.interfaces.repository..*.*(..))")
+    @Pointcut("execution(public * com.jee.learn.interfaces.repository.*.*(..))")
     public void repository() {
     };
 
@@ -40,20 +36,21 @@ public class DynamicDataSourceAspect {
     public void targetDataSource() {
     };
 
-    @Around("targetDataSource() && @annotation(anno)")
-    public Object around(ProceedingJoinPoint pjp, TargetDataSource anno) throws Throwable {
+    @Around("targetDataSource() || repository()")
+    public Object around(ProceedingJoinPoint pjp) throws Throwable {
+
+        MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
+        Method method = methodSignature.getMethod();
 
         try {
-            String targetDataSource = anno.dsType().value();
-            DynamicDataSourceHolder.setDataSource(targetDataSource);
+            if (method.isAnnotationPresent(TargetDataSource.class)) {
 
-            if (logger.isDebugEnabled()) {
-                MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
-                Method targetMethod = methodSignature.getMethod();
-                logger.debug(">>>>>> {}.{} used {}", methodSignature.getDeclaringTypeName(), targetMethod.getName(),
+                String targetDataSource = method.getAnnotation(TargetDataSource.class).dsType().value();
+                DynamicDataSourceHolder.setDataSource(targetDataSource);
+
+                logger.debug(">>>>>> {}.{} used {}", methodSignature.getDeclaringTypeName(), method.getName(),
                         targetDataSource);
             }
-
             // 执行方法
             Object result = pjp.proceed();
             return result;

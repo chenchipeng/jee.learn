@@ -12,10 +12,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.transaction.PlatformTransactionManager;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.jee.learn.interfaces.config.datasource.dynamic.DynamicDataSource;
@@ -57,9 +55,9 @@ public class DataSourceConfig {
      * 
      * @return
      */
-    @Primary
     @ConfigurationProperties(prefix = "spring.datasource.druid.write")
     @Bean(name = MASTER_DATASOURCE)
+    @Primary
     public DataSource masterDS() {
         return new DruidDataSource();
     }
@@ -75,52 +73,21 @@ public class DataSourceConfig {
         return new DruidDataSource();
     }
 
-    /**
-     * 配置默认 entity manager factory
-     * 
-     * @return
-     */
-//    @Bean(name = "entityManagerFactory")
-//    @Primary
-    public EntityManagerFactory entityManagerFactory(@Qualifier(DYNAMIC_DATASOURCE) DynamicDataSource dataSource,
-            JpaProperties jpaProperties) {
-        LocalContainerEntityManagerFactoryBean factory = initEntityManagerFactory(dataSource, jpaProperties);
-        return factory.getObject();
-    }
-
-    /**
-     * 配置默认事物管理器
-     * 
-     * @return
-     */
-//    @Bean(name = "transactionManager")
-//    @Primary
-    public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
-        JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
-        jpaTransactionManager.setEntityManagerFactory(entityManagerFactory);
-        return jpaTransactionManager;
-    }
-
-    @Deprecated
-    public EntityManagerFactory slaveEntityManagerFactory(@Qualifier(SLAVE_DATASOURCE) DataSource dataSource,
-            JpaProperties jpaProperties) {
-        LocalContainerEntityManagerFactoryBean factory = initEntityManagerFactory(dataSource, jpaProperties);
-        return factory.getObject();
-    }
-
-    /** 构造LocalContainerEntityManagerFactoryBean */
-    private LocalContainerEntityManagerFactoryBean initEntityManagerFactory(DataSource dataSource,
-            JpaProperties jpaProperties) {
+    /** 配置默认 entity manager factory */
+    @Bean(name = "entityManagerFactory")
+    public EntityManagerFactory entityManagerFactory(@Qualifier(DYNAMIC_DATASOURCE) DataSource dataSource,
+            JpaProperties jpaProperties) throws Exception {
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
 
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         factory.setJpaVendorAdapter(vendorAdapter);
 
         factory.setPackagesToScan("com.jee.learn.interfaces.domain");
-        factory.setJpaPropertyMap(jpaProperties.getProperties()); // 数据源
-        factory.setDataSource(dataSource); // 在完成了其它所有相关的配置加载以及属性设置后,才初始化
+        factory.setJpaPropertyMap(jpaProperties.getProperties());
+        factory.setDataSource(dataSource);
+        // 在完成了其它所有相关的配置加载以及属性设置后,才初始化
         factory.afterPropertiesSet();
-        return factory;
+        return factory.getObject();
     }
 
 }
