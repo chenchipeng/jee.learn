@@ -5,7 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.jee.learn.interfaces.config.datasource.DsTypeEnum;
+import com.jee.learn.interfaces.config.datasource.DsConstants;
 
 /**
  * 目标数据源
@@ -19,6 +19,6 @@ import com.jee.learn.interfaces.config.datasource.DsTypeEnum;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TargetDataSource {
 
-    DsTypeEnum dsType() default DsTypeEnum.SLAVE;
+    String dsType() default DsConstants.SLAVE_DATASOURCE;
 
 }

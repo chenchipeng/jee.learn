@@ -45,7 +45,7 @@ public class DynamicDataSourceAspect {
         try {
             if (method.isAnnotationPresent(TargetDataSource.class)) {
 
-                String targetDataSource = method.getAnnotation(TargetDataSource.class).dsType().value();
+                String targetDataSource = method.getAnnotation(TargetDataSource.class).dsType();
                 DynamicDataSourceHolder.setDataSource(targetDataSource);
 
                 logger.debug(">>>>>> {}.{} used {}", methodSignature.getDeclaringTypeName(), method.getName(),

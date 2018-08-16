@@ -28,11 +28,11 @@ public class JpaTest {
 
     @Test
     public void findOneTest() {
-        ApiUser u = apiUserService.get("1");
-        logger.debug("repository 拦截 {}", u.getLoginName());
+        ApiUser u1 = apiUserService.get("1");
+        logger.debug("repository 拦截 {}", u1.getLoginName());
         
-        u = apiUserService.getById("1");
-        logger.debug("service 拦截 {}", u.getLoginName());
+        ApiUser u2 = apiUserService.getById("1");
+        logger.debug("service 拦截 {}", u2.getLoginName());
     }
 
 }
