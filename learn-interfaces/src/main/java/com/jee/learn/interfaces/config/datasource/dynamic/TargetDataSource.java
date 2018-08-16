@@ -1,5 +1,6 @@
 package com.jee.learn.interfaces.config.datasource.dynamic;
 
+import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -17,6 +18,7 @@ import com.jee.learn.interfaces.config.datasource.DsConstants;
  */
 @Target({ ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
+@Documented
 public @interface TargetDataSource {
 
     String dsType() default DsConstants.SLAVE_DATASOURCE;

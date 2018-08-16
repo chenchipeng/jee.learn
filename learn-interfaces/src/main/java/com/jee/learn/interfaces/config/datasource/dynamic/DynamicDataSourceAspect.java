@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
  *          修改记录:<br/>
  *          1.2018年6月27日 下午8:14:15 1002360 新建
  */
-@Order(Ordered.LOWEST_PRECEDENCE - 1)
+@Order(Ordered.LOWEST_PRECEDENCE-1)
 @Aspect
 @Component
 public class DynamicDataSourceAspect {

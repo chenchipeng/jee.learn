@@ -22,7 +22,6 @@ import com.jee.learn.interfaces.util.support.Criteria;
 import com.jee.learn.interfaces.util.support.Restrictions;
 
 @Service
-@Transactional(readOnly = true)
 public class ApiUserServiceImpl implements ApiUserService {
 
     @Autowired
@@ -93,7 +92,7 @@ public class ApiUserServiceImpl implements ApiUserService {
         ApiUser u = apiUserRepository.findOneById(id);
         return u;
     }
-    
+
     @TargetDataSource
     @Override
     public ApiUser getById(String id) {

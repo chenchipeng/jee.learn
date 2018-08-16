@@ -32,11 +32,19 @@ public class DynamicDataSource extends AbstractRoutingDataSource implements Appl
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     private ApplicationContext applicationContext;
+    private Object[] dsKeys;
+    private int idx = 0;
 
     @Override
     protected Object determineCurrentLookupKey() {
         // 可以做一个简单的负载均衡策略
         String lookupKey = DynamicDataSourceHolder.getDataSource();
+
+        if (idx < dsKeys.length) {
+            lookupKey = String.valueOf(dsKeys[idx]);
+            idx++;
+        }
+
         logger.debug("------------ the lookupKey is {} ------------", lookupKey);
         return lookupKey;
     }
@@ -78,6 +86,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource implements Appl
                 targetDataSource.put(key, dataSources.get(key));
             }
         }
+        dsKeys = dataSources.keySet().toArray();
         return targetDataSource;
     }
 
