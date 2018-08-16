@@ -12,7 +12,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -22,7 +21,6 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.jee.learn.interfaces.config.datasource.dynamic.DynamicDataSource;
 
 @Configuration
-@EnableJpaRepositories(value = "com.jee.learn.interfaces.repository", entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef = "transactionManager")
 public class DataSourceConfig {
 
     private final static String DYNAMIC_DATASOURCE = "dataSource";// 默认库
@@ -59,9 +57,9 @@ public class DataSourceConfig {
      * 
      * @return
      */
+    @Primary
     @ConfigurationProperties(prefix = "spring.datasource.druid.write")
     @Bean(name = MASTER_DATASOURCE)
-    @Primary
     public DataSource masterDS() {
         return new DruidDataSource();
     }
@@ -82,8 +80,8 @@ public class DataSourceConfig {
      * 
      * @return
      */
-    @Bean(name = "entityManagerFactory")
-    @Primary
+//    @Bean(name = "entityManagerFactory")
+//    @Primary
     public EntityManagerFactory entityManagerFactory(@Qualifier(DYNAMIC_DATASOURCE) DynamicDataSource dataSource,
             JpaProperties jpaProperties) {
         LocalContainerEntityManagerFactoryBean factory = initEntityManagerFactory(dataSource, jpaProperties);
@@ -95,8 +93,8 @@ public class DataSourceConfig {
      * 
      * @return
      */
-    @Bean(name = "transactionManager")
-    @Primary
+//    @Bean(name = "transactionManager")
+//    @Primary
     public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
         JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
         jpaTransactionManager.setEntityManagerFactory(entityManagerFactory);
