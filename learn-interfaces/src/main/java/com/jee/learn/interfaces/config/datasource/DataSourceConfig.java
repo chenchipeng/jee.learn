@@ -1,12 +1,17 @@
 package com.jee.learn.interfaces.config.datasource;
 
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.jee.learn.interfaces.config.datasource.dynamic.DynamicDataSource;
 
 /**
  * 数据源配置<br/>
@@ -40,6 +45,20 @@ public class DataSourceConfig {
     @Bean(name = DsConstants.SLAVE_DATASOURCE)
     public DataSource slaveDS() {
         return new DruidDataSource();
+    }
+
+    /**注入后就不能切换了*/
+    // @Bean("entityManagerFactory")
+    public EntityManagerFactory entityManagerFactory(JpaProperties jpaProperties,DynamicDataSource dynamicDataSource) {
+        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
+        factory.setJpaVendorAdapter(vendorAdapter);
+        factory.setPackagesToScan("com.jee.learn.interfaces.domain");
+        factory.setDataSource(dynamicDataSource);
+
+        factory.setJpaPropertyMap(jpaProperties.getProperties());
+        factory.afterPropertiesSet();
+        return factory.getObject();
     }
 
 }
