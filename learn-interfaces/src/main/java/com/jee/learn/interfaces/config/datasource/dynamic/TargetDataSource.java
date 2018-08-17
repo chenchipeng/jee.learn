@@ -6,10 +6,15 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.springframework.core.annotation.AliasFor;
+
 import com.jee.learn.interfaces.config.datasource.DsConstants;
 
 /**
- * 目标数据源
+ * 目标数据源<br/>
+ * 可用在jpa repository dao层和service层<br/>
+ * 注意: 在该应用中因为使用了 dao层的切面切换数据源, 所以 @Transactional 注解不能加在类上, 只能用于方法;
+ * 有 @Trasactional 注解的方法无法切换数据源
  * 
  * @author 1002360
  * @version 1.0<br/>
@@ -21,6 +26,10 @@ import com.jee.learn.interfaces.config.datasource.DsConstants;
 @Documented
 public @interface TargetDataSource {
 
+    @AliasFor("dsType")
+    String value() default DsConstants.SLAVE_DATASOURCE;
+
+    @AliasFor("value")
     String dsType() default DsConstants.SLAVE_DATASOURCE;
 
 }

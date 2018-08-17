@@ -14,8 +14,6 @@ public interface ApiUserRepository extends JpaSpecificationExecutor<ApiUser>, Jp
 
     @TargetDataSource
     ApiUser findOneById(String id);
-    
-    ApiUser getById(String id);
 
     @Override
     <S extends ApiUser> S save(S entity);

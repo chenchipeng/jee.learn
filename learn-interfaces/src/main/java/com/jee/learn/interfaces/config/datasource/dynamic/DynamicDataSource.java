@@ -33,16 +33,16 @@ public class DynamicDataSource extends AbstractRoutingDataSource implements Appl
 
     private ApplicationContext applicationContext;
     private Object[] dsKeys;
-    private int idx = 0;
 
     @Override
     protected Object determineCurrentLookupKey() {
         // 可以做一个简单的负载均衡策略
         String lookupKey = DynamicDataSourceHolder.getDataSource();
 
-        if (idx < dsKeys.length) {
-            lookupKey = String.valueOf(dsKeys[idx]);
-            idx++;
+        // 系统启动时初始化数据库连接, 可以针对个别库做延迟初始化
+        if (dsKeys.length > 0) {
+            lookupKey = String.valueOf(dsKeys[dsKeys.length - 1]);
+            dsKeys = removeLastItem(dsKeys);
         }
 
         logger.debug("------------ the lookupKey is {} ------------", lookupKey);
@@ -88,6 +88,20 @@ public class DynamicDataSource extends AbstractRoutingDataSource implements Appl
         }
         dsKeys = dataSources.keySet().toArray();
         return targetDataSource;
+    }
+
+    /** 删除数组的最后一个元素 */
+    private Object[] removeLastItem(Object[] ary) {
+        int len = ary.length;
+        if (len > 0) {
+            len -= 1;
+            Object[] tmps = new Object[len];
+            for (int i = 0; i < len; i++) {
+                tmps[i] = ary[i];
+            }
+            ary = tmps;
+        }
+        return ary;
     }
 
 }

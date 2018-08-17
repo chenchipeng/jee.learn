@@ -15,6 +15,4 @@ public interface ApiUserService {
 
     ApiUser get(String id);
 
-    ApiUser getById(String id);
-
 }

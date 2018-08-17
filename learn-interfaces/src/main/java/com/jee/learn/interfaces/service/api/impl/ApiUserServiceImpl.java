@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.jee.learn.interfaces.config.datasource.dynamic.TargetDataSource;
 import com.jee.learn.interfaces.domain.ApiUser;
 import com.jee.learn.interfaces.dto.RequestDto;
 import com.jee.learn.interfaces.dto.ResponseDto;
@@ -86,16 +85,6 @@ public class ApiUserServiceImpl implements ApiUserService {
 
     @Override
     public ApiUser get(String id) {
-        if (StringUtils.isBlank(id)) {
-            return null;
-        }
-        ApiUser u = apiUserRepository.findOneById(id);
-        return u;
-    }
-
-    @TargetDataSource
-    @Override
-    public ApiUser getById(String id) {
         if (StringUtils.isBlank(id)) {
             return null;
         }

@@ -12,11 +12,12 @@ import com.jee.learn.interfaces.config.datasource.DsConstants;
  */
 public class DynamicDataSourceHolder {
 
-    // 使用ThreadLocal把数据源与当前线程绑定
+    // 使用ThreadLocal把数据源与当前线程绑定, 以便存放变量副本
     private static final ThreadLocal<String> DATA_SOURCE_HOLDER = new ThreadLocal<String>() {
 
         @Override
         protected String initialValue() {
+            // 当线程的变量值为空时返回默认值
             return DsConstants.MASTER_DATASOURCE;
         }
 
