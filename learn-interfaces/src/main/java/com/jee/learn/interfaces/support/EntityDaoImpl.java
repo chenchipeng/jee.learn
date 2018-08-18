@@ -29,7 +29,7 @@ import org.springframework.stereotype.Repository;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class EntityDaoImpl implements EntityDao {
 
-    @PersistenceContext
+    @PersistenceContext(unitName="default")
     private EntityManager entityManager;
 
     @Override
