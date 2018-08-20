@@ -15,4 +15,6 @@ public interface ApiUserService {
 
     ApiUser get(String id);
 
+    ApiUser updateRemarks(String id);
+
 }

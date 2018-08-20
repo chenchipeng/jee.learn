@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jee.learn.interfaces.config.datasource.dynamic.TargetDataSource;
 import com.jee.learn.interfaces.domain.ApiUser;
 import com.jee.learn.interfaces.dto.RequestDto;
 import com.jee.learn.interfaces.dto.ResponseDto;
@@ -21,6 +22,7 @@ import com.jee.learn.interfaces.util.support.Criteria;
 import com.jee.learn.interfaces.util.support.Restrictions;
 
 @Service
+@Transactional(readOnly = true)
 public class ApiUserServiceImpl implements ApiUserService {
 
     @Autowired
@@ -83,12 +85,25 @@ public class ApiUserServiceImpl implements ApiUserService {
         return rd;
     }
 
+    @TargetDataSource
     @Override
     public ApiUser get(String id) {
         if (StringUtils.isBlank(id)) {
             return null;
         }
         ApiUser u = apiUserRepository.findOneById(id);
+        return u;
+    }
+    
+    @Transactional(readOnly = false)
+    @Override
+    public ApiUser updateRemarks(String id) {
+        if (StringUtils.isBlank(id)) {
+            return null;
+        }
+        ApiUser u = apiUserRepository.findOneById(id);
+        u.setRemarks(String.valueOf(System.currentTimeMillis()));
+        apiUserRepository.save(u);
         return u;
     }
 

@@ -36,7 +36,11 @@ public class DynamicDataSourceAspect {
     public void anno() {
     };
 
-    @Around("anno() || repository()")
+    @Pointcut("!execution(public * com.jee.learn.interfaces.repository..*Impl.*(..))")
+    public void impl() {
+    };
+
+    @Around("anno() || (repository() && impl())")
     public Object around(ProceedingJoinPoint pjp) throws Throwable {
 
         MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
