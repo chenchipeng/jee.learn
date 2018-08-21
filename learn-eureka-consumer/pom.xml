@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.jee</groupId>
-	<artifactId>learn-eureka-consumer</artifactId>
+	<artifactId>learn-cloud-consumer</artifactId>
 	<version>0.0.1</version>
 	<packaging>war</packaging>
 
-	<name>learn-eureka-consumer</name>
-	<description>learn-eureka-consumer</description>
+	<name>learn-cloud-consumer</name>
+	<description>learn-cloud-consumer</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -67,7 +67,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>learn-eureka-consumer</finalName>
+		<finalName>learn-cloud-consumer</finalName>
 		<plugins>
 			<!-- Compiler 插件, 设定JDK版本 -->
 			<plugin>

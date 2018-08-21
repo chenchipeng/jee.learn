@@ -1,4 +1,4 @@
-package com.jee.learn.eureka.provider.controller;
+package com.jee.learn.cloud.provider.controller;
 
 import javax.servlet.http.HttpServletRequest;
 

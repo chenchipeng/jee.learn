@@ -20,7 +20,7 @@
 	<!-- RollingFileAppender：滚动记录文件 -->
 	<appender name="DAILYFILE"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<File>logs/${file.name}.log</File>
+		<File>/data/${file.name}/logs/${file.name}.log</File>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<fileNamePattern>logs/${file.name}.%d.%i.log</fileNamePattern>
 			<maxHistory>30</maxHistory>
