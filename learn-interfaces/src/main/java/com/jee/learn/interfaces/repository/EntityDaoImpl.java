@@ -26,7 +26,6 @@ import com.jee.learn.interfaces.config.datasource.dynamic.TargetDataSource;
  *          修改记录: 下面填写修改的内容以及修改的日期 <br/>
  *          1.2018-8-5 下午5:23:04 ccp new
  */
-
 @Repository
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class EntityDaoImpl implements EntityDao {

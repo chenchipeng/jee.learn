@@ -1,9 +1,9 @@
-package com.jee.learn.interfaces.util.support;
+package com.jee.learn.interfaces.util.jpa;
 
 import java.util.Collection;
 
-import com.jee.learn.interfaces.util.support.Criterion.MatchMode;
-import com.jee.learn.interfaces.util.support.Criterion.Operator;
+import com.jee.learn.interfaces.util.jpa.Criterion.MatchMode;
+import com.jee.learn.interfaces.util.jpa.Criterion.Operator;
 
 /**
  * 条件构造器 用于创建条件表达式

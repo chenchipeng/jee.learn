@@ -19,8 +19,8 @@ import com.jee.learn.interfaces.service.BaseServiceImpl;
 import com.jee.learn.interfaces.service.api.ApiUserService;
 import com.jee.learn.interfaces.util.WebConstants;
 import com.jee.learn.interfaces.util.exception.IntfcException;
-import com.jee.learn.interfaces.util.support.Criteria;
-import com.jee.learn.interfaces.util.support.Restrictions;
+import com.jee.learn.interfaces.util.jpa.Criteria;
+import com.jee.learn.interfaces.util.jpa.Restrictions;
 
 @Service
 @Transactional(readOnly = true)

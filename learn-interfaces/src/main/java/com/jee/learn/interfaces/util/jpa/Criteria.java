@@ -1,4 +1,4 @@
-package com.jee.learn.interfaces.util.support;
+package com.jee.learn.interfaces.util.jpa;
 
 import java.util.ArrayList;
 import java.util.List;

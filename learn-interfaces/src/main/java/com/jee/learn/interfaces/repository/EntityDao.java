@@ -21,6 +21,11 @@ import javax.persistence.EntityManager;
  */
 public interface EntityDao {
 
+    /**
+     * 获取entityManager
+     * 
+     * @return
+     */
     public EntityManager getEntityManager();
 
     /**

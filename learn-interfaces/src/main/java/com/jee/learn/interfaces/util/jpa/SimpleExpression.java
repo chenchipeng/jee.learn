@@ -1,4 +1,4 @@
-package com.jee.learn.interfaces.util.support;
+package com.jee.learn.interfaces.util.jpa;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;

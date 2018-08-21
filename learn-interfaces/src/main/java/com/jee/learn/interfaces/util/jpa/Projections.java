@@ -1,4 +1,4 @@
-package com.jee.learn.interfaces.util.support;
+package com.jee.learn.interfaces.util.jpa;
 
 /*
  * 计算用类
