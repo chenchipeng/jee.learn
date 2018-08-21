@@ -14,8 +14,14 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import com.jee.learn.interfaces.config.datasource.DsConstants;
+
 /**
  * AOP 方式动态切换数据源
+ * <p>
+ * 在配置文件中没有配置spring.jpa.aop时默认不进行dao层拦截。
+ * 存在配置时，dao层优先使用{@link TargetDataSource}指定的库，其次是{@link DsConstants}的SLAVE_DATASOURCE。
+ * </p>
  * 
  * @author 1002360
  * @version 1.0<br/>
@@ -29,7 +35,7 @@ public class DynamicDataSourceAspect {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Value("${spring.jpa.aop:*}")
+    @Value("${spring.jpa.aop:}")
     private String[] aopKeys;
 
     /** 暴露所有被 @TargetDataSource 注解的class和具体方法 */
@@ -78,11 +84,14 @@ public class DynamicDataSourceAspect {
 
         try {
             for (String key : aopKeys) {
-                if (method.getName().contains(key) && method.isAnnotationPresent(TargetDataSource.class)) {
-
-                    String targetDataSource = method.getAnnotation(TargetDataSource.class).dsType();
+                if (method.getName().contains(key)) {
+                    // 默认只读
+                    String targetDataSource = DsConstants.SLAVE_DATASOURCE;
+                    if (method.isAnnotationPresent(TargetDataSource.class)) {
+                        // 有注解的话就是用注解指定的
+                        targetDataSource = method.getAnnotation(TargetDataSource.class).dsType();
+                    }
                     DynamicDataSourceHolder.setDataSource(targetDataSource);
-
                     logger.debug(">>>>>> {}.{} used {}", methodSignature.getDeclaringTypeName(), method.getName(),
                             targetDataSource);
                     break;

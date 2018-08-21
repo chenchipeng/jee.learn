@@ -55,8 +55,21 @@ public class JpaTest {
 
     @Test
     public void apiUserRepositoryFindOneByIdTest() {
+        // 自定义repository方法
         ApiUser u = apiUserRepository.findOneById("1");
         logger.debug("repository 拦截 {}", u.getLoginName());
+    }
+
+    @Test
+    @Transactional(readOnly = false)
+    public void apiUserRepositoryGetOneTest() {
+        // repository自带方法，需要@Transactional注解支持，否则报错：no session
+        try {
+            ApiUser u = apiUserRepository.getOne("1");
+            logger.debug("repository 拦截 {}", u.getLoginName());
+        } catch (Exception e) {
+            logger.info("", e);
+        }
     }
 
     @Test
@@ -66,7 +79,7 @@ public class JpaTest {
     }
 
     @Test
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     @Rollback(false)
     public void apiUsersaveOrUpdateTest() {
         ApiUser u = apiUserService.get("1");
