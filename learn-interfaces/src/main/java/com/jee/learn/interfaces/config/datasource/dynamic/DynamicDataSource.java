@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 import com.jee.learn.interfaces.config.datasource.DsConstants;
 
 /**
- * 数据源动态路由
+ * 动态路由数据源
  * 
  * @author 1002360
  * @version 1.0<br/>

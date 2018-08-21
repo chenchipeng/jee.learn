@@ -9,6 +9,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -28,20 +29,29 @@ public class DynamicDataSourceAspect {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Pointcut("execution(public * com.jee.learn.interfaces.repository.*.*(..))")
-    public void repository() {
-    };
+    @Value("${spring.jpa.aop:*}")
+    private String[] aopKeys;
 
+    /** 暴露所有被 @TargetDataSource 注解的class和具体方法 */
     @Pointcut("@annotation(com.jee.learn.interfaces.config.datasource.dynamic.TargetDataSource)")
     public void anno() {
     };
 
-    @Around("anno() || repository()")
-    public Object around(ProceedingJoinPoint pjp) throws Throwable {
+    /** 暴露repository包及其子包下的所有类 */
+    @Pointcut("execution(* com.jee.learn.interfaces.repository..*(..))")
+    public void repository() {
+    };
 
+    /** 排除repository包及其子包下以"Impl结尾的类" */
+    @Pointcut("!execution(public * com.jee.learn.interfaces.repository..*Impl.*(..))")
+    public void impl() {
+    };
+
+    /** 拦截所有被 @TargetDataSource 注解的class和具体方法 */
+    @Around("anno()")
+    public Object annoAround(ProceedingJoinPoint pjp) throws Throwable {
         MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
         Method method = methodSignature.getMethod();
-
         try {
             if (method.isAnnotationPresent(TargetDataSource.class)) {
 
@@ -58,6 +68,33 @@ public class DynamicDataSourceAspect {
             // 防止内存泄露
             DynamicDataSourceHolder.clearDataSource();
         }
+    }
+
+    /** 拦截整个repository并排除impl */
+    @Around("repository() && impl()")
+    public Object repositoryAround(ProceedingJoinPoint pjp) throws Throwable {
+        MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
+        Method method = methodSignature.getMethod();
+
+        try {
+            for (String key : aopKeys) {
+                if (method.getName().contains(key) && method.isAnnotationPresent(TargetDataSource.class)) {
+
+                    String targetDataSource = method.getAnnotation(TargetDataSource.class).dsType();
+                    DynamicDataSourceHolder.setDataSource(targetDataSource);
+
+                    logger.debug(">>>>>> {}.{} used {}", methodSignature.getDeclaringTypeName(), method.getName(),
+                            targetDataSource);
+                    break;
+                }
+            }
+            // 执行方法
+            return pjp.proceed();
+        } finally {
+            // 防止内存泄露
+            DynamicDataSourceHolder.clearDataSource();
+        }
+
     }
 
 }

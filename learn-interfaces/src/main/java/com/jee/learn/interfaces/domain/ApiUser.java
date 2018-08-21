@@ -12,6 +12,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 /**
  * The persistent class for the api_user database table.
  * 
@@ -19,6 +22,8 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "api_user")
 @NamedQuery(name = "ApiUser.findAll", query = "SELECT a FROM ApiUser a WHERE a.delFlag = '0' ")
+@DynamicInsert
+@DynamicUpdate
 public class ApiUser implements Serializable {
     private static final long serialVersionUID = 1L;
     private String id;

@@ -1,4 +1,4 @@
-package com.jee.learn.interfaces.support;
+package com.jee.learn.interfaces.repository;
 
 import java.io.Serializable;
 
@@ -8,6 +8,8 @@ import javax.persistence.PersistenceContext;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
+
+import com.jee.learn.interfaces.config.datasource.dynamic.TargetDataSource;
 
 /**
  * 
@@ -42,6 +44,7 @@ public class EntityDaoImpl implements EntityDao {
         entityManager.persist(entity);
     }
 
+    @TargetDataSource
     @Override
     public <T> T findOne(Class<T> entityClass, Serializable id) {
         return entityManager.find(entityClass, id);

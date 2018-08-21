@@ -9,11 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jee.learn.interfaces.config.datasource.dynamic.TargetDataSource;
 import com.jee.learn.interfaces.domain.ApiUser;
 import com.jee.learn.interfaces.dto.RequestDto;
 import com.jee.learn.interfaces.dto.ResponseDto;
 import com.jee.learn.interfaces.dto.api.ApiUserDto;
-import com.jee.learn.interfaces.repository.ApiUserRepository;
+import com.jee.learn.interfaces.repository.api.ApiUserRepository;
+import com.jee.learn.interfaces.service.BaseServiceImpl;
 import com.jee.learn.interfaces.service.api.ApiUserService;
 import com.jee.learn.interfaces.util.WebConstants;
 import com.jee.learn.interfaces.util.exception.IntfcException;
@@ -21,7 +23,8 @@ import com.jee.learn.interfaces.util.support.Criteria;
 import com.jee.learn.interfaces.util.support.Restrictions;
 
 @Service
-public class ApiUserServiceImpl implements ApiUserService {
+@Transactional(readOnly = true)
+public class ApiUserServiceImpl extends BaseServiceImpl<ApiUser> implements ApiUserService {
 
     @Autowired
     private ApiUserRepository apiUserRepository;
@@ -83,13 +86,23 @@ public class ApiUserServiceImpl implements ApiUserService {
         return rd;
     }
 
+    @TargetDataSource
     @Override
     public ApiUser get(String id) {
         if (StringUtils.isBlank(id)) {
             return null;
         }
-        ApiUser u = apiUserRepository.findOneById(id);
+        ApiUser u = findOne(id);
         return u;
+    }
+
+    @Transactional(readOnly = false)
+    @Override
+    public ApiUser saveOrUpdate(ApiUser apiUser) {
+        if (apiUser != null) {
+            apiUser = apiUserRepository.save(apiUser);
+        }
+        return apiUser;
     }
 
 }

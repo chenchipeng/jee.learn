@@ -43,5 +43,10 @@
     "name": "spring.ehcache.disk-store-path",
     "type": "java.lang.String",
     "description": "A description for 'spring.ehcache.disk-store-path'"
+  },
+  {
+    "name": "spring.jpa.aop",
+    "type": "java.lang.String",
+    "description": "repository 方法拦截"
   }
 ]}
