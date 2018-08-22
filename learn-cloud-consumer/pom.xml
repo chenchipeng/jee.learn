@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.jee</groupId>
-	<artifactId>learn-eureka</artifactId>
+	<artifactId>learn-cloud-consumer</artifactId>
 	<version>0.0.1</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
-	<name>learn-eureka</name>
-	<description>learn-eureka注册中心</description>
+	<name>learn-cloud-consumer</name>
+	<description>learn-cloud-consumer</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -34,6 +34,8 @@
 		<!-- 环境与插件 -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
+		<!-- cloud -->
+		<feign.version>1.4.5.RELEASE</feign.version>
 		<!-- 工具 -->
 		<spring-boot-admin.version>2.0.0</spring-boot-admin.version>
 	</properties>
@@ -42,17 +44,30 @@
 		<!-- spring -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
+			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<!-- cloud -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter</artifactId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+			<artifactId>spring-cloud-starter-feign</artifactId>
+			<version>${feign.version}</version>
+		</dependency>
+		<!-- hystrix -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-hystrix-dashboard</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 		<!-- monitor -->
 		<dependency>
@@ -60,29 +75,10 @@
 			<artifactId>spring-boot-admin-starter-client</artifactId>
 			<version>${spring-boot-admin.version}</version>
 		</dependency>
-
 	</dependencies>
 
-	<!-- 设定主仓库，按设定顺序进行查找。 -->
-	<repositories>
-		<repository>
-			<id>aliyun</id>
-			<name>ali nexus</name>
-			<url>http://maven.aliyun.com/nexus/content/groups/public</url>
-		</repository>
-	</repositories>
-
-	<!-- 设定插件仓库 -->
-	<pluginRepositories>
-		<pluginRepository>
-			<id>aliyun</id>
-			<name>aliyun Repository</name>
-			<url>http://maven.aliyun.com/nexus/content/groups/public</url>
-		</pluginRepository>
-	</pluginRepositories>
-
 	<build>
-		<finalName>learn-eureka</finalName>
+		<finalName>learn-cloud-consumer</finalName>
 		<plugins>
 			<!-- Compiler 插件, 设定JDK版本 -->
 			<plugin>
