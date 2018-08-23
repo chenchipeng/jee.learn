@@ -20,6 +20,7 @@
 		<module>learn-cloud-provider</module>
 		<module>learn-cloud-consumer</module>
 		<module>learn-hystrix</module>
+		<module>learn-mongodb</module>
 	</modules>
 
 	<!-- 设定主仓库，按设定顺序进行查找。 -->
