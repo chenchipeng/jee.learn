@@ -1,16 +1,17 @@
 package com.jee.learn.interfaces.config.datasource.dynamic;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import org.springframework.stereotype.Component;
@@ -27,12 +28,14 @@ import com.jee.learn.interfaces.config.datasource.DsConstants;
  */
 @Component("dynamicDataSource")
 @Primary
-public class DynamicDataSource extends AbstractRoutingDataSource implements ApplicationContextAware {
+public class DynamicDataSource extends AbstractRoutingDataSource {
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
+    @Autowired
     private ApplicationContext applicationContext;
-    private Object[] dsKeys;
+
+    private List<String> dsKeys = new ArrayList<>();;
 
     @Override
     protected Object determineCurrentLookupKey() {
@@ -40,9 +43,8 @@ public class DynamicDataSource extends AbstractRoutingDataSource implements Appl
         String lookupKey = DynamicDataSourceHolder.getDataSource();
 
         // 系统启动时初始化数据库连接, 可以针对个别库做延迟初始化
-        if (dsKeys.length > 0) {
-            lookupKey = String.valueOf(dsKeys[dsKeys.length - 1]);
-            dsKeys = removeLastItem(dsKeys);
+        if (!dsKeys.isEmpty()) {
+            lookupKey = dsKeys.remove(dsKeys.size() - 1);
         }
 
         logger.debug("------------ the lookupKey is {} ------------", lookupKey);
@@ -51,8 +53,8 @@ public class DynamicDataSource extends AbstractRoutingDataSource implements Appl
 
     @Override
     public void afterPropertiesSet() {
-
         Map<String, DataSource> dataSources = applicationContext.getBeansOfType(DataSource.class);
+
         if (dataSources.size() == 0) {
             throw new IllegalStateException("Datasource can not found!!!");
         }
@@ -66,11 +68,6 @@ public class DynamicDataSource extends AbstractRoutingDataSource implements Appl
         super.afterPropertiesSet();
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
-
     /**
      * exclude current Datasource
      * 
@@ -79,29 +76,13 @@ public class DynamicDataSource extends AbstractRoutingDataSource implements Appl
      */
     private Map<Object, Object> excludeCurrentDataSource(Map<String, DataSource> dataSources) {
         Map<Object, Object> targetDataSource = new HashMap<>(dataSources.size());
-        Iterator<String> keys = dataSources.keySet().iterator();
-        while (keys.hasNext()) {
-            String key = keys.next();
-            if (!(dataSources.get(key) instanceof DynamicDataSource)) {
-                targetDataSource.put(key, dataSources.get(key));
+        for (Entry<String, DataSource> e : dataSources.entrySet()) {
+            if (!(e.getValue() instanceof DynamicDataSource)) {
+                targetDataSource.put(e.getKey(), e.getValue());
+                dsKeys.add(e.getKey());
             }
         }
-        dsKeys = dataSources.keySet().toArray();
         return targetDataSource;
-    }
-
-    /** 删除数组的最后一个元素 */
-    private Object[] removeLastItem(Object[] ary) {
-        int len = ary.length;
-        if (len > 0) {
-            len -= 1;
-            Object[] tmps = new Object[len];
-            for (int i = 0; i < len; i++) {
-                tmps[i] = ary[i];
-            }
-            ary = tmps;
-        }
-        return ary;
     }
 
 }

@@ -60,12 +60,8 @@ public class DynamicDataSourceAspect {
         Method method = methodSignature.getMethod();
         try {
             if (method.isAnnotationPresent(TargetDataSource.class)) {
-
-                String targetDataSource = method.getAnnotation(TargetDataSource.class).dsType();
-                DynamicDataSourceHolder.setDataSource(targetDataSource);
-
-                logger.debug(">>>>>> {}.{} used {}", methodSignature.getDeclaringTypeName(), method.getName(),
-                        targetDataSource);
+                changeDS(method.getAnnotation(TargetDataSource.class).dsType(), methodSignature.getDeclaringTypeName(),
+                        method.getName());
             }
             // 执行方法
             Object result = pjp.proceed();
@@ -83,17 +79,17 @@ public class DynamicDataSourceAspect {
         Method method = methodSignature.getMethod();
 
         try {
+            // 有注解的话就是用注解指定的
+            if (method.isAnnotationPresent(TargetDataSource.class)) {
+                changeDS(method.getAnnotation(TargetDataSource.class).dsType(), methodSignature.getDeclaringTypeName(),
+                        method.getName());
+                // 执行方法
+                return pjp.proceed();
+            }
+            // 没有注解就检查所配置的aopKeys与方法名
             for (String key : aopKeys) {
                 if (method.getName().contains(key)) {
-                    // 默认只读
-                    String targetDataSource = DsConstants.SLAVE_DATASOURCE;
-                    if (method.isAnnotationPresent(TargetDataSource.class)) {
-                        // 有注解的话就是用注解指定的
-                        targetDataSource = method.getAnnotation(TargetDataSource.class).dsType();
-                    }
-                    DynamicDataSourceHolder.setDataSource(targetDataSource);
-                    logger.debug(">>>>>> {}.{} used {}", methodSignature.getDeclaringTypeName(), method.getName(),
-                            targetDataSource);
+                    changeDS(DsConstants.SLAVE_DATASOURCE, methodSignature.getDeclaringTypeName(), method.getName());
                     break;
                 }
             }
@@ -103,7 +99,12 @@ public class DynamicDataSourceAspect {
             // 防止内存泄露
             DynamicDataSourceHolder.clearDataSource();
         }
+    }
 
+    /** 发起切换通知 */
+    private void changeDS(String targetDataSource, String declaringTypeName, String methodName) {
+        DynamicDataSourceHolder.setDataSource(targetDataSource);
+        logger.debug(">>>>>> {}.{} used {}", declaringTypeName, methodName, targetDataSource);
     }
 
 }
