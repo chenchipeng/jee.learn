@@ -22,6 +22,8 @@
 		<module>learn-hystrix</module>
 		<module>learn-mongodb</module>
 		<module>learn-kafka</module>
+		<module>learn-mybatis</module>
+		<module>learn-jpa</module>
 	</modules>
 
 	<!-- 设定主仓库，按设定顺序进行查找。 -->
