@@ -1,0 +1,13 @@
+#开发日志
+20180612 interfaces war部署
+20180612 interfaces 自定义异常捕捉
+20180618 interfaces ehcache读写
+20180619 interfaces md5构造缓存KEY
+20180626 interfaces spring boot jpa(Hibernate)读写分离
+20180720 interfaces jpa封装测试
+20180804 interfaces logback整理
+20180821 interfaces 读写分离改造 spring boot data jpa
+20180903 jpa 		spec简单封装
+
+#待办事项
+interfaces 动态路由切换时遇上高并发怎么办
