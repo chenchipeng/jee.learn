@@ -19,10 +19,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.jee.learn.jpa.LearnJpaApplication;
 import com.jee.learn.jpa.domain.ApiUser;
-import com.jee.learn.jpa.repository.ApiUserRepository;
+import com.jee.learn.jpa.repository.api.ApiUserRepository;
+import com.jee.learn.jpa.repository.dao.Condition;
+import com.jee.learn.jpa.repository.dao.Condition.Operator;
+import com.jee.learn.jpa.repository.dao.EntityDao;
 import com.jee.learn.jpa.repository.spec.Filter;
 import com.jee.learn.jpa.repository.spec.QueryParams;
-import com.jee.learn.jpa.util.JsonMapper;
+import com.jee.learn.jpa.util.mapper.JsonMapper;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = LearnJpaApplication.class)
@@ -32,6 +35,8 @@ public class EntityRepositoryTest {
 
     @Autowired
     private ApiUserRepository apiUserRepository;
+    @Autowired
+    private EntityDao entityDao;
 
     @Test
     public void test1() {
@@ -76,7 +81,7 @@ public class EntityRepositoryTest {
         Page<ApiUser> page = apiUserRepository.findByDelFlag("0", PageRequest.of(1, 1, sort));
         LOGGER.debug("{}", page.getTotalElements());
     }
-    
+
     /** 分页排序 */
     @Test
     public void test6() {
@@ -89,7 +94,25 @@ public class EntityRepositoryTest {
         } catch (Exception e) {
             LOGGER.info("", e);
         }
+    }
 
+    @Test
+    public void test7() {
+        ApiUser u = apiUserRepository.findOneById("3");
+        LOGGER.debug("{}", JsonMapper.toJson(u));
+    }
+
+    @Test
+    public void test8() {
+        ApiUser u = entityDao.findOne(ApiUser.class, "1");
+        LOGGER.debug("{}", JsonMapper.toJson(u));
+
+        Condition condition = new Condition();
+        condition.add("id", Operator.EQ, "3");
+        u = entityDao.findOne(ApiUser.class, condition);
+        LOGGER.debug("{}", JsonMapper.toJson(u));
+        List<ApiUser> list = entityDao.find(ApiUser.class, condition);
+        LOGGER.debug("{}", JsonMapper.toJson(list));
     }
 
 }

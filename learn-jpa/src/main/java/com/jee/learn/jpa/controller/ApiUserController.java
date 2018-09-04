@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jee.learn.jpa.domain.ApiUser;
-import com.jee.learn.jpa.repository.ApiUserRepository;
+import com.jee.learn.jpa.repository.api.ApiUserRepository;
 
 @RestController
 public class ApiUserController {

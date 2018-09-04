@@ -12,7 +12,7 @@ import java.util.List;
  * Title: Condition
  * </p>
  * <p>
- * Description: 条件封装类，用于封装查询条件 {@link IEntityDao}
+ * Description: 条件封装类，用于封装查询条件 {@link EntityDao}
  * </p>
  * <p>
  * Copyright: Copyright (c) 2013 ITDCL All right reserved.

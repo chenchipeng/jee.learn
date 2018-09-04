@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2013-Now http://jeesite.com All rights reserved.
  */
-package com.jee.learn.jpa.util;
+package com.jee.learn.jpa.util.mapper;
 
 import java.io.IOException;
 import java.util.ArrayList;
