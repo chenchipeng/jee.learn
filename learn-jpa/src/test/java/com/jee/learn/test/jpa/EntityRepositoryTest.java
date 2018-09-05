@@ -39,13 +39,13 @@ public class EntityRepositoryTest {
     private EntityDao entityDao;
 
     @Test
-    public void test1() {
+    public void findOneByIdTest() {
         ApiUser u = apiUserRepository.findOneById("1");
         LOGGER.debug("{}", u.getLoginName());
     }
 
     @Test
-    public void test2() {
+    public void specFindOneTest() {
 
         QueryParams<ApiUser> queryParams = new QueryParams<>();
         // 使用Specification条件查询,使用JPQL字段查询
@@ -55,7 +55,7 @@ public class EntityRepositoryTest {
     }
 
     @Test
-    public void test3() {
+    public void specFindAllTest() {
 
         QueryParams<ApiUser> queryParams = new QueryParams<>();
         queryParams.and(Filter.eq("delFlag", "0"));
@@ -67,7 +67,7 @@ public class EntityRepositoryTest {
     @Test
     @Transactional
     @Rollback(false)
-    public void test4() {
+    public void saveTest() {
         ApiUser u = apiUserRepository.findOneById("1");
         u.setRemarks(String.valueOf(System.currentTimeMillis()));
         apiUserRepository.save(u);
@@ -76,7 +76,7 @@ public class EntityRepositoryTest {
 
     /** 分页排序 */
     @Test
-    public void test5() {
+    public void pageTest() {
         Sort sort = new Sort(Sort.Direction.DESC, "id");
         Page<ApiUser> page = apiUserRepository.findByDelFlag("0", PageRequest.of(1, 1, sort));
         LOGGER.debug("{}", page.getTotalElements());
@@ -84,7 +84,7 @@ public class EntityRepositoryTest {
 
     /** 分页排序 */
     @Test
-    public void test6() {
+    public void specPageTest() {
         try {
             QueryParams<ApiUser> queryParams = new QueryParams<>();
             queryParams.and(Filter.eq("delFlag", "0"));
@@ -97,13 +97,13 @@ public class EntityRepositoryTest {
     }
 
     @Test
-    public void test7() {
+    public void findOneByIdNullTest() {
         ApiUser u = apiUserRepository.findOneById("3");
         LOGGER.debug("{}", JsonMapper.toJson(u));
     }
 
     @Test
-    public void test8() {
+    public void entityDaoFindTest() {
         ApiUser u = entityDao.findOne(ApiUser.class, "1");
         LOGGER.debug("{}", JsonMapper.toJson(u));
 

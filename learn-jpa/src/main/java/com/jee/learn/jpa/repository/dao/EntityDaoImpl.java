@@ -213,6 +213,16 @@ public class EntityDaoImpl implements EntityDao {
         return this.findOne(entityClass, new Condition(property, Condition.Operator.EQ, value));
     }
 
+    /**
+     * 通过entityManager创建查询对象
+     * 
+     * @param entityClass
+     * @param con
+     * @param sort
+     * @param handler {@link ConditionHandler<T>} 的一个子类，可由new
+     *            ConditionHandler<T>(){}匿名创建
+     * @return
+     */
     private <T> TypedQuery<T> createQuery(Class<T> entityClass, Condition con, Sort sort, ConditionHandler<T> handler) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<T> query = cb.createQuery(entityClass);
@@ -222,6 +232,15 @@ public class EntityDaoImpl implements EntityDao {
     }
 
     private <T> TypedQuery<T> createQuery(Class<T> entityClass, Condition con, Sort sort) {
+
+        /*
+         * ConditionHandler<T>是抽象类，这里并没有将其实例化。一般情况下abstract类是不能够实例化的，
+         * 但可以通过abstract父类的引用来指向子类的实例实现实例化，如AbstractClazz ac = new
+         * NormalClazz()，其中AbstractClazz是NormalClazz的父类。
+         * 
+         * 这里new关键字实例化的是一个继承了ConditionHandler<T>的匿名对象
+         */
+
         TypedQuery<T> query = createQuery(entityClass, con, sort, new ConditionHandler<T>() {
             @Override
             public CriteriaQuery<T> handle(Root<T> root, CriteriaQuery<T> query, CriteriaBuilder cb, Condition con,
