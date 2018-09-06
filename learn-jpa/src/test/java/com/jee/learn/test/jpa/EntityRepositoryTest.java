@@ -1,6 +1,7 @@
 package com.jee.learn.test.jpa;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -19,10 +20,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.jee.learn.jpa.LearnJpaApplication;
 import com.jee.learn.jpa.domain.ApiUser;
+import com.jee.learn.jpa.repository.BaseRepository;
 import com.jee.learn.jpa.repository.api.ApiUserRepository;
 import com.jee.learn.jpa.repository.dao.Condition;
 import com.jee.learn.jpa.repository.dao.Condition.Operator;
 import com.jee.learn.jpa.repository.dao.EntityDao;
+import com.jee.learn.jpa.repository.jdbc.JdbcDao;
 import com.jee.learn.jpa.repository.spec.Filter;
 import com.jee.learn.jpa.repository.spec.QueryParams;
 import com.jee.learn.jpa.util.mapper.JsonMapper;
@@ -34,9 +37,13 @@ public class EntityRepositoryTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(EntityRepositoryTest.class);
 
     @Autowired
+    private BaseRepository<ApiUser, String> baseRepository;
+    @Autowired
     private ApiUserRepository apiUserRepository;
     @Autowired
     private EntityDao entityDao;
+    @Autowired
+    private JdbcDao jdbcDao;
 
     @Test
     public void findOneByIdTest() {
@@ -114,5 +121,54 @@ public class EntityRepositoryTest {
         List<ApiUser> list = entityDao.find(ApiUser.class, condition);
         LOGGER.debug("{}", JsonMapper.toJson(list));
     }
+
+    @Test
+    public void baseRepositoryTest() {
+        ApiUser u = baseRepository.findOneById("1");
+        LOGGER.debug("{}", JsonMapper.toJson(u));
+    }
+
+    @Test
+    public void queryTest() {
+        List<ApiUser> list = jdbcDao.query("select * from api_user where del_flag = ?", ApiUser.class, "0");
+        LOGGER.debug("{}", JsonMapper.toJson(list));
+    }
+    
+    @Test
+    public void queryForListTest() {
+        List<Map<String, Object>> list = jdbcDao.queryForList("select * from api_user where del_flag = '0' ");
+        LOGGER.debug("{}", JsonMapper.toJson(list));
+    }
+
+    @Test
+    public void queryObjListTest() {
+        try {
+            // 没有使用RowMapper将结果集映射成对象，因此只能查询具体的某一列，而且传入的clazz要与所查询的字段的类型对应得上
+            List<String> list = jdbcDao.queryObjList("select id from api_user where del_flag = ?", String.class, "0");
+            LOGGER.debug("{}", JsonMapper.toJson(list));
+        } catch (Exception e) {
+            LOGGER.info("", e);
+        }
+
+    }
+
+    @Test
+    public void queryOneTest() {
+        // 查询一个对象，能成功进行映射
+        ApiUser u = jdbcDao.queryOne("select * from api_user where id = ?", ApiUser.class, "1");
+        LOGGER.debug("{}", JsonMapper.toJson(u));
+    }
+
+    @Test
+    public void queryForObjectTest() {
+        try {
+            // 没有使用RowMapper将结果集映射成对象，因此只能查询具体的某一列的第一条，而且传入的clazz要与所查询的字段的类型对应得上
+            String u = jdbcDao.queryForObject("select login_name from api_user where id = ?", String.class, "1");
+            LOGGER.debug("{}", JsonMapper.toJson(u));
+        } catch (Exception e) {
+            LOGGER.info("", e);
+        }
+    }
+    
 
 }
