@@ -25,7 +25,7 @@ import com.jee.learn.jpa.repository.api.ApiUserRepository;
 import com.jee.learn.jpa.repository.dao.Condition;
 import com.jee.learn.jpa.repository.dao.Condition.Operator;
 import com.jee.learn.jpa.repository.dao.EntityDao;
-import com.jee.learn.jpa.repository.jdbc.JdbcDao;
+import com.jee.learn.jpa.support.jdbc.JdbcDao;
 import com.jee.learn.jpa.support.spec.Filter;
 import com.jee.learn.jpa.support.spec.QueryParams;
 import com.jee.learn.jpa.util.mapper.JsonMapper;

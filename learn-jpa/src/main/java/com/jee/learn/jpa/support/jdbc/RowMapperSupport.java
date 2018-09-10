@@ -1,17 +1,14 @@
-package com.jee.learn.jpa.repository.jdbc;
+package com.jee.learn.jpa.support.jdbc;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import org.springframework.jdbc.core.RowMapper;
 
 /**
  * 
  * <p>
- * Title: RowMapperCustom
+ * Title: RowMapperSupport
  * </p>
  * <p>
  * Description: Pojo对象转换器，用于将jdbc查询结果转换为pojo对象
@@ -29,23 +26,26 @@ import org.springframework.jdbc.core.RowMapper;
  *          修改记录: 下面填写修改的内容以及修改的日期<br/>
  *          1.2013-9-10 上午11:13:41 yjf new
  */
-public class RowMapperCustom<T> implements RowMapper<T> {
+public class RowMapperSupport {
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public T mapRow(ResultSet rs, int rowNum) throws SQLException {
-        T pojo = null;
+    private Class<?> clazz;
+
+    public RowMapperSupport(Class<?> clazz) {
+        super();
+        this.clazz = clazz;
+    }
+
+    public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+        Object pojo = null;
         try {
-            Class<T> clazz = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
-                    .getActualTypeArguments()[0];
-            
+
             pojo = clazz.newInstance();
+
             Field fields[] = clazz.getDeclaredFields();
             String pojoTypeName = null;
             String columnLabel = null;
             String setterName = null;
             Method setMthd = null;
-
             for (Field fd : fields) {
                 pojoTypeName = fd.getType().getName();
                 columnLabel = parseDbColumn(fd.getName());
@@ -84,6 +84,18 @@ public class RowMapperCustom<T> implements RowMapper<T> {
 
     }
 
+    /** 判断查询结果集中是否存在某列 */
+    private boolean isExistColumn(ResultSet rs, String columnName) {
+        try {
+            if (rs.findColumn(columnName) > 0) {
+                return true;
+            }
+        } catch (SQLException e) {
+            return false;
+        }
+        return false;
+    }
+
     /** 数据表字段名解析 */
     private String parseDbColumn(String str) {
         char[] chars = str.toCharArray();
@@ -99,18 +111,6 @@ public class RowMapperCustom<T> implements RowMapper<T> {
             }
         }
         return dbColumnName;
-    }
-
-    /** 判断查询结果集中是否存在某列 */
-    private boolean isExistColumn(ResultSet rs, String columnName) {
-        try {
-            if (rs.findColumn(columnName) > 0) {
-                return true;
-            }
-        } catch (SQLException e) {
-            return false;
-        }
-        return false;
     }
 
 }

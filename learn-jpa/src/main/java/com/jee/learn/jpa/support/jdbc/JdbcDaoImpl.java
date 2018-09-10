@@ -1,4 +1,4 @@
-package com.jee.learn.jpa.repository.jdbc;
+package com.jee.learn.jpa.support.jdbc;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -40,7 +40,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JdbcDaoImpl implements JdbcDao {
 
-    private static Logger logger = LoggerFactory.getLogger(JdbcDaoImpl.class);
+    private final static Logger logger = LoggerFactory.getLogger(JdbcDaoImpl.class);
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -57,19 +57,24 @@ public class JdbcDaoImpl implements JdbcDao {
 
     @Override
     public long count(String sql) {
-        Long count = queryForObject("select count(*) from ( " + sql + ") t", Long.class);
+        Long count = queryForObject("SELECT COUNT(*) FROM ( " + sql + ") exm", Long.class);
         return count == null ? 0 : count;
     }
 
     @Override
     public long count(String sql, Object... args) {
-        Long count = queryForObject("select count(*) from ( " + sql + ") t", Long.class, args);
+        Long count = queryForObject("SELECT COUNT(*) FROM ( " + sql + ") exm", Long.class, args);
         return count == null ? 0 : count;
     }
 
     @Override
     public <T> List<T> query(String sql, Class<T> clazz) {
         return query(sql, createRowMapper(clazz));
+    }
+
+    @Override
+    public <T> List<T> query(String sql, Class<T> clazz, Object... args) {
+        return query(sql, createRowMapper(clazz), args);
     }
 
     @Override
@@ -83,13 +88,15 @@ public class JdbcDaoImpl implements JdbcDao {
     }
 
     @Override
-    public <T> List<T> query(String sql, Class<T> clazz, Object... args) {
-        return query(sql, createRowMapper(clazz), args);
+    public <T> List<T> query(String sql, RowMapper<T> rowMapper) {
+        logger.debug("JdbcTemplate:\n{}", sql);
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
     @Override
-    public <T> List<T> query(String sql, RowMapper<T> rowMapper) {
-        return jdbcTemplate.query(sql, rowMapper);
+    public <T> List<T> query(String sql, RowMapper<T> rowMapper, Object... args) {
+        logger.debug("JdbcTemplate:\n{}\nargs: {}", sql, Arrays.toString(args));
+        return jdbcTemplate.query(sql, rowMapper, args);
     }
 
     @Override
@@ -103,11 +110,6 @@ public class JdbcDaoImpl implements JdbcDao {
     }
 
     @Override
-    public <T> List<T> query(String sql, RowMapper<T> rowMapper, Object... args) {
-        return jdbcTemplate.query(sql, rowMapper, args);
-    }
-
-    @Override
     public <T> T queryOne(String sql, Class<T> clazz, Object... args) {
         List<T> list = query(sql, clazz, args);
         if (list != null && !list.isEmpty()) {
@@ -118,6 +120,7 @@ public class JdbcDaoImpl implements JdbcDao {
 
     @Override
     public <T> List<T> queryObjList(String sql, Class<T> clazz, Object... args) {
+        logger.debug("JdbcTemplate:\n{}\nargs: {}", sql, Arrays.toString(args));
         if (args == null || args.length < 1) {
             return jdbcTemplate.queryForList(sql, clazz);
         } else {
@@ -143,24 +146,24 @@ public class JdbcDaoImpl implements JdbcDao {
     }
 
     @Override
-    public List<Map<String, Object>> queryForList(String sql, int offset, int limit) {
-        return queryForList(generateLimitSql(sql, offset, limit));
-    }
-
-    @Override
-    public List<Map<String, Object>> queryForList(String sql, int offset, int limit, Object... args) {
-        return queryForList(generateLimitSql(sql, offset, limit), args);
-    }
-
-    @Override
     public List<Map<String, Object>> queryForList(String sql, Object... args) {
         logger.debug("JdbcTemplate:\n{}\nargs: {}", sql, Arrays.toString(args));
         return jdbcTemplate.queryForList(sql, args);
     }
 
     @Override
+    public List<Map<String, Object>> queryForPageList(String sql, int offset, int limit) {
+        return queryForList(generateLimitSql(sql, offset, limit));
+    }
+
+    @Override
+    public List<Map<String, Object>> queryForPageList(String sql, int offset, int limit, Object... args) {
+        return queryForList(generateLimitSql(sql, offset, limit), args);
+    }
+
+    @Override
     public Map<String, Object> queryForMap(String sql) {
-        List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
+        List<Map<String, Object>> list = queryForList(sql);
         Map<String, Object> map = null;
         if (list != null && list.size() > 0) {
             map = list.get(0);
@@ -261,14 +264,15 @@ public class JdbcDaoImpl implements JdbcDao {
 
     /**
      * 创建数据解析器<br/>
-     * {@link RowMapperSupport} 与 {@link createRowMapper}
+     * {@link RowMapperSupport} 与 {@link RowMapperCustom}
      * 类似。前者需要显式指定构造方法的参数，后者则通过泛型指定，功能上基本一致
      * 
      * @return
      */
     @SuppressWarnings("unused")
     private <T> RowMapper<T> createRowMapper() {
-        return new RowMapperCustom<>();
+        return new RowMapperCustom<T>() {
+        };
     }
 
 }

@@ -8,6 +8,14 @@ import org.springframework.stereotype.Component;
 
 import com.jee.learn.jpa.support.spec.repository.SpecRepository;
 
+/**
+ * 公共基础Repository
+ * 
+ * @author ccp
+ * @version 1.0<br/>
+ *          修改记录:<br/>
+ *          1.2018年9月10日 下午1:58:29 ccp 新建
+ */
 @NoRepositoryBean
 @Component
 public interface BaseRepository<T, ID extends Serializable> extends SpecRepository<T, ID> {
