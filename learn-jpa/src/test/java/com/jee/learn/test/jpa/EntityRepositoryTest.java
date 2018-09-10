@@ -26,8 +26,8 @@ import com.jee.learn.jpa.repository.dao.Condition;
 import com.jee.learn.jpa.repository.dao.Condition.Operator;
 import com.jee.learn.jpa.repository.dao.EntityDao;
 import com.jee.learn.jpa.repository.jdbc.JdbcDao;
-import com.jee.learn.jpa.repository.spec.Filter;
-import com.jee.learn.jpa.repository.spec.QueryParams;
+import com.jee.learn.jpa.support.spec.Filter;
+import com.jee.learn.jpa.support.spec.QueryParams;
 import com.jee.learn.jpa.util.mapper.JsonMapper;
 
 @RunWith(SpringRunner.class)
@@ -124,7 +124,8 @@ public class EntityRepositoryTest {
 
     @Test
     public void baseRepositoryTest() {
-        ApiUser u = baseRepository.findOneById("1");
+        ApiUser u = baseRepository.findById("12").orElseGet(()->{return null;});
+        LOGGER.debug("{}", u == null);
         LOGGER.debug("{}", JsonMapper.toJson(u));
     }
 
@@ -133,7 +134,7 @@ public class EntityRepositoryTest {
         List<ApiUser> list = jdbcDao.query("select * from api_user where del_flag = ?", ApiUser.class, "0");
         LOGGER.debug("{}", JsonMapper.toJson(list));
     }
-    
+
     @Test
     public void queryForListTest() {
         List<Map<String, Object>> list = jdbcDao.queryForList("select * from api_user where del_flag = '0' ");
@@ -169,6 +170,11 @@ public class EntityRepositoryTest {
             LOGGER.info("", e);
         }
     }
-    
+
+    @Test
+    public void findByIdTest() {
+        Optional<ApiUser> u = apiUserRepository.findById("1");
+        LOGGER.debug("{}", JsonMapper.toJson(u.isPresent()));
+    }
 
 }

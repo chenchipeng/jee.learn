@@ -8,6 +8,7 @@
 20180804 interfaces logback整理
 20180821 interfaces 读写分离改造 spring boot data jpa
 20180903 jpa 		spec简单封装
+20180910 jpa		spec整理
 
 #待办事项
 interfaces 动态路由切换时遇上高并发怎么办

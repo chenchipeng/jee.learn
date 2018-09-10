@@ -10,6 +10,14 @@ package com.jee.learn.jpa.util;
  */
 public interface Constants {
 
+    /** 01是否-否 */
+    String YES_NO_0 = "0";
+    /** 01是否-是 */
+    String YES_NO_1 = "1";
 
+    /** 主键属性名称 */
+    String PRIMARY_KEY_NAME = "id";
+    /** 删除标记属性名称 */
+    String DEL_FLAG_NAME = "delFlag";
 
 }

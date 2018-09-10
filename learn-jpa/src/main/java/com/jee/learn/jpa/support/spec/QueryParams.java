@@ -1,4 +1,4 @@
-package com.jee.learn.jpa.repository.spec;
+package com.jee.learn.jpa.support.spec;
 
 import java.util.ArrayList;
 import java.util.Arrays;
