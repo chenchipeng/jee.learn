@@ -9,16 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jee.learn.jpa.support.dao.Condition;
+import com.jee.learn.jpa.support.dao.Condition.Operator;
 import com.jee.learn.jpa.support.dao.EntityDao;
 import com.jee.learn.jpa.support.dao.Page;
 import com.jee.learn.jpa.support.dao.Sort;
-import com.jee.learn.jpa.support.dao.Condition.Operator;
 import com.jee.learn.jpa.support.dao.Sort.Direction;
 import com.jee.learn.jpa.util.Constants;
 import com.jee.learn.jpa.util.reflect.ReflectUtils;
 
 /**
- * {@link EntityDao} 通用sevice接口实现
+ * {@link EntityDao} 通用sevice接口实现<br/>
+ * 无法直接使用，必须通过具体的子类继承才行
  * 
  * @author ccp
  * @version 1.0<br/>
