@@ -26,7 +26,7 @@ public interface SpecSercice<T, ID extends Serializable> {
      * 
      * @return
      */
-    SpecRepository<T, ID> getSimpleRepository();
+    SpecRepository<T, ID> getSpecRepository();
 
     /**
      * 根据id查询一条记录
@@ -93,7 +93,7 @@ public interface SpecSercice<T, ID extends Serializable> {
      * @param sort
      * @return
      */
-    List<T> findLists(T entity, Sort sort);
+    List<T> findList(T entity, Sort sort);
 
     /**
      * 根据单个属性查询
@@ -148,7 +148,7 @@ public interface SpecSercice<T, ID extends Serializable> {
      * 自定义组合条件分页查询
      * 
      * @param entity
-     * @param pageable
+     * @param pageable 可使用PageRequest.of()创建
      * @return
      */
     Page<T> findPage(T entity, Pageable pageable);

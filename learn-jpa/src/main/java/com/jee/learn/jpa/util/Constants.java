@@ -19,5 +19,4 @@ public interface Constants {
     String PRIMARY_KEY_NAME = "id";
     /** 删除标记属性名称 */
     String DEL_FLAG_NAME = "delFlag";
-
 }

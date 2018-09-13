@@ -22,14 +22,22 @@ import com.jee.learn.jpa.LearnJpaApplication;
 import com.jee.learn.jpa.domain.ApiUser;
 import com.jee.learn.jpa.repository.BaseRepository;
 import com.jee.learn.jpa.repository.api.ApiUserRepository;
-import com.jee.learn.jpa.repository.dao.Condition;
-import com.jee.learn.jpa.repository.dao.Condition.Operator;
-import com.jee.learn.jpa.repository.dao.EntityDao;
+import com.jee.learn.jpa.support.dao.Condition;
+import com.jee.learn.jpa.support.dao.EntityDao;
+import com.jee.learn.jpa.support.dao.Condition.Operator;
 import com.jee.learn.jpa.support.jdbc.JdbcDao;
 import com.jee.learn.jpa.support.spec.Filter;
 import com.jee.learn.jpa.support.spec.QueryParams;
 import com.jee.learn.jpa.util.mapper.JsonMapper;
 
+/**
+ * repository 测试类
+ * 
+ * @author ccp
+ * @version 1.0<br/>
+ *          修改记录:<br/>
+ *          1.2018年9月11日 上午9:42:14 ccp 新建
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = LearnJpaApplication.class)
 public class EntityRepositoryTest {
@@ -124,7 +132,9 @@ public class EntityRepositoryTest {
 
     @Test
     public void baseRepositoryTest() {
-        ApiUser u = baseRepository.findById("12").orElseGet(()->{return null;});
+        ApiUser u = baseRepository.findById("12").orElseGet(() -> {
+            return null;
+        });
         LOGGER.debug("{}", u == null);
         LOGGER.debug("{}", JsonMapper.toJson(u));
     }

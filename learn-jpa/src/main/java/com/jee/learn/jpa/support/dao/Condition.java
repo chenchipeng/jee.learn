@@ -1,4 +1,4 @@
-package com.jee.learn.jpa.repository.dao;
+package com.jee.learn.jpa.support.dao;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,9 +22,9 @@ import java.util.List;
  * </p>
  * 
  * @author yjf
- * @version 1.0
- *
- *          修改记录: 下面填写修改的内容以及修改的日期 1.2013-9-6 下午5:11:49 yjf new
+ * @version 1.0<br/>
+ *          修改记录: 下面填写修改的内容以及修改的日期<br/>
+ *          1.2013-9-6 下午5:11:49 yjf new
  */
 public class Condition implements Iterable<Condition.Paramerter>, Serializable {
 

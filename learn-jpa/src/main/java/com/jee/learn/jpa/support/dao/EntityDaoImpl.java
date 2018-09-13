@@ -1,4 +1,4 @@
-package com.jee.learn.jpa.repository.dao;
+package com.jee.learn.jpa.support.dao;
 
 import java.io.Serializable;
 import java.util.List;
@@ -17,6 +17,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
+import com.jee.learn.jpa.util.Constants;
 import com.jee.learn.jpa.util.reflect.ReflectUtils;
 
 /**
@@ -35,9 +36,9 @@ import com.jee.learn.jpa.util.reflect.ReflectUtils;
  * </p>
  * 
  * @author yjf
- * @version 1.0
- *
- *          修改记录: 下面填写修改的内容以及修改的日期 1.2013-9-6 下午5:27:48 yjf new
+ * @version 1.0<br/>
+ *          修改记录: 下面填写修改的内容以及修改的日期<br/>
+ *          1.2013-9-6 下午5:27:48 yjf new
  */
 
 @Repository
@@ -49,6 +50,59 @@ public class EntityDaoImpl implements EntityDao {
 
     public EntityManager getEntityManager() {
         return entityManager;
+    }
+
+    @Override
+    public <T> List<T> find(Class<T> entityClass, Condition condition) {
+        return find(entityClass, condition, null);
+    }
+
+    @Override
+    public <T> List<T> find(Class<T> entityClass, Condition condition, Sort sort) {
+        TypedQuery<T> query = createQuery(entityClass, condition, sort);
+
+        return query.getResultList();
+    }
+
+    @Override
+    public <T> List<T> find(Class<T> entityClass, Condition condition, int offset, int limit) {
+        return find(entityClass, condition, null, offset, limit);
+    }
+
+    @Override
+    public <T> List<T> find(Class<T> entityClass, Condition condition, Sort sort, int offset, int limit) {
+        TypedQuery<T> query = createQuery(entityClass, condition, sort);
+        query.setFirstResult(offset);
+        query.setMaxResults(limit);
+
+        return query.getResultList();
+    }
+
+    @Override
+    public <T> List<T> findAll(Class<T> entityClass) {
+        return find(entityClass, null);
+    }
+
+    @Override
+    public <T> T findOne(Class<T> entityClass, Condition condition) {
+        List<T> result = find(entityClass, condition);
+
+        return result != null && !result.isEmpty() ? result.get(0) : null;
+    }
+
+    @Override
+    public <T> T findOne(Class<T> entityClass, String property, Object value) {
+        return this.findOne(entityClass, new Condition(property, Condition.Operator.EQ, value));
+    }
+
+    @Override
+    public <T> T findOne(Class<T> entityClass, Serializable id) {
+        return entityManager.find(entityClass, id);
+    }
+
+    @Override
+    public <T> T findOneForUpdate(Class<T> entityClass, Serializable id) {
+        return entityManager.find(entityClass, id, LockModeType.PESSIMISTIC_WRITE);
     }
 
     @Override
@@ -69,21 +123,6 @@ public class EntityDaoImpl implements EntityDao {
     }
 
     @Override
-    public <T> T findOne(Class<T> entityClass, Serializable id) {
-        return entityManager.find(entityClass, id);
-    }
-
-    @Override
-    public <T> T findOneForUpdate(Class<T> entityClass, Serializable id) {
-        return entityManager.find(entityClass, id, LockModeType.PESSIMISTIC_WRITE);
-    }
-
-    @Override
-    public <T> List<T> findAll(Class<T> entityClass) {
-        return find(entityClass, null);
-    }
-
-    @Override
     public <T> void logicDelete(Class<T> entityClass, Serializable id) {
         T obj = findOne(entityClass, id);
         if (obj != null) {
@@ -93,9 +132,9 @@ public class EntityDaoImpl implements EntityDao {
 
     @Override
     public <T> void logicDelete(T entity) {
-        String id = (String) ReflectUtils.invokeGetter(entity, ID_NAME);
+        String id = (String) ReflectUtils.invokeGetter(entity, Constants.PRIMARY_KEY_NAME);
         Object obj = findOne(entity.getClass(), id);
-        ReflectUtils.invokeSetter(obj, DEL_FLEG_NAME, YES_NO_1);
+        ReflectUtils.invokeSetter(obj, Constants.DEL_FLAG_NAME, Constants.YES_NO_1);
         update(obj);
     }
 
@@ -176,41 +215,8 @@ public class EntityDaoImpl implements EntityDao {
     }
 
     @Override
-    public <T> List<T> find(Class<T> entityClass, Condition condition) {
-        return find(entityClass, condition, null);
-    }
-
-    @Override
-    public <T> List<T> find(Class<T> entityClass, Condition condition, Sort sort) {
-        TypedQuery<T> query = createQuery(entityClass, condition, sort);
-
-        return query.getResultList();
-    }
-
-    @Override
-    public <T> List<T> find(Class<T> entityClass, Condition condition, int offset, int limit) {
-        return find(entityClass, condition, null, offset, limit);
-    }
-
-    @Override
-    public <T> List<T> find(Class<T> entityClass, Condition condition, Sort sort, int offset, int limit) {
-        TypedQuery<T> query = createQuery(entityClass, condition, sort);
-        query.setFirstResult(offset);
-        query.setMaxResults(limit);
-
-        return query.getResultList();
-    }
-
-    @Override
-    public <T> T findOne(Class<T> entityClass, Condition condition) {
-        List<T> result = find(entityClass, condition);
-
-        return result != null && !result.isEmpty() ? result.get(0) : null;
-    }
-
-    @Override
-    public <T> T findOne(Class<T> entityClass, String property, Object value) {
-        return this.findOne(entityClass, new Condition(property, Condition.Operator.EQ, value));
+    public void flush() {
+        entityManager.flush();
     }
 
     /**
@@ -258,11 +264,6 @@ public class EntityDaoImpl implements EntityDao {
             }
         });
         return query;
-    }
-
-    @Override
-    public void flush() {
-        entityManager.flush();
     }
 
 }

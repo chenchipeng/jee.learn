@@ -42,7 +42,7 @@ public class SpecSerciceImpl<T, ID extends Serializable> implements SpecSercice<
      * @param entity
      * @return
      */
-    protected QueryParams<T> parseQueryParams(T entity) {
+    protected QueryParams<T> analyzeQueryParams(T entity) {
         return new QueryParams<T>();
     }
 
@@ -53,12 +53,12 @@ public class SpecSerciceImpl<T, ID extends Serializable> implements SpecSercice<
      * @param properties 需要排序的属性
      * @return
      */
-    protected Sort parseSort(Direction direction, String... properties) {
+    protected Sort analyzeSort(Direction direction, String... properties) {
         return Sort.by(direction, properties);
     }
 
     @Override
-    public SpecRepository<T, ID> getSimpleRepository() {
+    public SpecRepository<T, ID> getSpecRepository() {
         return this.specRepository;
     }
 
@@ -78,7 +78,7 @@ public class SpecSerciceImpl<T, ID extends Serializable> implements SpecSercice<
 
     @Override
     public T findOne(T entity) {
-        return findOne(parseQueryParams(entity));
+        return findOne(analyzeQueryParams(entity));
     }
 
     @Override
@@ -98,12 +98,12 @@ public class SpecSerciceImpl<T, ID extends Serializable> implements SpecSercice<
 
     @Override
     public List<T> findList(T entity) {
-        return findList(parseQueryParams(entity));
+        return findList(analyzeQueryParams(entity));
     }
 
     @Override
-    public List<T> findLists(T entity, Sort sort) {
-        return findList(parseQueryParams(entity), sort);
+    public List<T> findList(T entity, Sort sort) {
+        return findList(analyzeQueryParams(entity), sort);
     }
 
     @Override
@@ -134,17 +134,17 @@ public class SpecSerciceImpl<T, ID extends Serializable> implements SpecSercice<
 
     @Override
     public Page<T> findPage(T entity, Pageable pageable) {
-        return findPage(parseQueryParams(entity), pageable);
+        return findPage(analyzeQueryParams(entity), pageable);
     }
 
     @Override
     public Page<T> findPage(T entity, int page, int size) {
-        return findPage(parseQueryParams(entity), PageRequest.of(page, size));
+        return findPage(analyzeQueryParams(entity), PageRequest.of(page, size));
     }
 
     @Override
     public Page<T> findPage(T entity, int page, int size, Sort sort) {
-        return findPage(parseQueryParams(entity), PageRequest.of(page, size, sort));
+        return findPage(analyzeQueryParams(entity), PageRequest.of(page, size, sort));
     }
 
     @Override
