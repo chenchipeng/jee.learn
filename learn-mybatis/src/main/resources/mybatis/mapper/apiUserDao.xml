@@ -25,5 +25,12 @@
         <include refid="apiUserJoins" />
         WHERE a.id = #{id}
     </select>
+    
+    <select id="findList" resultType="ApiUser">
+        SELECT
+        <include refid="apiUserColumns" />
+        FROM api_user a
+        <include refid="apiUserJoins" />
+    </select>
 
 </mapper>

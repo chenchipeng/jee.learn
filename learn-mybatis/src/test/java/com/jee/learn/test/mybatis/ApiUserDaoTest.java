@@ -1,11 +1,15 @@
 package com.jee.learn.test.mybatis;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.jee.learn.mybatis.LearnMybatisApplication;
 import com.jee.learn.mybatis.domain.ApiUser;
 import com.jee.learn.mybatis.repository.mapper.ApiUserDao;
@@ -25,5 +29,15 @@ public class ApiUserDaoTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void findPage() {
+        Page<ApiUser> page = PageHelper.startPage(1, 10);
+        List<ApiUser> list = apiUserDao.findList(new ApiUser());
+        list.forEach(item -> {
+            System.out.println(item.getLoginName());
+        });
+        System.out.println("记录总数" + page.getTotal());
     }
 }
