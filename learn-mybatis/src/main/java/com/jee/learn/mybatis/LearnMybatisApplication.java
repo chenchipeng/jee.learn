@@ -4,10 +4,10 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.jee.learn.mybatis.dao.MapperScanTag;
+import com.jee.learn.mybatis.repository.Mapper;
 
 @SpringBootApplication
-@MapperScan(basePackageClasses = MapperScanTag.class)
+@MapperScan(basePackageClasses = Mapper.class)
 public class LearnMybatisApplication {
 
     /** 启动入口 */

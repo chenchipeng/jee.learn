@@ -1,4 +1,4 @@
-package com.jee.learn.mybatis.entity;
+package com.jee.learn.mybatis.domain;
 
 import java.io.Serializable;
 import java.util.Date;
