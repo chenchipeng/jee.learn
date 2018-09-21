@@ -1,4 +1,4 @@
-package com.jee.learn.mybatis.domain;
+package com.jee.learn.mybatis.domain.api;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -18,23 +18,14 @@ public class ApiUser implements Serializable {
     private String updateBy;
     private Date updateDate;
 
+    /* 非持久化字段 */
+    private Date beginCreateDate;
+    private Date endCreateDate;
+    private Date beginUpdateDate;
+    private Date endUpdateDate;
+
     public ApiUser() {
         super();
-    }
-
-    public ApiUser(String id, String createBy, Date createDate, String delFlag, String isEnable, String loginName,
-            String password, String remarks, String updateBy, Date updateDate) {
-        super();
-        this.id = id;
-        this.createBy = createBy;
-        this.createDate = createDate;
-        this.delFlag = delFlag;
-        this.isEnable = isEnable;
-        this.loginName = loginName;
-        this.password = password;
-        this.remarks = remarks;
-        this.updateBy = updateBy;
-        this.updateDate = updateDate;
     }
 
     public String getId() {
@@ -115,6 +106,38 @@ public class ApiUser implements Serializable {
 
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
+    }
+
+    public Date getBeginCreateDate() {
+        return beginCreateDate;
+    }
+
+    public void setBeginCreateDate(Date beginCreateDate) {
+        this.beginCreateDate = beginCreateDate;
+    }
+
+    public Date getEndCreateDate() {
+        return endCreateDate;
+    }
+
+    public void setEndCreateDate(Date endCreateDate) {
+        this.endCreateDate = endCreateDate;
+    }
+
+    public Date getBeginUpdateDate() {
+        return beginUpdateDate;
+    }
+
+    public void setBeginUpdateDate(Date beginUpdateDate) {
+        this.beginUpdateDate = beginUpdateDate;
+    }
+
+    public Date getEndUpdateDate() {
+        return endUpdateDate;
+    }
+
+    public void setEndUpdateDate(Date endUpdateDate) {
+        this.endUpdateDate = endUpdateDate;
     }
 
 }

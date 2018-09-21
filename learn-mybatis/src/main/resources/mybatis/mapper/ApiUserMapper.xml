@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jee.learn.mybatis.repository.mapper.ApiUserMapper">
+
+    <sql id="apiUserColumns">
+        a.id AS "id",
+        a.login_name AS "loginName",
+        a.password AS "password",
+        a.is_enable AS "isEnable",
+        a.remarks AS "remarks",
+        a.update_by AS "updateBy",
+        a.update_date AS "updateDate",
+        a.create_by AS "createBy",
+        a.create_date AS "createDate",
+        a.del_flag AS "delFlag"
+    </sql>
+
+    <sql id="apiUserJoins">
+    </sql>
+    
+    <sql id="apiUserWhere">
+        <if test="id != null and id != ''">
+            AND a.id = #{id}
+        </if>
+        <if test="loginName != null and loginName != ''">
+            AND a.login_name = #{loginName}
+        </if>
+        <if test="password != null and password != ''">
+            AND a.password = #{password}
+        </if>
+        <if test="isEnable != null and isEnable != ''">
+            AND a.is_enable = #{isEnable}
+        </if>
+        <if test="remarks != null and remarks != ''">
+            AND a.remarks = #{remarks}
+        </if>
+        <if test="updateBy != null and updateBy != ''">
+            AND a.update_by = #{updateBy}
+        </if>
+        <if test="beginUpdateDate != null and beginUpdateDate != ''">
+            AND a.update_date &gt;= #{beginUpdateDate}
+        </if>
+        <if test="endUpdateDate != null and endUpdateDate != ''">
+            AND a.update_date &lt;= #{endUpdateDate}
+        </if>
+        <if test="createBy != null and createBy != ''">
+            AND a.create_by = #{createBy}
+        </if>
+        <if test="beginCreateDate != null and beginCreateDate != ''">
+            AND a.create_date &gt;= #{beginCreateDate}
+        </if>
+        <if test="endCreateDate != null and endCreateDate != ''">
+            AND a.create_date &lt;= #{endCreateDate}
+        </if>
+        <if test="delFlag != null and delFlag != ''">
+            AND a.del_flag = #{delFlag}
+        </if>        
+    </sql>
+
+    <!-- 根据主键查询 -->
+    <select id="get" resultType="ApiUser">
+        SELECT
+        <include refid="apiUserColumns" />
+        FROM api_user a
+        <include refid="apiUserJoins" />
+        WHERE a.id = #{id}
+    </select>
+
+    <!-- 列表查询 -->
+    <select id="findList" resultType="ApiUser">
+        SELECT
+        <include refid="apiUserColumns" />
+        FROM api_user a
+        <include refid="apiUserJoins" />
+        <where>
+            <include refid="apiUserWhere" />       
+        </where>
+    </select>
+
+    <!-- 新增 -->
+    <insert id="insert" useGeneratedKeys="false" keyProperty="id">
+        INSERT INTO api_user(
+            id,
+            login_name,
+            password,
+            is_enable,
+            remarks,
+            update_by,
+            update_date,
+            create_by,
+            create_date,
+            del_flag
+        ) VALUES (
+            #{id},
+            #{loginName},
+            #{password},
+            #{isEnable},
+            #{remarks},
+            #{updateBy},
+            #{updateDate},
+            #{createBy},
+            #{createDate},
+            #{delFlag}
+        )
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update">
+        UPDATE api_user SET
+            login_name = #{loginName},
+            password = #{password},
+            is_enable = #{isEnable},
+            remarks = #{remarks},
+            update_by = #{updateBy},
+            update_date = #{updateDate},
+            create_by = #{createBy},
+            create_date = #{createDate},
+            del_flag = #{delFlag}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除 -->
+    <delete id="delete">
+        DELETE FROM api_user WHERE id = #{id}
+    </delete>
+    
+    <!-- 统计记录总数 -->
+    <select id="count" resultType="Long">
+        SELECT COUNT(0)
+        FROM api_user a
+        <include refid="apiUserJoins" />
+        <where>
+            <include refid="apiUserWhere" />
+        </where>
+    </select>
+
+</mapper>
