@@ -38,7 +38,6 @@ public class ApiUserMapperTest {
         Page<ApiUser> page = PageHelper.startPage(2, 10).setOrderBy("loginName ASC");
         List<ApiUser> list = apiUserMapper.findList(new ApiUser());
         list.forEach(item -> {
-            System.out.println(item.getLoginName());
         });
         System.out.println("记录总数" + page.getTotal());
     }
@@ -49,7 +48,7 @@ public class ApiUserMapperTest {
     public void insertTest() {
         try {
             ApiUser entity = new ApiUser();
-            entity.setId("1");
+            entity.setId("0");
             entity.setLoginName("test");
             apiUserMapper.insert(entity);
             System.out.println(entity.getId());
