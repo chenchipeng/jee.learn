@@ -10,7 +10,7 @@ import java.util.List;
  *          修改记录:<br/>
  *          1.2018年9月22日 上午11:29:34 ccp 新建
  */
-public class PageDto<T> {
+public class Page<T> {
 
     private long total;
     private int pageNum;

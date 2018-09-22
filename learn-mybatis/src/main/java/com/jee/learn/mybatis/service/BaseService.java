@@ -11,11 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.jee.learn.mybatis.domain.api.ApiUser;
 import com.jee.learn.mybatis.repository.BaseMapper;
-import com.jee.learn.mybatis.support.PageDto;
+import com.jee.learn.mybatis.support.Page;
 import com.jee.learn.mybatis.support.PrimaryKey;
 
 @Transactional(readOnly = true)
@@ -66,25 +65,25 @@ public abstract class BaseService<T, ID extends Serializable, M extends BaseMapp
     /**
      * 分页查询
      * 
-     * @param pageDto
+     * @param page
      * @param entity
      * @return
      */
-    public PageDto<T> findPage(PageDto<T> pageDto, T entity) {
-        if (pageDto == null) {
+    public Page<T> findPage(Page<T> page, T entity) {
+        if (page == null) {
             return null;
         }
         try {
-            Page<ApiUser> page = PageHelper.startPage(pageDto.getPageNum(), pageDto.getPageSize())
-                    .setOrderBy(pageDto.getOrderBy());
+            com.github.pagehelper.Page<ApiUser> pagehelper = PageHelper.startPage(page.getPageNum(), page.getPageSize())
+                    .setOrderBy(page.getOrderBy());
             List<T> list = mapper.findList(entity);
-            pageDto.setTotal(page.getTotal());
-            pageDto.setContent(list);
+            page.setTotal(pagehelper.getTotal());
+            page.setContent(list);
         } finally {
             // 手动(强制)清理 ThreadLocal 存储的分页参数
             PageHelper.clearPage();
         }
-        return pageDto;
+        return page;
     }
 
     /**
@@ -95,12 +94,12 @@ public abstract class BaseService<T, ID extends Serializable, M extends BaseMapp
      * @param entity
      * @return
      */
-    public PageDto<T> findPage(int pageNum, int pageSize, String orderBy, T entity) {
-        PageDto<T> pageDto = new PageDto<>();
-        pageDto.setPageNum(pageNum);
-        pageDto.setPageSize(pageSize);
-        pageDto.setOrderBy(orderBy);
-        return findPage(pageDto, entity);
+    public Page<T> findPage(int pageNum, int pageSize, String orderBy, T entity) {
+        Page<T> page = new Page<>();
+        page.setPageNum(pageNum);
+        page.setPageSize(pageSize);
+        page.setOrderBy(orderBy);
+        return findPage(page, entity);
     }
 
     /**

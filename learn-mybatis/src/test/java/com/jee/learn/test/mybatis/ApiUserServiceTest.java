@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.jee.learn.mybatis.LearnMybatisApplication;
 import com.jee.learn.mybatis.domain.api.ApiUser;
 import com.jee.learn.mybatis.service.ApiUserService;
-import com.jee.learn.mybatis.support.PageDto;
+import com.jee.learn.mybatis.support.Page;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = LearnMybatisApplication.class)
@@ -46,7 +46,7 @@ public class ApiUserServiceTest {
 
     @Test
     public void findPageTest() {
-        PageDto<ApiUser> dto = apiUserService.findPage(1, 5, null, null);
+        Page<ApiUser> dto = apiUserService.findPage(1, 5, null, null);
         System.out.println(dto.getTotal());
     }
 
