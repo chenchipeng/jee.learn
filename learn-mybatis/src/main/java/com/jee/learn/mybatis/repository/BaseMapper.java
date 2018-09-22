@@ -59,4 +59,12 @@ public interface BaseMapper<T, ID extends Serializable> {
      * @return
      */
     long count(T entity);
+
+    /**
+     * 判断记录是否存在
+     * 
+     * @param id
+     * @return [0:否,1:是]
+     */
+    long isExist(ID id);
 }

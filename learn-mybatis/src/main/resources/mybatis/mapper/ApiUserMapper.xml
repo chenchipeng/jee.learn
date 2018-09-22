@@ -133,5 +133,10 @@
             <include refid="apiUserWhere" />
         </where>
     </select>
+    
+    <!-- 判断记录是否存在 -->
+    <select id="isExist" resultType="Long">
+        SELECT COUNT(0) FROM api_user a WHERE a.id = #{id}
+    </select>
 
 </mapper>

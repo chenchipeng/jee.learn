@@ -49,7 +49,7 @@ public class ApiUserMapperTest {
     public void insertTest() {
         try {
             ApiUser entity = new ApiUser();
-            entity.setId("0");
+            entity.setId("1");
             entity.setLoginName("test");
             apiUserMapper.insert(entity);
             System.out.println(entity.getId());

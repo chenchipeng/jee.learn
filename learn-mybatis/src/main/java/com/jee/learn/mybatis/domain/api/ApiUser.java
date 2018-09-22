@@ -3,10 +3,13 @@ package com.jee.learn.mybatis.domain.api;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.jee.learn.mybatis.support.PrimaryKey;
+
 public class ApiUser implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @PrimaryKey
     private String id;
     private String createBy;
     private Date createDate;
