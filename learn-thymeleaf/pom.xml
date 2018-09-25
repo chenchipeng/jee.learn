@@ -6,7 +6,6 @@
 	<groupId>com.jee</groupId>
 	<artifactId>learn-thymeleaf</artifactId>
 	<version>0.0.1</version>
-	<packaging>jar</packaging>
 
 	<name>learn-thymeleaf</name>
 	<description>learn-thymeleaf</description>
@@ -40,7 +39,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
-
+        
 	</dependencies>
 
 	<!-- 设定主仓库，按设定顺序进行查找。 -->
