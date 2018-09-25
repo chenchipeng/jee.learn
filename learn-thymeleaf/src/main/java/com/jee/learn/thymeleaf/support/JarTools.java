@@ -1,4 +1,4 @@
-package com.jee.learn.test.thymeleaf;
+package com.jee.learn.thymeleaf.support;
 
 import java.io.File;
 import java.util.ArrayList;
