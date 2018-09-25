@@ -14,6 +14,7 @@
 	<modules>
 		<module>learn-common</module>
 		<module>learn-manager</module>
+        <module>learn-manager-support</module>
 		<module>learn-interfaces</module>
 		<module>learn-monitor</module>
 		<module>learn-eureka</module>
