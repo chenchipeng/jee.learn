@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class LearnManagerApplication {
 
-    private static Logger logger = LoggerFactory.getLogger(LearnManagerApplication.class);
+    private static final Logger logger = LoggerFactory.getLogger(LearnManagerApplication.class);
 
     /** 启动入口 */
     public static void main(String[] args) {

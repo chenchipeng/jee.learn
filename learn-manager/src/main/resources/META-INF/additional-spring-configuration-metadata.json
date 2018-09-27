@@ -1,0 +1,152 @@
+{"properties": [
+  {
+    "name": "spring.jpa.aop",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.jpa.aop'"
+  },
+  {
+    "name": "spring.ehcache.disk-store-path",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.ehcache.disk-store-path'"
+  },
+  {
+    "name": "spring.datasource.druid.write.url",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.write.url'"
+  },
+  {
+    "name": "spring.datasource.druid.write.driver-class-name",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.write.driver-class-name'"
+  },
+  {
+    "name": "spring.datasource.druid.write.username",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.write.username'"
+  },
+  {
+    "name": "spring.datasource.druid.write.password",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.write.password'"
+  },
+  {
+    "name": "spring.datasource.druid.write.initial-size",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.write.initial-size'"
+  },
+  {
+    "name": "spring.datasource.druid.write.min-idle",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.write.min-idle'"
+  },
+  {
+    "name": "spring.datasource.druid.write.max-active",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.write.max-active'"
+  },
+  {
+    "name": "spring.datasource.druid.write.max-wait",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.write.max-wait'"
+  },
+  {
+    "name": "spring.datasource.druid.write.time-between-eviction-runs-millis",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.write.time-between-eviction-runs-millis'"
+  },
+  {
+    "name": "spring.datasource.druid.write.min-evictable-idle-time-millis",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.write.min-evictable-idle-time-millis'"
+  },
+  {
+    "name": "spring.datasource.druid.write.validation-query",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.write.validation-query'"
+  },
+  {
+    "name": "spring.datasource.druid.write.test-while-idle",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.write.test-while-idle'"
+  },
+  {
+    "name": "spring.datasource.druid.write.test-on-borrow",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.write.test-on-borrow'"
+  },
+  {
+    "name": "spring.datasource.druid.write.test-on-return",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.write.test-on-return'"
+  },
+  {
+    "name": "spring.datasource.druid.read.url",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.read.url'"
+  },
+  {
+    "name": "spring.datasource.druid.read.driver-class-name",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.read.driver-class-name'"
+  },
+  {
+    "name": "spring.datasource.druid.read.username",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.read.username'"
+  },
+  {
+    "name": "spring.datasource.druid.read.password",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.read.password'"
+  },
+  {
+    "name": "spring.datasource.druid.read.initial-size",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.read.initial-size'"
+  },
+  {
+    "name": "spring.datasource.druid.read.min-idle",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.read.min-idle'"
+  },
+  {
+    "name": "spring.datasource.druid.read.max-active",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.read.max-active'"
+  },
+  {
+    "name": "spring.datasource.druid.read.max-wait",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.read.max-wait'"
+  },
+  {
+    "name": "spring.datasource.druid.read.time-between-eviction-runs-millis",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.read.time-between-eviction-runs-millis'"
+  },
+  {
+    "name": "spring.datasource.druid.read.min-evictable-idle-time-millis",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.read.min-evictable-idle-time-millis'"
+  },
+  {
+    "name": "spring.datasource.druid.read.validation-query",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.read.validation-query'"
+  },
+  {
+    "name": "spring.datasource.druid.read.test-while-idle",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.read.test-while-idle'"
+  },
+  {
+    "name": "spring.datasource.druid.read.test-on-borrow",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.read.test-on-borrow'"
+  },
+  {
+    "name": "spring.datasource.druid.read.test-on-return",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.druid.read.test-on-return'"
+  }
+]}
