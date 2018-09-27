@@ -195,10 +195,10 @@ public class SpecSerciceImpl<T, ID extends Serializable> implements SpecSercice<
     @SuppressWarnings("unchecked")
     @Transactional(readOnly = false)
     public void logicDelete(Iterable<T> entities) {
-        entities.forEach(entity -> {
+        for (T entity : entities) {
             entity = this.findOne((ID) primaryKeyValidation(entity));
             ReflectUtils.invokeSetter(entity, Constants.DEL_FLAG_NAME, Constants.YES_NO_1);
-        });
+        }
         this.save(entities);
     }
 

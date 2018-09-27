@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="learn-manager">
+		<class>com.jee.learn.manager.domain.gen.GenScheme</class>
+		<class>com.jee.learn.manager.domain.gen.GenTable</class>
+		<class>com.jee.learn.manager.domain.gen.GenTableColumn</class>
+		<class>com.jee.learn.manager.domain.gen.GenTemplate</class>
+		<class>com.jee.learn.manager.domain.sys.SysArea</class>
+		<class>com.jee.learn.manager.domain.sys.SysLog</class>
+		<class>com.jee.learn.manager.domain.sys.SysMenu</class>
+		<class>com.jee.learn.manager.domain.sys.SysOffice</class>
+		<class>com.jee.learn.manager.domain.sys.SysRole</class>
+		<class>com.jee.learn.manager.domain.sys.SysRoleMenu</class>
+		<class>com.jee.learn.manager.domain.sys.SysRoleOffice</class>
+		<class>com.jee.learn.manager.domain.sys.SysUser</class>
+		<class>com.jee.learn.manager.domain.sys.SysUserRole</class>
+	</persistence-unit>
+</persistence>
