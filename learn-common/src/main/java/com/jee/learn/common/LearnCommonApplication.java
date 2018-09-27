@@ -1,4 +1,4 @@
-package com.jee.learn.manager;
+package com.jee.learn.common;
 
 import java.util.Arrays;
 
@@ -9,17 +9,15 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
-@EnableAsync
-public class LearnManagerApplication {
+public class LearnCommonApplication {
 
-    private static Logger logger = LoggerFactory.getLogger(LearnManagerApplication.class);
+    private static Logger logger = LoggerFactory.getLogger(LearnCommonApplication.class);
 
     /** 启动入口 */
     public static void main(String[] args) {
-        SpringApplication.run(LearnManagerApplication.class, args);
+        SpringApplication.run(LearnCommonApplication.class, args);
     }
 
     /** bean打印 */
