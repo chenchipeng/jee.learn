@@ -23,8 +23,10 @@
         <java.version>1.8</java.version>
         <!-- 工具 -->
         <druid.version>1.1.10</druid.version>
+        <thymeleaf-shiro.version>2.0.0</thymeleaf-shiro.version>
+        <shiro-spring.version>1.4.0</shiro-spring.version>
     </properties>
-    
+
     <dependencies>
         <!-- spring -->
         <dependency>
@@ -45,11 +47,15 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-        <dependency>  
-            <groupId>org.springframework.boot</groupId>  
-            <artifactId>spring-boot-starter-data-redis</artifactId>  
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
-        
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+
         <!-- database -->
         <dependency>
             <groupId>mysql</groupId>
@@ -60,19 +66,31 @@
             <artifactId>druid-spring-boot-starter</artifactId>
             <version>${druid.version}</version>
         </dependency>
-        
+
         <!-- cache -->
         <dependency>
             <groupId>net.sf.ehcache</groupId>
             <artifactId>ehcache</artifactId>
         </dependency>
-        
+
         <!-- apache commons -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
-        
+
+        <!-- shiro -->
+        <dependency>
+            <groupId>com.github.theborakompanioni</groupId>
+            <artifactId>thymeleaf-extras-shiro</artifactId>
+            <version>${thymeleaf-shiro.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-spring</artifactId>
+            <version>${shiro-spring.version}</version>
+        </dependency>
+
     </dependencies>
 
     <!-- 设定主仓库，按设定顺序进行查找。 -->

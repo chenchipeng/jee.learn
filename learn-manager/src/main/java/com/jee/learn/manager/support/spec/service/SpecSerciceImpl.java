@@ -187,7 +187,7 @@ public class SpecSerciceImpl<T, ID extends Serializable> implements SpecSercice<
     @Transactional(readOnly = false)
     public void logicDelete(T entity) {
         entity = this.findOne((ID) primaryKeyValidation(entity));
-        ReflectUtils.invokeSetter(entity, Constants.DEL_FLAG_NAME, Constants.YES_NO_1);
+        ReflectUtils.invokeSetter(entity, Constants.DEL_FLAG_NAME, Constants.Y);
         this.save(entity);
     }
 
@@ -197,7 +197,7 @@ public class SpecSerciceImpl<T, ID extends Serializable> implements SpecSercice<
     public void logicDelete(Iterable<T> entities) {
         for (T entity : entities) {
             entity = this.findOne((ID) primaryKeyValidation(entity));
-            ReflectUtils.invokeSetter(entity, Constants.DEL_FLAG_NAME, Constants.YES_NO_1);
+            ReflectUtils.invokeSetter(entity, Constants.DEL_FLAG_NAME, Constants.Y);
         }
         this.save(entities);
     }

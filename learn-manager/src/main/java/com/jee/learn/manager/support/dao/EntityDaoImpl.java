@@ -45,7 +45,7 @@ import com.jee.learn.manager.util.reflect.ReflectUtils;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class EntityDaoImpl implements EntityDao {
 
-    @PersistenceContext
+    @PersistenceContext(unitName="default")
     private EntityManager entityManager;
 
     public EntityManager getEntityManager() {
@@ -134,7 +134,7 @@ public class EntityDaoImpl implements EntityDao {
     public <T> void logicDelete(T entity) {
         String id = (String) ReflectUtils.invokeGetter(entity, Constants.PRIMARY_KEY_NAME);
         Object obj = findOne(entity.getClass(), id);
-        ReflectUtils.invokeSetter(obj, Constants.DEL_FLAG_NAME, Constants.YES_NO_1);
+        ReflectUtils.invokeSetter(obj, Constants.DEL_FLAG_NAME, Constants.Y);
         update(obj);
     }
 

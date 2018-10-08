@@ -1,4 +1,4 @@
-package com.jee.learn.manager.config;
+package com.jee.learn.manager.config.cache;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;

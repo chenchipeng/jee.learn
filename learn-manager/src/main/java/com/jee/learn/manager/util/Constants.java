@@ -15,9 +15,9 @@ public class Constants {
     }
 
     /** 01是否-否 */
-    public static final String YES_NO_0 = "0";
+    public static final String N = "0";
     /** 01是否-是 */
-    public static final String YES_NO_1 = "1";
+    public static final String Y = "1";
 
     /** 主键属性名称 */
     public static final String PRIMARY_KEY_NAME = "id";
