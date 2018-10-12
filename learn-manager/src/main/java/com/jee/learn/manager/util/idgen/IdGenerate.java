@@ -12,7 +12,7 @@ import io.netty.util.internal.ThreadLocalRandom;
 /**
  * 封装各种生成唯一性ID算法的工具类
  * 
- * @author ccp
+ * @author thinkgem, vjtools, ccp
  * @version 1.0<br/>
  *          修改记录:<br/>
  *          1.2018年9月27日 下午5:31:05 ccp 新建

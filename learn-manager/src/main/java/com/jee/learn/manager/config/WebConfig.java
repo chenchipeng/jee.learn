@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
@@ -25,6 +26,9 @@ public class WebConfig implements WebMvcConfigurer {
     @Resource(name = "thymeleafViewResolver")
     private ThymeleafViewResolver thymeleafViewResolver;
 
+    @Autowired
+    private SystemConfig systemConfig;
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         WebMvcConfigurer.super.addResourceHandlers(registry);
@@ -35,7 +39,9 @@ public class WebConfig implements WebMvcConfigurer {
 
         if (thymeleafViewResolver != null) {
             // 可定义页面全局变量
-            Map<String, Object> vars = new HashMap<>(1);
+            Map<String, Object> vars = new HashMap<>(2);
+            vars.put("authcPath", systemConfig.getAuthcPath());
+            vars.put("guestPath", systemConfig.getGuestPath());
             thymeleafViewResolver.setStaticVariables(vars);
         }
 

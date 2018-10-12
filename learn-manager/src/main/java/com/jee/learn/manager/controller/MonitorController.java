@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/monitor")
+@RequestMapping("${system.authc-path}/monitor")
 public class MonitorController extends BaseController{
 
     @GetMapping("hello")
