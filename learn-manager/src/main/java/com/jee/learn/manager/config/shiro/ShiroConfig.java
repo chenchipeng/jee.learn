@@ -9,6 +9,7 @@ import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.servlet.SimpleCookie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,10 @@ import org.springframework.context.annotation.Configuration;
 
 import com.jee.learn.manager.config.SystemConfig;
 import com.jee.learn.manager.config.shiro.mv.CustomRealm;
+import com.jee.learn.manager.config.shiro.session.CustomSessionIdGenerator;
+import com.jee.learn.manager.config.shiro.session.CustomWebSessionManager;
+import com.jee.learn.manager.config.shiro.session.JedisSessionDAO;
+import com.jee.learn.manager.config.shiro.session.SessionDAO;
 
 /**
  * shiro config<br/>
@@ -75,7 +80,7 @@ public class ShiroConfig {
         // 相关URL
         shiroFilterFactoryBean.setLoginUrl(systemConfig.getAuthcPath() + "/login");
         shiroFilterFactoryBean.setSuccessUrl(systemConfig.getAuthcPath());
-        // shiroFilterFactoryBean.setUnauthorizedUrl("https://www.baidu.com/");
+        shiroFilterFactoryBean.setUnauthorizedUrl(systemConfig.getAuthcPath() + "/403");
 
         // 设置拦截器
         shiroFilterFactoryBean.setFilters(customFilters());
@@ -89,14 +94,58 @@ public class ShiroConfig {
      * 注入 securityManager
      */
     @Bean
-    public org.apache.shiro.mgt.SecurityManager securityManager(CustomRealm customRealm) {
+    public org.apache.shiro.mgt.SecurityManager securityManager(CustomRealm customRealm,
+            CustomWebSessionManager sessionManager) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         // 设置realm
         securityManager.setRealm(customRealm);
-        // session cache
+        // 设置session manager
+        securityManager.setSessionManager(sessionManager);
+        // cache
 
         return securityManager;
     }
+
+    //////// shiro sessionManager配置 ////////
+
+    @Bean("sessionManager")
+    public CustomWebSessionManager sessionManager(SessionDAO sessionDAO) {
+        CustomWebSessionManager sessionManager = new CustomWebSessionManager();
+
+        // Session存储容器
+        sessionManager.setSessionDAO(sessionDAO);
+
+        // 会话超时时间，单位：毫秒
+        sessionManager.setGlobalSessionTimeout(systemConfig.getSessionTimeout());
+
+        // 定时清理失效会话, 清理用户直接关闭浏览器造成的孤立会话
+        sessionManager.setSessionValidationInterval(systemConfig.getSessionTimeoutClean());
+        sessionManager.setSessionValidationSchedulerEnabled(true);
+
+        // 开启cookie
+        sessionManager.setSessionIdCookie(sessionIdCookie());
+        sessionManager.setSessionIdCookieEnabled(true);
+
+        return sessionManager;
+    }
+
+    /**
+     * 指定本系统SESSIONID, 默认为: JSESSIONID 问题: 与SERVLET容器名冲突, 如JETTY, TOMCAT
+     * 等默认JSESSIONID,当跳出SHIRO SERVLET时如ERROR-PAGE容器会为JSESSIONID重新分配值导致登录会话丢失!
+     */
+    public SimpleCookie sessionIdCookie() {
+        return new SimpleCookie("chnskin.session.id");
+    }
+
+    /** 自定义Session存储容器 */
+    @Bean
+    public SessionDAO sessionDAO(CustomSessionIdGenerator sessionIdGenerator) {
+        JedisSessionDAO jedisSessionDao = new JedisSessionDAO();
+        jedisSessionDao.setSessionIdGenerator(sessionIdGenerator);
+        return jedisSessionDao;
+    }
+
+    //////// 开启shiro aop注解支持 ////////
 
     @Bean
     public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {

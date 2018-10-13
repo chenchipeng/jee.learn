@@ -49,8 +49,7 @@ public class RedisService {
      * @param hashKey
      * @param key
      * @param values
-     * @param expire
-     *            过期时间(单位:秒),传入 -1 时表示不设置过期时间
+     * @param expire 过期时间(单位:秒),传入 -1 时表示不设置过期时间
      */
     public void put(String hashKey, String key, String values, long expire) {
         try {
@@ -137,15 +136,23 @@ public class RedisService {
      *
      * @return
      */
-    public Set<String> getKeys(String hashKey) {
+    public Set<String> getHashKeys(String hashKey) {
         return hashOperations.keys(hashKey);
+    }
+
+    /**
+     * 查询查询当前redis库下所有key
+     *
+     * @return
+     */
+    public Set<String> getKeys(String pattern) {
+        return redisTemplate.keys(pattern);
     }
 
     /**
      * 判断key是否存在redis中
      *
-     * @param key
-     *            传入key的名称
+     * @param key 传入key的名称
      * @return
      */
     public boolean isKeyExists(String hashKey, String key) {
@@ -184,8 +191,7 @@ public class RedisService {
      * 
      * @param hashKey
      * @param expire
-     * @param timeUnit
-     *            单位
+     * @param timeUnit 单位
      */
     public void flushExpire(String hashKey, long expire, TimeUnit timeUnit) {
         if (expire != -1) {
@@ -209,8 +215,7 @@ public class RedisService {
      * 
      * @param key
      * @param value
-     * @param expire
-     *            过期时间(单位:秒),传入 -1 时表示不设置过期时间
+     * @param expire 过期时间(单位:秒),传入 -1 时表示不设置过期时间
      */
     public void putStringValue(String key, String value, long expire) {
         try {
@@ -229,8 +234,7 @@ public class RedisService {
      * 
      * @param hashKey
      * @param expire
-     * @param timeUnit
-     *            单位
+     * @param timeUnit 单位
      */
     public void flushStrExpire(String key, long expire, TimeUnit timeUnit) {
         if (expire != -1) {

@@ -19,6 +19,9 @@ public class SystemConfig {
     private String authcPath = "/u";// 用户
     private String guestPath = "/g";// 游客
 
+    private Long sessionTimeout = 1800000L;// sessoin默认30分钟有效期
+    private Long sessionTimeoutClean = 180000L;// 默认关闭浏览器后3分钟清除session
+
     public String getName() {
         return name;
     }
@@ -41,6 +44,22 @@ public class SystemConfig {
 
     public void setGuestPath(String guestPath) {
         this.guestPath = guestPath;
+    }
+
+    public Long getSessionTimeout() {
+        return sessionTimeout;
+    }
+
+    public void setSessionTimeout(Long sessionTimeout) {
+        this.sessionTimeout = sessionTimeout;
+    }
+
+    public Long getSessionTimeoutClean() {
+        return sessionTimeoutClean;
+    }
+
+    public void setSessionTimeoutClean(Long sessionTimeoutClean) {
+        this.sessionTimeoutClean = sessionTimeoutClean;
     }
 
 }

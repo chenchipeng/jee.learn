@@ -22,7 +22,7 @@ public class IndexController extends BaseController {
 
     @Autowired
     private SystemConfig systemConfig;
-    
+
     @GetMapping("${system.authc-path}/login")
     public String loginPage(Model model) {
 
@@ -38,20 +38,17 @@ public class IndexController extends BaseController {
 
     @PostMapping("${system.authc-path}/login")
     public String loginFail() {
-        
+
         // 如果已经登录，则跳转到管理首页
-        
+
         logger.debug("loginFail...");
-        
+
         return "main/login";
     }
 
     @RequiresPermissions("user")
-    @PostMapping("${system.authc-path}")
+    @GetMapping("${system.authc-path}")
     public String indexPage() {
-        
-        
-        
         return "hello";
     }
 
