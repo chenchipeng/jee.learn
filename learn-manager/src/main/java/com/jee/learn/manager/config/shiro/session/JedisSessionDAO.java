@@ -35,18 +35,9 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
 
     private static final String sessionKeyPrefix = "shiro:session_";
 
-    @Autowired
-    private RedisConnectionFactory redisConnectionFactory;
-
-    private RedisTemplate<String, Object> shiroRedisTemplate;
-    private ValueOperations<String, Object> redisValueOps;
 
     public JedisSessionDAO() {
         super();
-        shiroRedisTemplate = new RedisTemplate<>();
-        shiroRedisTemplate.setConnectionFactory(redisConnectionFactory);
-        shiroRedisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisValueOps = shiroRedisTemplate.opsForValue();
     }
 
     @Override

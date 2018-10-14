@@ -135,5 +135,25 @@ public class RedisConfig {
     public ValueOperations<String, String> stringValueOperations(RedisTemplate<String, String> strRedisTemplate) {
         return strRedisTemplate.opsForValue();
     }
+    
+    ////// shiro-redis //////
+    
+    /**
+     * 实例化 RedisTemplate 对象<br/>
+     * 用于shiro session管理, key 为字符串, value 为JDK默认的序列化
+     * @return
+     */
+    @Bean(name = "shiroRedisTemplate")
+    public RedisTemplate<String, Object> shiroRedisTemplate() {
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
+        return redisTemplate;
+    }
+    
+    @Bean("shiroValueOps")
+    public ValueOperations<String, Object> shiroValueOps(RedisTemplate<String, Object> shiroRedisTemplate) {
+        return shiroRedisTemplate.opsForValue();
+    }
 
 }
