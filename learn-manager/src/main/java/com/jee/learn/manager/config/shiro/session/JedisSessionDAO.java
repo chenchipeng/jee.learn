@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import com.jee.learn.manager.util.Constants;
 import com.jee.learn.manager.util.net.ServletUtil;
@@ -44,6 +45,7 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
         super();
         shiroRedisTemplate = new RedisTemplate<>();
         shiroRedisTemplate.setConnectionFactory(redisConnectionFactory);
+        shiroRedisTemplate.setKeySerializer(new StringRedisSerializer());
         redisValueOps = shiroRedisTemplate.opsForValue();
     }
 
