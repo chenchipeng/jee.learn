@@ -14,6 +14,10 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.session.UnknownSessionException;
 import org.apache.shiro.session.mgt.eis.AbstractSessionDAO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import com.jee.learn.manager.support.cache.RedisService;
 import com.jee.learn.manager.util.Constants;
@@ -36,6 +40,22 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
 
     @Autowired
     private RedisService redisService;
+    @Autowired
+    private RedisConnectionFactory redisConnectionFactory;
+    
+    private RedisTemplate<String, Object> shiroRedisTemplate;
+    
+    
+
+    public JedisSessionDAO() {
+        super();
+        shiroRedisTemplate = new RedisTemplate<>();
+        shiroRedisTemplate.setKeySerializer(new StringRedisSerializer());
+        shiroRedisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        shiroRedisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        shiroRedisTemplate.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
+        shiroRedisTemplate.setConnectionFactory(redisConnectionFactory);
+    }
 
     @Override
     protected Serializable doCreate(Session session) {
