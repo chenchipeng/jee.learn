@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 
 import com.jee.learn.manager.config.SystemConfig;
 import com.jee.learn.manager.config.shiro.mv.CustomRealm;
@@ -25,6 +24,7 @@ import com.jee.learn.manager.config.shiro.session.CacheSessionDAO;
 import com.jee.learn.manager.config.shiro.session.CustomSessionIdGenerator;
 import com.jee.learn.manager.config.shiro.session.CustomWebSessionManager;
 import com.jee.learn.manager.config.shiro.session.SessionDAO;
+import com.jee.learn.manager.support.cache.CacheConstants;
 
 import net.sf.ehcache.CacheManager;
 
@@ -42,11 +42,12 @@ public class ShiroConfig {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ShiroConfig.class);
     private static final String ANY_REQUEST = "/**";
+    private static final String SIMPLE_COOKIE_NAME = "chnskin.session.id";
 
     @Autowired
     private SystemConfig systemConfig;
     @Autowired
-    private CacheManager  ehCacheManager ;
+    private CacheManager ehCacheManager;
 
     /** shiro url 拦截配置 */
     private Map<String, String> urlFilter() {
@@ -102,7 +103,7 @@ public class ShiroConfig {
      */
     @Bean
     public org.apache.shiro.mgt.SecurityManager securityManager(CustomRealm customRealm,
-            CustomWebSessionManager sessionManager,EhCacheManager shiroCacheManager) {
+            CustomWebSessionManager sessionManager, EhCacheManager shiroCacheManager) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         // 设置realm
         securityManager.setRealm(customRealm);
@@ -141,17 +142,17 @@ public class ShiroConfig {
      * 指定本系统SESSIONID, 默认为: JSESSIONID 问题: 与SERVLET容器名冲突, 如JETTY, TOMCAT
      * 等默认JSESSIONID,当跳出SHIRO SERVLET时如ERROR-PAGE容器会为JSESSIONID重新分配值导致登录会话丢失!
      */
-    public SimpleCookie sessionIdCookie() {
-        return new SimpleCookie("chnskin.session.id");
+    private SimpleCookie sessionIdCookie() {
+        return new SimpleCookie(SIMPLE_COOKIE_NAME);
     }
 
     /** 自定义Session存储容器 */
     @Bean
-    public SessionDAO sessionDAO(CustomSessionIdGenerator sessionIdGenerator,EhCacheManager shiroCacheManager) {
+    public SessionDAO sessionDAO(CustomSessionIdGenerator sessionIdGenerator, EhCacheManager shiroCacheManager) {
         CacheSessionDAO sessionDao = new CacheSessionDAO();
         sessionDao.setSessionIdGenerator(sessionIdGenerator);
         sessionDao.setCacheManager(shiroCacheManager);
-        sessionDao.setActiveSessionsCacheName("shiroCache");
+        sessionDao.setActiveSessionsCacheName(CacheConstants.EHCACHE_SHIRO);
         return sessionDao;
     }
 

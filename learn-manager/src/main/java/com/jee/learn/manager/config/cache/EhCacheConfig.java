@@ -48,12 +48,9 @@ public class EhCacheConfig implements CachingConfigurer {
         net.sf.ehcache.config.Configuration config = new net.sf.ehcache.config.Configuration();
         config.setName(DEFAULT_CONFIG_NAME);
         config.setDefaultCacheConfiguration(defCache(persistence));
-        
-        
         config.diskStore(diskStore);
 
         /* 可以创建多个cacheConfiguration，都添加到Config中 */
-        // 默认配置
         // 系统活动会话缓存
         config.addCache(shiroCache(persistence));
 
@@ -74,7 +71,7 @@ public class EhCacheConfig implements CachingConfigurer {
     /** 系统活动会话缓存 */
     private CacheConfiguration shiroCache(PersistenceConfiguration persistence) {
         CacheConfiguration shiroCache = new CacheConfiguration();
-        shiroCache.setName("shiroCache");
+        shiroCache.setName(CacheConstants.EHCACHE_SHIRO);
         shiroCache.setTimeToIdleSeconds(0);
         shiroCache.setTimeToIdleSeconds(0);
         shiroCache.setDiskExpiryThreadIntervalSeconds(180L);

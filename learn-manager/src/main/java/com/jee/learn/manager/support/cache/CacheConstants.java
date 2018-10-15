@@ -21,6 +21,8 @@ public class CacheConstants {
 
     /** ehcache 默认存储空间 */
     public static final String EHCACHE_DEFAULT = "defCache";
+    /** ehcache shiro 系统活动会话缓存存储空间 */
+    public static final String EHCACHE_SHIRO = "shiroCache";
 
     /** "null"字符串 */
     public static final String NULL_STRING = "null";
