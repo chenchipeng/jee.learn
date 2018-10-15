@@ -2,7 +2,6 @@ package com.jee.learn.manager.config.shiro.session;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,19 +10,15 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.UnknownSessionException;
-import org.apache.shiro.session.mgt.SimpleSession;
 import org.apache.shiro.session.mgt.eis.AbstractSessionDAO;
-import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.subject.support.DefaultSubjectContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.jee.learn.manager.support.cache.RedisService;
 import com.jee.learn.manager.util.Constants;
 import com.jee.learn.manager.util.net.ServletUtil;
-import com.jee.learn.manager.util.time.DateUtil;
 
 /**
- * shiro-redis session管理器<br/>
+ * shiro-redis session管理器<br/> 没用!!!!!!!!!!!!!!!!!!!
  * 参考: https://www.jianshu.com/p/f85e50f41100
  * 
  * @author ccp
@@ -34,7 +29,6 @@ import com.jee.learn.manager.util.time.DateUtil;
 public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
 
     private static final String sessionKeyPrefix = "shiro:session_";
-    private static final String sessionKey = "session";
 
     @Autowired
     private RedisService redisService;
@@ -42,6 +36,7 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
     @Override
     protected Serializable doCreate(Session session) {
         HttpServletRequest request = ServletUtil.getRequest();
+        
         if (request != null) {
             String uri = request.getServletPath();
             // 如果是静态文件，则不创建SESSION
@@ -49,21 +44,13 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
                 return null;
             }
         }
-        Serializable sessionId = this.generateSessionId(session);
+        Serializable sessionId = generateSessionId(session);
         assignSessionId(session, sessionId);
 
         String redisKey = sessionKeyPrefix + session.getId().toString();
-        // 获取登录者编号
-        PrincipalCollection pc = (PrincipalCollection) session
-                .getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY);
-        String principalId = pc != null ? pc.getPrimaryPrincipal().toString() : StringUtils.EMPTY;
+        redisService.setShiroValue(redisKey, sessionKeyPrefix, session, session.getTimeout());
 
-        String hashValue = session.getId().toString() + "|" + principalId + "|" + session.getTimeout() + "|"
-                + session.getLastAccessTime().getTime();
-        redisService.setShiroValue(redisKey, sessionKey, hashValue, session.getTimeout());
-        redisService.setShiroValue(redisKey, session.getId().toString(), session, session.getTimeout());
         logger.debug("create {} {}", session.getId(), request != null ? request.getRequestURI() : StringUtils.EMPTY);
-
         return sessionId;
     }
 
@@ -74,8 +61,9 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
             return null;
         }
 
-        Session s = null;
         HttpServletRequest request = ServletUtil.getRequest();
+        
+        Session s = null;
         if (request != null) {
             String uri = request.getServletPath();
             // 如果是静态文件，则不获取SESSION
@@ -90,10 +78,10 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
 
         Session session = null;
 
-        Object sessionByte = redisService.getShiroValue(sessionKeyPrefix + sessionId.toString(), sessionId.toString());
+        Object sessionByte = redisService.getShiroValue(sessionKeyPrefix + sessionId.toString(), sessionKeyPrefix);
         if (sessionByte != null) {
-            logger.debug("read {} {}", sessionId, request != null ? request.getRequestURI() : StringUtils.EMPTY);
             session = (Session) sessionByte;
+            logger.debug("read {} {}", sessionId, request != null ? request.getRequestURI() : StringUtils.EMPTY);
         }
 
         if (request != null && session != null) {
@@ -110,6 +98,8 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
         }
 
         HttpServletRequest request = ServletUtil.getRequest();
+        logger.debug("update {} {}", session.getId(), request != null ? request.getRequestURI() : StringUtils.EMPTY);
+        
         if (request != null) {
             String uri = request.getServletPath();
             // 如果是静态文件，则不更新SESSION
@@ -128,7 +118,6 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
 
         String redisKey = sessionKeyPrefix + session.getId().toString();
         redisService.flushShiroExpire(redisKey, session.getTimeout());
-        logger.debug("update {} {}", session.getId(), request != null ? request.getRequestURI() : StringUtils.EMPTY);
 
     }
 
@@ -137,10 +126,10 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
         if (session == null || session.getId() == null) {
             return;
         }
+        logger.debug("delete {} ", session.getId());
 
         String redisKey = sessionKeyPrefix + session.getId().toString();
         redisService.flushShiroExpire(redisKey, 1L);
-        logger.debug("delete {} ", session.getId());
     }
 
     /**
@@ -157,52 +146,9 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
 
         Set<String> keys = redisService.getKeys(sessionKeyPrefix + "*");
         for (String key : keys) {
-            String str = (String) redisService.getShiroValue(key, sessionKey);
-            if (StringUtils.isNotBlank(str)) {
-                String[] ss = str.split("|");
-
-                if (ss != null && ss.length == 4) {
-                    SimpleSession session = new SimpleSession();
-                    session.setId(ss[0]);
-                    session.setAttribute("principalId", ss[1]);
-                    session.setTimeout(Long.valueOf(ss[2]));
-                    session.setLastAccessTime(new Date(Long.valueOf(ss[3])));
-                    try {
-                        // 验证SESSION
-                        session.validate();
-                    } catch (Exception e) {
-                        // SESSION验证失败
-                        redisService.flushShiroExpire(key, 1L);
-                    }
-
-                    boolean isActiveSession = false;
-                    // 不包括离线并符合最后访问时间小于等于3分钟条件。
-                    if (includeLeave
-                            || DateUtil.isSameTime(DateUtil.subMinutes(new Date(), 3), session.getLastAccessTime())) {
-                        isActiveSession = true;
-                    }
-                    // 符合登陆者条件。
-                    if (principal != null) {
-                        PrincipalCollection pc = (PrincipalCollection) session
-                                .getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY);
-                        if (principal.toString()
-                                .equals(pc != null ? pc.getPrimaryPrincipal().toString() : StringUtils.EMPTY)) {
-                            isActiveSession = true;
-                        }
-                    }
-                    // 过滤掉的SESSION
-                    if (filterSession != null && filterSession.getId().equals(session.getId())) {
-                        isActiveSession = false;
-                    }
-                    if (isActiveSession) {
-                        sessions.add(session);
-                    }
-
-                } else {
-                    // 存储的SESSION不符合规则
-                    redisService.flushShiroExpire(key, 1L);
-                }
-
+            Session session = (Session) redisService.getShiroValue(key, sessionKeyPrefix);
+            if (session != null) {
+                sessions.add(session);
             }
         }
 
@@ -221,7 +167,7 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
 
     @Override
     public Collection<Session> getActiveSessions() {
-        return this.getActiveSessions(true);
+        return getActiveSessions(true);
     }
 
     /**
@@ -232,7 +178,7 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
      */
     @Override
     public Collection<Session> getActiveSessions(boolean includeLeave) {
-        return this.getActiveSessions(includeLeave, null, null);
+        return getActiveSessions(includeLeave, null, null);
     }
 
 }

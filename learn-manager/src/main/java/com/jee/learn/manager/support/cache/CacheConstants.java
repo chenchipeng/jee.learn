@@ -20,7 +20,7 @@ public class CacheConstants {
     public static final String CACHE_KEY_TOKEN = "token";
 
     /** ehcache 默认存储空间 */
-    public static final String EHCACHE_DEFAULT = "def";
+    public static final String EHCACHE_DEFAULT = "defCache";
 
     /** "null"字符串 */
     public static final String NULL_STRING = "null";

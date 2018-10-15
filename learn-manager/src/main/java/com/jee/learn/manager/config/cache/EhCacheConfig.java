@@ -29,7 +29,9 @@ import net.sf.ehcache.config.PersistenceConfiguration.Strategy;
  */
 @Configuration
 public class EhCacheConfig implements CachingConfigurer {
-    
+
+    private static final String DEFAULT_CONFIG_NAME = "defaultCacheConfig";
+
     @Value("${spring.ehcache.disk-store-path}")
     private String diskStorePath;
 
@@ -43,20 +45,43 @@ public class EhCacheConfig implements CachingConfigurer {
         PersistenceConfiguration persistence = new PersistenceConfiguration();
         persistence.strategy(Strategy.LOCALTEMPSWAP);
 
+        net.sf.ehcache.config.Configuration config = new net.sf.ehcache.config.Configuration();
+        config.setName(DEFAULT_CONFIG_NAME);
+        config.setDefaultCacheConfiguration(defCache(persistence));
+        
+        
+        config.diskStore(diskStore);
+
+        /* 可以创建多个cacheConfiguration，都添加到Config中 */
         // 默认配置
+        // 系统活动会话缓存
+        config.addCache(shiroCache(persistence));
+
+        return net.sf.ehcache.CacheManager.newInstance(config);
+    }
+
+    /** 默认配置 */
+    private CacheConfiguration defCache(PersistenceConfiguration persistence) {
         CacheConfiguration defCache = new CacheConfiguration();
         defCache.setName(CacheConstants.EHCACHE_DEFAULT);
         defCache.setTimeToIdleSeconds(1800);
         defCache.setMaxEntriesLocalHeap(100);
         defCache.setMaxEntriesLocalDisk(100000);
         defCache.persistence(persistence);
+        return defCache;
+    }
 
-        net.sf.ehcache.config.Configuration config = new net.sf.ehcache.config.Configuration();
-        config.diskStore(diskStore);
-        // 可以创建多个cacheConfiguration，都添加到Config中
-        config.addCache(defCache);
-
-        return net.sf.ehcache.CacheManager.newInstance(config);
+    /** 系统活动会话缓存 */
+    private CacheConfiguration shiroCache(PersistenceConfiguration persistence) {
+        CacheConfiguration shiroCache = new CacheConfiguration();
+        shiroCache.setName("shiroCache");
+        shiroCache.setTimeToIdleSeconds(0);
+        shiroCache.setTimeToIdleSeconds(0);
+        shiroCache.setDiskExpiryThreadIntervalSeconds(180L);
+        shiroCache.setMaxEntriesLocalHeap(100);
+        shiroCache.setMaxEntriesLocalDisk(100000);
+        shiroCache.persistence(persistence);
+        return shiroCache;
     }
 
     /**

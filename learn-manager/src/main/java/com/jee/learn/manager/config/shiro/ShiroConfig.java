@@ -5,7 +5,9 @@ import java.util.Map;
 
 import javax.servlet.Filter;
 
+import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -15,13 +17,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 
 import com.jee.learn.manager.config.SystemConfig;
 import com.jee.learn.manager.config.shiro.mv.CustomRealm;
+import com.jee.learn.manager.config.shiro.session.CacheSessionDAO;
 import com.jee.learn.manager.config.shiro.session.CustomSessionIdGenerator;
 import com.jee.learn.manager.config.shiro.session.CustomWebSessionManager;
-import com.jee.learn.manager.config.shiro.session.JedisSessionDAO;
 import com.jee.learn.manager.config.shiro.session.SessionDAO;
+
+import net.sf.ehcache.CacheManager;
 
 /**
  * shiro config<br/>
@@ -40,6 +45,8 @@ public class ShiroConfig {
 
     @Autowired
     private SystemConfig systemConfig;
+    @Autowired
+    private CacheManager  ehCacheManager ;
 
     /** shiro url 拦截配置 */
     private Map<String, String> urlFilter() {
@@ -95,13 +102,14 @@ public class ShiroConfig {
      */
     @Bean
     public org.apache.shiro.mgt.SecurityManager securityManager(CustomRealm customRealm,
-            CustomWebSessionManager sessionManager) {
+            CustomWebSessionManager sessionManager,EhCacheManager shiroCacheManager) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         // 设置realm
         securityManager.setRealm(customRealm);
         // 设置session manager
         securityManager.setSessionManager(sessionManager);
-        // cache
+        // 设置cacheManager
+        securityManager.setCacheManager(shiroCacheManager);
 
         return securityManager;
     }
@@ -139,10 +147,20 @@ public class ShiroConfig {
 
     /** 自定义Session存储容器 */
     @Bean
-    public SessionDAO sessionDAO(CustomSessionIdGenerator sessionIdGenerator) {
-        JedisSessionDAO jedisSessionDao = new JedisSessionDAO();
-        jedisSessionDao.setSessionIdGenerator(sessionIdGenerator);
-        return jedisSessionDao;
+    public SessionDAO sessionDAO(CustomSessionIdGenerator sessionIdGenerator,EhCacheManager shiroCacheManager) {
+        CacheSessionDAO sessionDao = new CacheSessionDAO();
+        sessionDao.setSessionIdGenerator(sessionIdGenerator);
+        sessionDao.setCacheManager(shiroCacheManager);
+        sessionDao.setActiveSessionsCacheName("shiroCache");
+        return sessionDao;
+    }
+
+    //////// cache ////////
+    @Bean("shiroCacheManager")
+    public EhCacheManager shiroCacheManager() {
+        EhCacheManager em = new EhCacheManager();
+        em.setCacheManager(ehCacheManager);
+        return em;
     }
 
     //////// 开启shiro aop注解支持 ////////
@@ -152,6 +170,13 @@ public class ShiroConfig {
         AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
         authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
         return authorizationAttributeSourceAdvisor;
+    }
+
+    //////// 保证实现了Shiro内部lifecycle函数的bean执行 ////////
+
+    // @Bean(name = "lifecycleBeanPostProcessor")
+    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
+        return new LifecycleBeanPostProcessor();
     }
 
 }
