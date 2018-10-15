@@ -79,7 +79,7 @@ public class ShiroConfig {
 
         // 相关URL
         shiroFilterFactoryBean.setLoginUrl(systemConfig.getAuthcPath() + "/login");
-        shiroFilterFactoryBean.setSuccessUrl(systemConfig.getAuthcPath());
+        shiroFilterFactoryBean.setSuccessUrl(systemConfig.getAuthcPath() + "?login");
         shiroFilterFactoryBean.setUnauthorizedUrl(systemConfig.getAuthcPath() + "/403");
 
         // 设置拦截器

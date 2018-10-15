@@ -2,21 +2,25 @@ package com.jee.learn.manager.config.shiro.session;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.UnknownSessionException;
+import org.apache.shiro.session.mgt.SimpleSession;
 import org.apache.shiro.session.mgt.eis.AbstractSessionDAO;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.support.DefaultSubjectContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.jee.learn.manager.support.cache.RedisService;
 import com.jee.learn.manager.util.Constants;
 import com.jee.learn.manager.util.net.ServletUtil;
+import com.jee.learn.manager.util.time.DateUtil;
 
 /**
  * shiro-redis session管理器<br/>
@@ -30,6 +34,7 @@ import com.jee.learn.manager.util.net.ServletUtil;
 public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
 
     private static final String sessionKeyPrefix = "shiro:session_";
+    private static final String sessionKey = "session";
 
     @Autowired
     private RedisService redisService;
@@ -45,8 +50,20 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
             }
         }
         Serializable sessionId = this.generateSessionId(session);
-        this.assignSessionId(session, sessionId);
-        this.update(session);
+        assignSessionId(session, sessionId);
+
+        String redisKey = sessionKeyPrefix + session.getId().toString();
+        // 获取登录者编号
+        PrincipalCollection pc = (PrincipalCollection) session
+                .getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY);
+        String principalId = pc != null ? pc.getPrimaryPrincipal().toString() : StringUtils.EMPTY;
+
+        String hashValue = session.getId().toString() + "|" + principalId + "|" + session.getTimeout() + "|"
+                + session.getLastAccessTime().getTime();
+        redisService.setShiroValue(redisKey, sessionKey, hashValue, session.getTimeout());
+        redisService.setShiroValue(redisKey, session.getId().toString(), session, session.getTimeout());
+        logger.debug("create {} {}", session.getId(), request != null ? request.getRequestURI() : StringUtils.EMPTY);
+
         return sessionId;
     }
 
@@ -73,10 +90,9 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
 
         Session session = null;
 
-        Object sessionByte = redisService.getShiroValue(sessionKeyPrefix + sessionId.toString());
+        Object sessionByte = redisService.getShiroValue(sessionKeyPrefix + sessionId.toString(), sessionId.toString());
         if (sessionByte != null) {
-            logger.debug("doReadSession {} {}", sessionId,
-                    request != null ? request.getRequestURI() : StringUtils.EMPTY);
+            logger.debug("read {} {}", sessionId, request != null ? request.getRequestURI() : StringUtils.EMPTY);
             session = (Session) sessionByte;
         }
 
@@ -111,13 +127,8 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
         }
 
         String redisKey = sessionKeyPrefix + session.getId().toString();
-        Object obj = redisService.getShiroValue(redisKey);
-        logger.debug("update {} {}", session.getId(), request != null ? request.getRequestURI() : "");
-        if (obj == null) {
-            redisService.setShiroValue(redisKey, session, session.getTimeout());
-            return;
-        }
-        redisService.flushShiroExpire(redisKey, session.getTimeout(), TimeUnit.MILLISECONDS);
+        redisService.flushShiroExpire(redisKey, session.getTimeout());
+        logger.debug("update {} {}", session.getId(), request != null ? request.getRequestURI() : StringUtils.EMPTY);
 
     }
 
@@ -128,12 +139,8 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
         }
 
         String redisKey = sessionKeyPrefix + session.getId().toString();
-        Object obj = redisService.getShiroValue(redisKey);
-        if (obj != null) {
-            logger.debug("delete {} ", session.getId());
-            redisService.flushShiroExpire(redisKey, session.getTimeout(), TimeUnit.MILLISECONDS);
-        }
-
+        redisService.flushShiroExpire(redisKey, 1L);
+        logger.debug("delete {} ", session.getId());
     }
 
     /**
@@ -150,9 +157,52 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
 
         Set<String> keys = redisService.getKeys(sessionKeyPrefix + "*");
         for (String key : keys) {
-            Session session = (Session) redisService.getShiroValue(key);
-            if (session != null) {
-                sessions.add(session);
+            String str = (String) redisService.getShiroValue(key, sessionKey);
+            if (StringUtils.isNotBlank(str)) {
+                String[] ss = str.split("|");
+
+                if (ss != null && ss.length == 4) {
+                    SimpleSession session = new SimpleSession();
+                    session.setId(ss[0]);
+                    session.setAttribute("principalId", ss[1]);
+                    session.setTimeout(Long.valueOf(ss[2]));
+                    session.setLastAccessTime(new Date(Long.valueOf(ss[3])));
+                    try {
+                        // 验证SESSION
+                        session.validate();
+                    } catch (Exception e) {
+                        // SESSION验证失败
+                        redisService.flushShiroExpire(key, 1L);
+                    }
+
+                    boolean isActiveSession = false;
+                    // 不包括离线并符合最后访问时间小于等于3分钟条件。
+                    if (includeLeave
+                            || DateUtil.isSameTime(DateUtil.subMinutes(new Date(), 3), session.getLastAccessTime())) {
+                        isActiveSession = true;
+                    }
+                    // 符合登陆者条件。
+                    if (principal != null) {
+                        PrincipalCollection pc = (PrincipalCollection) session
+                                .getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY);
+                        if (principal.toString()
+                                .equals(pc != null ? pc.getPrimaryPrincipal().toString() : StringUtils.EMPTY)) {
+                            isActiveSession = true;
+                        }
+                    }
+                    // 过滤掉的SESSION
+                    if (filterSession != null && filterSession.getId().equals(session.getId())) {
+                        isActiveSession = false;
+                    }
+                    if (isActiveSession) {
+                        sessions.add(session);
+                    }
+
+                } else {
+                    // 存储的SESSION不符合规则
+                    redisService.flushShiroExpire(key, 1L);
+                }
+
             }
         }
 

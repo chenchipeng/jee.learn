@@ -31,9 +31,9 @@ public class RedisService {
     private RedisTemplate<String, Object> redisTemplate;
     @Resource
     private HashOperations<String, String, String> hashOperations;
-    @Resource
+    @Resource(name = "hashOperations")
     private HashOperations<String, String, Object> hashOperationsObj;
-    @Resource(name="valueOperations")
+    @Resource(name = "valueOperations")
     private ValueOperations<String, Object> valueOperationsObj;
 
     @Autowired
@@ -43,8 +43,8 @@ public class RedisService {
 
     @Autowired
     private RedisTemplate<String, Object> shiroRedisTemplate;
-    @Resource(name="shiroValueOps")
-    private ValueOperations<String, Object> shiroValueOps;
+    @Resource(name = "shiroHashOps")
+    private HashOperations<String, Object, Object> shiroHashOps;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -250,30 +250,28 @@ public class RedisService {
     ////// shiro-redis //////
 
     /**
-     * 使用shiroValueOps查询
+     * 使用shiroHashOps查询
      * 
      * @param key
+     * @param hashKey
      * @return 序列化对象/byte[]
      */
-    public Object getShiroValue(String key) {
-        return shiroValueOps.get(key);
+    public Object getShiroValue(String key, Object hashKey) {
+        return shiroHashOps.get(key, hashKey);
     }
 
     /**
-     * 使用shiroValueOps插入
+     * 使用shiroHashOps插入
      * 
      * @param key
-     * @param values 序列化对象/byte[]
-     * @param expire 有效期: 秒
+     * @param hashKey
+     * @param value 序列化对象/byte[]
+     * @param expire 有效期: 毫秒
      */
-    public void setShiroValue(String key, Object values, long expire) {
-        try {
-            shiroValueOps.set(key, values);
-            if (expire != -1) {
-                redisTemplate.expire(key, expire, TimeUnit.SECONDS);
-            }
-        } catch (Exception e) {
-            logger.warn("", e);
+    public void setShiroValue(String key, Object hashKey, Object value, long expire) {
+        shiroHashOps.put(key, hashKey, value);
+        if (expire != -1) {
+            redisTemplate.expire(key, expire, TimeUnit.MILLISECONDS);
         }
     }
 
@@ -282,11 +280,10 @@ public class RedisService {
      * 
      * @param key
      * @param expire
-     * @param timeUnit
      */
-    public void flushShiroExpire(String key, long expire, TimeUnit timeUnit) {
+    public void flushShiroExpire(String key, long expire) {
         if (expire != -1) {
-            shiroRedisTemplate.expire(key, expire, timeUnit);
+            shiroRedisTemplate.expire(key, expire, TimeUnit.MILLISECONDS);
         }
     }
 }

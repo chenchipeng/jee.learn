@@ -72,7 +72,7 @@ public class RedisConfig {
      * @param redisTemplate
      * @return
      */
-    @Bean
+    @Bean("hashOperations")
     public HashOperations<String, String, Object> hashOperations(RedisTemplate<String, Object> redisTemplate) {
         return redisTemplate.opsForHash();
     }
@@ -151,9 +151,9 @@ public class RedisConfig {
         return redisTemplate;
     }
     
-    @Bean("shiroValueOps")
-    public ValueOperations<String, Object> shiroValueOps(RedisTemplate<String, Object> shiroRedisTemplate) {
-        return shiroRedisTemplate.opsForValue();
+    @Bean("shiroHashOps")
+    public HashOperations<String, Object, Object> shiroValueOps(RedisTemplate<String, Object> shiroRedisTemplate) {
+        return shiroRedisTemplate.opsForHash();
     }
 
 }

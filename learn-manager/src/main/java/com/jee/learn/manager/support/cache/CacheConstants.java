@@ -14,9 +14,10 @@ public class CacheConstants {
         throw new IllegalStateException("Utility class");
     }
 
+    public static final long NEVER_EXPIRE = -1L;
     public static final String CACHE_KEY_SEPARATOR = ":";
     public static final String CACHE_KEY_APIUSER = "apiuser";
-    public static final String CACHE_KEY_TOKEN = "tkoen";
+    public static final String CACHE_KEY_TOKEN = "token";
 
     /** ehcache 默认存储空间 */
     public static final String EHCACHE_DEFAULT = "def";
