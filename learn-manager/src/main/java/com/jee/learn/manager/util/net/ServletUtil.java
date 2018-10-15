@@ -19,7 +19,7 @@ public class ServletUtil {
 
     /** 静态文件列表 */
     private static final String[] STATIC_FILES_SUFFIX = { ".css", ".js", ".png", ".gif", ".jpeg", ".bmp", ".ico", ".swf",
-            ".psd", ".htc", ".crx", ".xpi", ".exe", ".ipa", ".apk", ".hml" };
+            ".psd", ".htc", ".crx", ".xpi", ".exe", ".ipa", ".apk",".map", ".hml" };
     private static final String STATIC_FILES_PREFIX ="/hml";
 
     /**

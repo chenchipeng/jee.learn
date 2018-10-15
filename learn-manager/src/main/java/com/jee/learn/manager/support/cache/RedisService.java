@@ -33,13 +33,18 @@ public class RedisService {
     private HashOperations<String, String, String> hashOperations;
     @Resource
     private HashOperations<String, String, Object> hashOperationsObj;
-    @Resource
+    @Resource(name="valueOperations")
     private ValueOperations<String, Object> valueOperationsObj;
 
     @Autowired
     private RedisTemplate<String, String> strRedisTemplate;
     @Resource
     private ValueOperations<String, String> valueOperations;
+
+    @Autowired
+    private RedisTemplate<String, Object> shiroRedisTemplate;
+    @Resource(name="shiroValueOps")
+    private ValueOperations<String, Object> shiroValueOps;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -239,6 +244,49 @@ public class RedisService {
     public void flushStrExpire(String key, long expire, TimeUnit timeUnit) {
         if (expire != -1) {
             strRedisTemplate.expire(key, expire, timeUnit);
+        }
+    }
+
+    ////// shiro-redis //////
+
+    /**
+     * 使用shiroValueOps查询
+     * 
+     * @param key
+     * @return 序列化对象/byte[]
+     */
+    public Object getShiroValue(String key) {
+        return shiroValueOps.get(key);
+    }
+
+    /**
+     * 使用shiroValueOps插入
+     * 
+     * @param key
+     * @param values 序列化对象/byte[]
+     * @param expire 有效期: 秒
+     */
+    public void setShiroValue(String key, Object values, long expire) {
+        try {
+            shiroValueOps.set(key, values);
+            if (expire != -1) {
+                redisTemplate.expire(key, expire, TimeUnit.SECONDS);
+            }
+        } catch (Exception e) {
+            logger.warn("", e);
+        }
+    }
+
+    /**
+     * 刷新shiroRedisTemplate有效期
+     * 
+     * @param key
+     * @param expire
+     * @param timeUnit
+     */
+    public void flushShiroExpire(String key, long expire, TimeUnit timeUnit) {
+        if (expire != -1) {
+            shiroRedisTemplate.expire(key, expire, timeUnit);
         }
     }
 }

@@ -8,17 +8,13 @@ import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.UnknownSessionException;
 import org.apache.shiro.session.mgt.eis.AbstractSessionDAO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+import com.jee.learn.manager.support.cache.RedisService;
 import com.jee.learn.manager.util.Constants;
 import com.jee.learn.manager.util.net.ServletUtil;
 
@@ -35,10 +31,8 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
 
     private static final String sessionKeyPrefix = "shiro:session_";
 
-
-    public JedisSessionDAO() {
-        super();
-    }
+    @Autowired
+    private RedisService redisService;
 
     @Override
     protected Serializable doCreate(Session session) {
@@ -79,11 +73,11 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
 
         Session session = null;
 
-        byte[] sessionByte = (byte[]) redisValueOps.get(sessionKeyPrefix + sessionId.toString());
+        Object sessionByte = redisService.getShiroValue(sessionKeyPrefix + sessionId.toString());
         if (sessionByte != null) {
             logger.debug("doReadSession {} {}", sessionId,
                     request != null ? request.getRequestURI() : StringUtils.EMPTY);
-            session = (Session) SerializationUtils.deserialize(sessionByte);
+            session = (Session) sessionByte;
         }
 
         if (request != null && session != null) {
@@ -117,13 +111,13 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
         }
 
         String redisKey = sessionKeyPrefix + session.getId().toString();
-        Object obj = redisValueOps.get(redisKey);
+        Object obj = redisService.getShiroValue(redisKey);
         logger.debug("update {} {}", session.getId(), request != null ? request.getRequestURI() : "");
         if (obj == null) {
-            redisValueOps.set(redisKey, session, session.getTimeout());
+            redisService.setShiroValue(redisKey, session, session.getTimeout());
             return;
         }
-        shiroRedisTemplate.expire(redisKey, session.getTimeout(), TimeUnit.MILLISECONDS);
+        redisService.flushShiroExpire(redisKey, session.getTimeout(), TimeUnit.MILLISECONDS);
 
     }
 
@@ -134,10 +128,10 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
         }
 
         String redisKey = sessionKeyPrefix + session.getId().toString();
-        Object obj = redisValueOps.get(redisKey);
+        Object obj = redisService.getShiroValue(redisKey);
         if (obj != null) {
             logger.debug("delete {} ", session.getId());
-            shiroRedisTemplate.expire(redisKey, session.getTimeout(), TimeUnit.MILLISECONDS);
+            redisService.flushShiroExpire(redisKey, session.getTimeout(), TimeUnit.MILLISECONDS);
         }
 
     }
@@ -145,21 +139,18 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
     /**
      * 获取活动会话
      * 
-     * @param includeLeave
-     *            是否包括离线（最后访问时间大于3分钟为离线会话）
-     * @param principal
-     *            根据登录者对象获取活动会话
-     * @param filterSession
-     *            不为空，则过滤掉（不包含）这个会话。
+     * @param includeLeave 是否包括离线（最后访问时间大于3分钟为离线会话）
+     * @param principal 根据登录者对象获取活动会话
+     * @param filterSession 不为空，则过滤掉（不包含）这个会话。
      * @return
      */
     @Override
     public Collection<Session> getActiveSessions(boolean includeLeave, Object principal, Session filterSession) {
         Set<Session> sessions = new HashSet<>();
 
-        Set<String> keys = shiroRedisTemplate.keys(sessionKeyPrefix + "*");
+        Set<String> keys = redisService.getKeys(sessionKeyPrefix + "*");
         for (String key : keys) {
-            Session session = (Session) redisValueOps.get(key);
+            Session session = (Session) redisService.getShiroValue(key);
             if (session != null) {
                 sessions.add(session);
             }
@@ -186,8 +177,7 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
     /**
      * 获取活动会话
      * 
-     * @param includeLeave
-     *            是否包括离线（最后访问时间大于3分钟为离线会话）
+     * @param includeLeave 是否包括离线（最后访问时间大于3分钟为离线会话）
      * @return
      */
     @Override
