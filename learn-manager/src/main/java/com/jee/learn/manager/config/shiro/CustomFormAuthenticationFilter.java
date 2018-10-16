@@ -13,6 +13,14 @@ import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 表单登录拦截器
+ * 
+ * @author ccp
+ * @version 1.0<br/>
+ *          修改记录:<br/>
+ *          1.2018年10月16日 上午9:46:55 ccp 新建
+ */
 public class CustomFormAuthenticationFilter extends FormAuthenticationFilter {
 
     protected Logger logger = LoggerFactory.getLogger(getClass());

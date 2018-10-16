@@ -22,6 +22,14 @@ import org.apache.shiro.web.servlet.SimpleCookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.apache.shiro.web.util.WebUtils;
 
+/**
+ * session 管理器
+ * 
+ * @author ccp
+ * @version 1.0<br/>
+ *          修改记录:<br/>
+ *          1.2018年10月16日 上午10:28:02 ccp 新建
+ */
 public class CustomWebSessionManager extends DefaultWebSessionManager {
 
     private static final String SID_PARAMETER_NAME = "__sid";

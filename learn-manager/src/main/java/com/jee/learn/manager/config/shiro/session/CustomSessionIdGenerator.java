@@ -9,6 +9,14 @@ import org.springframework.stereotype.Component;
 
 import com.jee.learn.manager.util.idgen.IdGenerate;
 
+/**
+ * session id 生产器
+ * 
+ * @author ccp
+ * @version 1.0<br/>
+ *          修改记录:<br/>
+ *          1.2018年10月16日 上午10:27:10 ccp 新建
+ */
 @Component
 @Lazy(false)
 public class CustomSessionIdGenerator implements SessionIdGenerator {

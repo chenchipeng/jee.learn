@@ -14,16 +14,26 @@ import org.apache.shiro.session.UnknownSessionException;
 import org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.support.DefaultSubjectContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import com.jee.learn.manager.config.SystemConfig;
+import com.jee.learn.manager.config.shiro.ShiroContants;
 import com.jee.learn.manager.util.Constants;
 import com.jee.learn.manager.util.net.ServletUtil;
 import com.jee.learn.manager.util.time.DateUtil;
 
+/**
+ * ehcache session dao
+ * 
+ * @author ccp
+ * @version 1.0<br/>
+ *          修改记录:<br/>
+ *          1.2018年10月16日 上午9:56:49 ccp 新建
+ */
 public class CacheSessionDAO extends EnterpriseCacheSessionDAO implements SessionDAO {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    @Autowired
+    private SystemConfig systemConfig;
 
     public CacheSessionDAO() {
         super();
@@ -31,6 +41,7 @@ public class CacheSessionDAO extends EnterpriseCacheSessionDAO implements Sessio
 
     @Override
     protected void doUpdate(Session session) {
+
         if (session == null || session.getId() == null) {
             return;
         }
@@ -47,12 +58,12 @@ public class CacheSessionDAO extends EnterpriseCacheSessionDAO implements Sessio
                 return;
             }
             // 手动控制不更新SESSION
-            if (Constants.N.equals(request.getParameter("updateSession"))) {
+            if (Constants.N.equals(request.getParameter(ShiroContants.UPDATE_SESSION_PARAM))) {
                 return;
             }
         }
         super.doUpdate(session);
-        logger.debug("update {} {}", session.getId(), request != null ? request.getRequestURI() : "");
+        logger.debug("update {} {}", session.getId(), request != null ? request.getRequestURI() : StringUtils.EMPTY);
     }
 
     @Override
@@ -76,7 +87,7 @@ public class CacheSessionDAO extends EnterpriseCacheSessionDAO implements Sessio
             }
         }
         super.doCreate(session);
-        logger.debug("doCreate {} {}", session, request != null ? request.getRequestURI() : "");
+        logger.debug("doCreate {} {}", session, request != null ? request.getRequestURI() : StringUtils.EMPTY);
         return session.getId();
     }
 
@@ -96,17 +107,17 @@ public class CacheSessionDAO extends EnterpriseCacheSessionDAO implements Sessio
                 if (ServletUtil.isStaticFile(uri)) {
                     return null;
                 }
-                s = (Session) request.getAttribute("session_" + sessionId);
+                s = (Session) request.getAttribute(ShiroContants.SESSION_PARAM_PREFIX + sessionId);
             }
             if (s != null) {
                 return s;
             }
 
             Session session = super.readSession(sessionId);
-            logger.debug("readSession {} {}", sessionId, request != null ? request.getRequestURI() : "");
+            logger.debug("readSession {} {}", sessionId, request != null ? request.getRequestURI() : StringUtils.EMPTY);
 
             if (request != null && session != null) {
-                request.setAttribute("session_" + sessionId, session);
+                request.setAttribute(ShiroContants.SESSION_PARAM_PREFIX + sessionId, session);
             }
 
             return session;
@@ -115,36 +126,24 @@ public class CacheSessionDAO extends EnterpriseCacheSessionDAO implements Sessio
         }
     }
 
-    /**
-     * 获取活动会话
-     * 
-     * @param includeLeave 是否包括离线（最后访问时间大于3分钟为离线会话）
-     * @return
-     */
     @Override
     public Collection<Session> getActiveSessions(boolean includeLeave) {
         return getActiveSessions(includeLeave, null, null);
     }
 
-    /**
-     * 获取活动会话
-     * 
-     * @param includeLeave 是否包括离线（最后访问时间大于3分钟为离线会话）
-     * @param principal 根据登录者对象获取活动会话
-     * @param filterSession 不为空，则过滤掉（不包含）这个会话。
-     * @return
-     */
     @Override
     public Collection<Session> getActiveSessions(boolean includeLeave, Object principal, Session filterSession) {
         // 如果包括离线，并无登录者条件。
         if (includeLeave && principal == null) {
             return getActiveSessions();
         }
+        Long minute = systemConfig.getSessionTimeoutClean() / 60000L;
         Set<Session> sessions = new HashSet<>();
         for (Session session : getActiveSessions()) {
             boolean isActiveSession = false;
-            // 不包括离线并符合最后访问时间小于等于3分钟条件。
-            if (includeLeave || DateUtil.isSameTime(DateUtil.subMinutes(new Date(), 3), session.getLastAccessTime())) {
+            // 不包括离线并符合最后访问时间小于等于3分钟条件
+            if (includeLeave || DateUtil.isSameTime(DateUtil.subMinutes(new Date(), minute.intValue()),
+                    session.getLastAccessTime())) {
                 isActiveSession = true;
             }
             // 符合登陆者条件。

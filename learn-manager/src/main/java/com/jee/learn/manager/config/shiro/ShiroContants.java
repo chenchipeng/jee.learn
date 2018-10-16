@@ -14,5 +14,8 @@ public class ShiroContants {
     public static final String INVALID_USERNAME_ERROR = "账号禁止登录.";
     public static final String USERNAME_PASSWORD_ERROR = "用户或密码错误, 请重试.";
     public static final String SYSTEM_ERROR = "系统出现点问题，请稍后再试!";
-
+    
+    //////// session dao 相关 ////////
+    public static final String UPDATE_SESSION_PARAM="updateSession";
+    public static final String SESSION_PARAM_PREFIX="session_";
 }

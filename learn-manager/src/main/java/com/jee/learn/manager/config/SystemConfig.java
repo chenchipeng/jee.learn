@@ -1,7 +1,8 @@
 package com.jee.learn.manager.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * 自定义系统属性配置
@@ -11,9 +12,12 @@ import org.springframework.stereotype.Component;
  *          修改记录:<br/>
  *          1.2018年10月9日 上午11:32:17 ccp 新建
  */
-@Component
+@Configuration
 @ConfigurationProperties(prefix = "system")
 public class SystemConfig {
+
+    @Value("${spring.application.name}")
+    private String applicationName;
 
     private String name = "后台管理系统";
     private String authcPath = "/u";// 用户
@@ -21,6 +25,10 @@ public class SystemConfig {
 
     private Long sessionTimeout = 1800000L;// sessoin默认30分钟有效期
     private Long sessionTimeoutClean = 180000L;// 默认关闭浏览器后3分钟清除session
+
+    public String getApplicationName() {
+        return applicationName;
+    }
 
     public String getName() {
         return name;

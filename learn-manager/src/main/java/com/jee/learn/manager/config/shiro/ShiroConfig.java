@@ -7,7 +7,6 @@ import javax.servlet.Filter;
 
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
-import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -42,12 +41,14 @@ public class ShiroConfig {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ShiroConfig.class);
     private static final String ANY_REQUEST = "/**";
-    private static final String SIMPLE_COOKIE_NAME = "chnskin.session.id";
+    private static final String SIMPLE_COOKIE_NAME_SUFFIX = ".session.id";
 
     @Autowired
     private SystemConfig systemConfig;
     @Autowired
     private CacheManager ehCacheManager;
+
+    //////// shiro 拦截配置 ////////
 
     /** shiro url 拦截配置 */
     private Map<String, String> urlFilter() {
@@ -78,6 +79,8 @@ public class ShiroConfig {
         map.put("authc", new CustomFormAuthenticationFilter());
         return map;
     }
+
+    //////// shiro filter factory配置 ////////
 
     @Bean
     public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
@@ -143,7 +146,7 @@ public class ShiroConfig {
      * 等默认JSESSIONID,当跳出SHIRO SERVLET时如ERROR-PAGE容器会为JSESSIONID重新分配值导致登录会话丢失!
      */
     private SimpleCookie sessionIdCookie() {
-        return new SimpleCookie(SIMPLE_COOKIE_NAME);
+        return new SimpleCookie(systemConfig.getApplicationName() + SIMPLE_COOKIE_NAME_SUFFIX);
     }
 
     /** 自定义Session存储容器 */
@@ -157,6 +160,8 @@ public class ShiroConfig {
     }
 
     //////// cache ////////
+
+    /** shiro cacheManager配置 */
     @Bean("shiroCacheManager")
     public EhCacheManager shiroCacheManager() {
         EhCacheManager em = new EhCacheManager();
@@ -171,13 +176,6 @@ public class ShiroConfig {
         AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
         authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
         return authorizationAttributeSourceAdvisor;
-    }
-
-    //////// 保证实现了Shiro内部lifecycle函数的bean执行 ////////
-
-    // @Bean(name = "lifecycleBeanPostProcessor")
-    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
-        return new LifecycleBeanPostProcessor();
     }
 
 }
