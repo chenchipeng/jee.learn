@@ -1,4 +1,4 @@
-package com.jee.learn.manager.config.shiro.mv;
+package com.jee.learn.manager.security;
 
 import javax.annotation.PostConstruct;
 
@@ -18,7 +18,9 @@ import org.springframework.stereotype.Component;
 
 import com.jee.learn.manager.config.shiro.ShiroContants;
 import com.jee.learn.manager.config.shiro.security.CustomCredentialsMatcher;
+import com.jee.learn.manager.config.shiro.security.CustomPrincipal;
 import com.jee.learn.manager.config.shiro.security.CustomToken;
+import com.jee.learn.manager.config.shiro.session.SessionDAO;
 import com.jee.learn.manager.domain.sys.SysUser;
 import com.jee.learn.manager.service.sys.SysUserService;
 import com.jee.learn.manager.util.Constants;
@@ -29,6 +31,9 @@ public class CustomRealm extends AuthorizingRealm {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomRealm.class);
     private static final String ENTITY_PROPERTIES_LOGIN_NAME = "loginName";
+
+    @Autowired
+    private SessionDAO sessionDao;
 
     @Autowired
     private SysUserService userService;
@@ -67,6 +72,11 @@ public class CustomRealm extends AuthorizingRealm {
         CustomToken customToken = (CustomToken) token;
 
         // 统计活跃数
+        if (LOGGER.isDebugEnabled()) {
+            int activeSessionSize = sessionDao.getActiveSessions(false).size();
+            LOGGER.debug("login submit, active session size: {}, username: {}", activeSessionSize,
+                    customToken.getUsername());
+        }
 
         // 校验登录验证码
 

@@ -20,13 +20,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
 import com.jee.learn.manager.config.SystemConfig;
-import com.jee.learn.manager.config.shiro.mv.CustomRealm;
 import com.jee.learn.manager.config.shiro.security.CustomFormAuthenticationFilter;
 import com.jee.learn.manager.config.shiro.session.CacheSessionDAO;
 import com.jee.learn.manager.config.shiro.session.CustomSessionIdGenerator;
 import com.jee.learn.manager.config.shiro.session.CustomWebSessionManager;
 import com.jee.learn.manager.config.shiro.session.JedisSessionDAO;
 import com.jee.learn.manager.config.shiro.session.SessionDAO;
+import com.jee.learn.manager.security.CustomRealm;
 import com.jee.learn.manager.support.cache.CacheConstants;
 
 import net.sf.ehcache.CacheManager;

@@ -1,7 +1,6 @@
 package com.jee.learn.manager.config.shiro.session;
 
 import java.util.Collection;
-import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.session.Session;
@@ -11,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jee.learn.manager.config.SystemConfig;
+import com.jee.learn.manager.util.time.ClockUtil;
 import com.jee.learn.manager.util.time.DateUtil;
 
 public interface SessionDAO extends org.apache.shiro.session.mgt.eis.SessionDAO {
@@ -50,7 +50,8 @@ public interface SessionDAO extends org.apache.shiro.session.mgt.eis.SessionDAO 
 
         boolean isActiveSession = false;
         // 不包括离线并符合最后访问时间小于等于离线时间
-        if (includeLeave || DateUtil.isSameTime(DateUtil.subMinutes(new Date(), amount), session.getLastAccessTime())) {
+        if (includeLeave
+                || !(DateUtil.subMinutes(ClockUtil.currentDate(), amount).after(session.getLastAccessTime()))) {
             isActiveSession = true;
         }
         // 符合登陆者条件。

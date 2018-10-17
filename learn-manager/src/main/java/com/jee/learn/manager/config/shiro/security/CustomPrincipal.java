@@ -1,4 +1,4 @@
-package com.jee.learn.manager.config.shiro.mv;
+package com.jee.learn.manager.config.shiro.security;
 
 import java.io.Serializable;
 
