@@ -159,10 +159,6 @@ public class RedisConfig {
 
     @Bean("shiroHashOps")
     public HashOperations<String, Object, Object> shiroHashOps(RedisTemplate<String, Object> shiroRedisTemplate) {
-
-        System.out.println(shiroRedisTemplate.getKeySerializer().getClass().getName());
-        System.out.println(shiroRedisTemplate.getValueSerializer().getClass().getName());
-
         return shiroRedisTemplate.opsForHash();
     }
 

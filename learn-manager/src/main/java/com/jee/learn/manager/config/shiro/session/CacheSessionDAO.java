@@ -123,6 +123,13 @@ public class CacheSessionDAO extends EnterpriseCacheSessionDAO implements Sessio
     }
 
     @Override
+    public Collection<Session> getActiveSessions() {
+        Collection<Session> sessions = super.getActiveSessions();
+        logger.info("getActiveSessions size: {} ", sessions.size());
+        return sessions;
+    }
+
+    @Override
     public Collection<Session> getActiveSessions(boolean includeLeave) {
         return getActiveSessions(includeLeave, null, null);
     }
@@ -141,6 +148,7 @@ public class CacheSessionDAO extends EnterpriseCacheSessionDAO implements Sessio
                 sessions.add(session);
             }
         }
+        logger.info("after getActiveSessions size: {} ", sessions.size());
         return sessions;
     }
 

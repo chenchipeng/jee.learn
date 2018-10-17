@@ -179,11 +179,9 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
             logger.debug("session or session id is null");
             return;
         }
-
-        String key = session.getId().toString();
+        String key = systemConfig.getShiroKeyPrefix() + session.getId().toString();
         session.setTimeout(systemConfig.getSessionTimeout());
-        redisService.putShiroValue(systemConfig.getShiroKeyPrefix() + key, session, systemConfig.getSessionTimeout(),
-                TimeUnit.MILLISECONDS);
+        redisService.putShiroValue(key, session, systemConfig.getSessionTimeout(), TimeUnit.MILLISECONDS);
     }
 
 }
