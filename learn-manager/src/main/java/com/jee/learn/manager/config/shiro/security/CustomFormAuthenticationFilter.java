@@ -1,4 +1,4 @@
-package com.jee.learn.manager.config.shiro;
+package com.jee.learn.manager.config.shiro.security;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -12,6 +12,8 @@ import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.jee.learn.manager.config.shiro.ShiroContants;
 
 /**
  * 表单登录拦截器

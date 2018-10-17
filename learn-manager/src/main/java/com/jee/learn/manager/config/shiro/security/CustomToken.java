@@ -1,4 +1,4 @@
-package com.jee.learn.manager.config.shiro;
+package com.jee.learn.manager.config.shiro.security;
 
 /**
  * 用户和密码/验证码 令牌类

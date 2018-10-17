@@ -29,19 +29,6 @@ public class RedisConfig {
     private RedisConnectionFactory redisConnectionFactory;
 
     /**
-     * 实例化 RedisTemplate 对象<br/>
-     * 数据以json格式保存
-     *
-     * @return
-     */
-    @Bean(name = "redisTemplate")
-    public RedisTemplate<String, Object> functionDomainRedisTemplate() {
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        initDomainRedisTemplate(redisTemplate, redisConnectionFactory);
-        return redisTemplate;
-    }
-
-    /**
      * 设置数据存入 redis 的序列化方式
      *
      * @param redisTemplate
@@ -55,14 +42,29 @@ public class RedisConfig {
         redisTemplate.setConnectionFactory(factory);
     }
 
+    //////// redis json ////////
+
     /**
-     * 实例化 ValueOperations 对象,可以使用 String 操作
+     * 实例化 RedisTemplate 对象<br/>
+     * 数据以json格式保存
+     *
+     * @return
+     */
+    @Bean(name = "redisTemplate")
+    public RedisTemplate<String, Object> josnRedisTemplate() {
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        initDomainRedisTemplate(redisTemplate, redisConnectionFactory);
+        return redisTemplate;
+    }
+
+    /**
+     * 实例化 ValueOperations 对象,可以使用 Value 操作
      *
      * @param redisTemplate
      * @return
      */
-    @Bean("valueOperations")
-    public ValueOperations<String, Object> valueOperations(RedisTemplate<String, Object> redisTemplate) {
+    @Bean("valueOps")
+    public ValueOperations<String, Object> valueOps(RedisTemplate<String, Object> redisTemplate) {
         return redisTemplate.opsForValue();
     }
 
@@ -72,8 +74,8 @@ public class RedisConfig {
      * @param redisTemplate
      * @return
      */
-    @Bean("hashOperations")
-    public HashOperations<String, String, Object> hashOperations(RedisTemplate<String, Object> redisTemplate) {
+    @Bean("hashOps")
+    public HashOperations<String, String, Object> hashOps(RedisTemplate<String, Object> redisTemplate) {
         return redisTemplate.opsForHash();
     }
 
@@ -83,8 +85,8 @@ public class RedisConfig {
      * @param redisTemplate
      * @return
      */
-    @Bean
-    public ListOperations<String, Object> listOperations(RedisTemplate<String, Object> redisTemplate) {
+    @Bean("listOps")
+    public ListOperations<String, Object> listOps(RedisTemplate<String, Object> redisTemplate) {
         return redisTemplate.opsForList();
     }
 
@@ -94,8 +96,8 @@ public class RedisConfig {
      * @param redisTemplate
      * @return
      */
-    @Bean
-    public SetOperations<String, Object> setOperations(RedisTemplate<String, Object> redisTemplate) {
+    @Bean("setOps")
+    public SetOperations<String, Object> setOps(RedisTemplate<String, Object> redisTemplate) {
         return redisTemplate.opsForSet();
     }
 
@@ -105,10 +107,12 @@ public class RedisConfig {
      * @param redisTemplate
      * @return
      */
-    @Bean
-    public ZSetOperations<String, Object> zSetOperations(RedisTemplate<String, Object> redisTemplate) {
+    @Bean("zSetOps")
+    public ZSetOperations<String, Object> zSetOps(RedisTemplate<String, Object> redisTemplate) {
         return redisTemplate.opsForZSet();
     }
+
+    //////// redis string ////////
 
     /**
      * 实例化 RedisTemplate 对象<br/>
@@ -117,7 +121,7 @@ public class RedisConfig {
      * @return
      */
     @Bean(name = "strRedisTemplate")
-    public RedisTemplate<String, String> functionDomainStringRedisTemplate() {
+    public RedisTemplate<String, String> strRedisTemplate() {
         RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new StringRedisSerializer());
@@ -131,29 +135,40 @@ public class RedisConfig {
      * @param stringRedisTemplate
      * @return
      */
-    @Bean
-    public ValueOperations<String, String> stringValueOperations(RedisTemplate<String, String> strRedisTemplate) {
+    @Bean("strValueOps")
+    public ValueOperations<String, String> strValueOps(RedisTemplate<String, String> strRedisTemplate) {
         return strRedisTemplate.opsForValue();
     }
-    
+
     ////// shiro-redis //////
-    
+
     /**
      * 实例化 RedisTemplate 对象<br/>
      * 用于shiro session管理, key 为字符串, value 为JDK默认的序列化
+     * 
      * @return
      */
     @Bean(name = "shiroRedisTemplate")
     public RedisTemplate<String, Object> shiroRedisTemplate() {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         return redisTemplate;
     }
-    
+
     @Bean("shiroHashOps")
-    public HashOperations<String, Object, Object> shiroValueOps(RedisTemplate<String, Object> shiroRedisTemplate) {
+    public HashOperations<String, Object, Object> shiroHashOps(RedisTemplate<String, Object> shiroRedisTemplate) {
+
+        System.out.println(shiroRedisTemplate.getKeySerializer().getClass().getName());
+        System.out.println(shiroRedisTemplate.getValueSerializer().getClass().getName());
+
         return shiroRedisTemplate.opsForHash();
+    }
+
+    @Bean("shiroValueOps")
+    public ValueOperations<String, Object> shiroValueOps(RedisTemplate<String, Object> shiroRedisTemplate) {
+        return shiroRedisTemplate.opsForValue();
     }
 
 }

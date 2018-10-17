@@ -1,7 +1,6 @@
 package com.jee.learn.manager.support.cache;
 
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
@@ -29,24 +28,26 @@ public class RedisService {
 
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
-    @Resource
-    private HashOperations<String, String, String> hashOperations;
-    @Resource(name = "hashOperations")
-    private HashOperations<String, String, Object> hashOperationsObj;
-    @Resource(name = "valueOperations")
-    private ValueOperations<String, Object> valueOperationsObj;
+    @Resource(name = "hashOps")
+    private HashOperations<String, String, Object> hashOps;
+    @Resource(name = "valueOps")
+    private ValueOperations<String, Object> valueOps;
 
     @Autowired
     private RedisTemplate<String, String> strRedisTemplate;
-    @Resource
-    private ValueOperations<String, String> valueOperations;
+    @Resource(name = "strValueOps")
+    private ValueOperations<String, String> strValueOps;
 
     @Autowired
     private RedisTemplate<String, Object> shiroRedisTemplate;
     @Resource(name = "shiroHashOps")
     private HashOperations<String, Object, Object> shiroHashOps;
+    @Resource(name = "shiroValueOps")
+    private ValueOperations<String, Object> shiroValueOps;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
+
+    //////// redis json ////////
 
     /**
      * 添加
@@ -54,35 +55,33 @@ public class RedisService {
      * @param hashKey
      * @param key
      * @param values
-     * @param expire 过期时间(单位:秒),传入 -1 时表示不设置过期时间
+     * @param expire
+     * @param unit 过期时间,传入 -1 时表示不设置过期时间
      */
-    public void put(String hashKey, String key, String values, long expire) {
+    public void putHash(String hashKey, String key, Object values, long expire, TimeUnit unit) {
         try {
-            hashOperations.put(hashKey, key, values);
+            hashOps.put(hashKey, key, values);
             if (expire != -1) {
-                redisTemplate.expire(hashKey, expire, TimeUnit.SECONDS);
+                redisTemplate.expire(hashKey, expire, unit);
             }
         } catch (Exception e) {
             logger.warn("", e);
         }
     }
 
-    public void putObj(String hashKey, String key, Object values, long expire) {
+    /**
+     * 添加
+     * 
+     * @param key
+     * @param values
+     * @param expire
+     * @param unit 过期时间,传入 -1 时表示不设置过期时间
+     */
+    public void putValue(String key, Object values, long expire, TimeUnit unit) {
         try {
-            hashOperationsObj.put(hashKey, key, values);
+            valueOps.set(key, values);
             if (expire != -1) {
-                redisTemplate.expire(hashKey, expire, TimeUnit.SECONDS);
-            }
-        } catch (Exception e) {
-            logger.warn("", e);
-        }
-    }
-
-    public void setKeyValue(String key, Object values, long expire) {
-        try {
-            valueOperationsObj.set(key, values);
-            if (expire != -1) {
-                redisTemplate.expire(key, expire, TimeUnit.SECONDS);
+                redisTemplate.expire(key, expire, unit);
             }
         } catch (Exception e) {
             logger.warn("", e);
@@ -92,11 +91,15 @@ public class RedisService {
     /**
      * 删除
      * 
+     * @param key
      * @param hashKey
-     * @param key
      */
-    public void remove(String hashKey, String key) {
-        hashOperations.delete(hashKey, key);
+    public void removeHash(String key, String hashKey) {
+        try {
+            hashOps.delete(key, hashKey);
+        } catch (Exception e) {
+            logger.warn("", e);
+        }
     }
 
     /**
@@ -104,115 +107,74 @@ public class RedisService {
      * 
      * @param key
      */
-    public void remove(String key) {
-        redisTemplate.delete(key);
+    public void removeValue(String key) {
+        try {
+            flushExpire(key, 1L, TimeUnit.MILLISECONDS);
+        } catch (Exception e) {
+            logger.warn("", e);
+        }
     }
 
     /**
      * 查询
      * 
+     * @param key
      * @param hashKey
+     * @return
+     */
+    public Object getHash(String key, String hashKey) {
+        return hashOps.get(key, hashKey);
+    }
+
+    /**
+     * 查询
+     * 
      * @param key
      * @return
      */
-    public String get(String hashKey, String key) {
-        return hashOperations.get(hashKey, key);
-    }
-
-    public Object getObj(String hashKey, String key) {
-        return hashOperationsObj.get(hashKey, key);
-    }
-
-    public Object getKeyValue(String key) {
-        return valueOperationsObj.get(key);
+    public Object getValue(String key) {
+        return valueOps.get(key);
     }
 
     /**
-     * 获取当前redis库下所有对象
-     *
-     * @return
-     */
-    public List<String> getAll(String hashKey) {
-        return hashOperations.values(hashKey);
-    }
-
-    /**
-     * 查询查询当前redis库下所有key
-     *
-     * @return
-     */
-    public Set<String> getHashKeys(String hashKey) {
-        return hashOperations.keys(hashKey);
-    }
-
-    /**
-     * 查询查询当前redis库下所有key
-     *
-     * @return
-     */
-    public Set<String> getKeys(String pattern) {
-        return redisTemplate.keys(pattern);
-    }
-
-    /**
-     * 判断key是否存在redis中
-     *
-     * @param key 传入key的名称
-     * @return
-     */
-    public boolean isKeyExists(String hashKey, String key) {
-        return hashOperations.hasKey(hashKey, key);
-    }
-
-    /**
-     * 查询当前key下缓存数量
-     *
-     * @return
-     */
-    public long count(String hashKey) {
-        return hashOperations.size(hashKey);
-    }
-
-    /**
-     * 清空redis
-     */
-    public void empty(String hashKey) {
-        Set<String> set = hashOperations.keys(hashKey);
-        set.stream().forEach(key -> hashOperations.delete(hashKey, key));
-    }
-
-    /**
-     * 重设过期时间(秒)
+     * 根据key模糊查询 like%
      * 
-     * @param hashKey
-     * @param expire
+     * @param key
+     * @return hash
      */
-    public void flushExpire(String hashKey, long expire) {
-        flushExpire(hashKey, expire, TimeUnit.SECONDS);
+    public List<Object> getAllHash(String key) {
+        return hashOps.values(key);
     }
 
     /**
      * 重设过期时间
      * 
-     * @param hashKey
+     * @param key
      * @param expire
-     * @param timeUnit 单位
+     * @param unit
      */
-    public void flushExpire(String hashKey, long expire, TimeUnit timeUnit) {
-        if (expire != -1) {
-            redisTemplate.expire(hashKey, expire, timeUnit);
+    public void flushExpire(String key, long expire, TimeUnit unit) {
+        try {
+            if (expire < -1L) {
+                return;
+            }
+            redisTemplate.expire(key, expire, unit);
+
+        } catch (Exception e) {
+            logger.warn("", e);
         }
     }
 
     /**
-     * 根据Key查询普通字符串value
+     * 根据key清除缓存
      * 
      * @param key
-     * @return
      */
-    public String getStringValue(String key) {
-        return valueOperations.get(key);
+    public void delete(String key) {
+        flushExpire(key, 1L, TimeUnit.MILLISECONDS);
     }
+
+    //////// redis string ////////
 
     /**
      * 添加<br/>
@@ -222,11 +184,11 @@ public class RedisService {
      * @param value
      * @param expire 过期时间(单位:秒),传入 -1 时表示不设置过期时间
      */
-    public void putStringValue(String key, String value, long expire) {
+    public void putStrValue(String key, String value, long expire, TimeUnit unit) {
         try {
-            valueOperations.set(key, value);
+            strValueOps.set(key, value);
             if (expire != -1) {
-                strRedisTemplate.expire(key, expire, TimeUnit.SECONDS);
+                strRedisTemplate.expire(key, expire, unit);
             }
         } catch (Exception e) {
             logger.warn("", e);
@@ -234,45 +196,104 @@ public class RedisService {
     }
 
     /**
-     * 重设过期时间<br/>
-     * 针对strRedisTemplate
+     * 删除
      * 
-     * @param hashKey
-     * @param expire
-     * @param timeUnit 单位
+     * @param key
      */
-    public void flushStrExpire(String key, long expire, TimeUnit timeUnit) {
-        if (expire != -1) {
-            strRedisTemplate.expire(key, expire, timeUnit);
+    public void removeStrValue(String key) {
+        try {
+            flushStrExpire(key, 1L, TimeUnit.MILLISECONDS);
+        } catch (Exception e) {
+            logger.warn("", e);
+        }
+    }
+
+    /**
+     * 查询
+     * 
+     * @param key
+     * @return
+     */
+    public String getStrValue(String key) {
+        return strValueOps.get(key);
+    }
+
+    /**
+     * 重设过期时间
+     * 
+     * @param key
+     * @param expire
+     * @param unit
+     */
+    public void flushStrExpire(String key, long expire, TimeUnit unit) {
+        try {
+            if (expire < -1L) {
+                return;
+            }
+            strRedisTemplate.expire(key, expire, unit);
+        } catch (Exception e) {
+            logger.warn("", e);
         }
     }
 
     ////// shiro-redis //////
 
     /**
-     * 使用shiroHashOps查询
-     * 
-     * @param key
-     * @param hashKey
-     * @return 序列化对象/byte[]
-     */
-    public Object getShiroValue(String key, Object hashKey) {
-        return shiroHashOps.get(key, hashKey);
-    }
-
-    /**
-     * 使用shiroHashOps插入
+     * 新增
      * 
      * @param key
      * @param hashKey
      * @param value 序列化对象/byte[]
      * @param expire 有效期: 毫秒
      */
-    public void setShiroValue(String key, Object hashKey, Object value, long expire) {
-        shiroHashOps.put(key, hashKey, value);
-        if (expire != -1) {
-            redisTemplate.expire(key, expire, TimeUnit.MILLISECONDS);
+    public void putShiroHash(String key, String hashKey, Object value, long expire, TimeUnit unit) {
+        try {
+            shiroHashOps.put(key, hashKey, value);
+            if (expire != -1) {
+                redisTemplate.expire(key, expire, unit);
+            }
+        } catch (Exception e) {
+            logger.warn("", e);
         }
+    }
+
+    /**
+     * 新增
+     * 
+     * @param key
+     * @param value 序列化对象/byte[]
+     * @param expire 有效期: 毫秒
+     */
+    public void putShiroValue(String key, Object value, long expire, TimeUnit unit) {
+        try {
+            shiroValueOps.set(key, value);
+            if (expire != -1) {
+                redisTemplate.expire(key, expire, unit);
+            }
+        } catch (Exception e) {
+            logger.warn("", e);
+        }
+    }
+
+    /**
+     * 查询
+     * 
+     * @param key
+     * @param hashKey
+     * @return 序列化对象/byte[]
+     */
+    public Object getShiroHash(String key, Object hashKey) {
+        return shiroHashOps.get(key, hashKey);
+    }
+
+    /**
+     * 查询
+     * 
+     * @param key
+     * @return 序列化对象/byte[]
+     */
+    public Object getShiroValue(String key) {
+        return shiroValueOps.get(key);
     }
 
     /**
@@ -281,9 +302,18 @@ public class RedisService {
      * @param key
      * @param expire
      */
-    public void flushShiroExpire(String key, long expire) {
-        if (expire != -1) {
-            shiroRedisTemplate.expire(key, expire, TimeUnit.MILLISECONDS);
+    public void flushShiroExpire(String key, long expire, TimeUnit unit) {
+        try {
+            if (expire < -1L) {
+                return;
+            }
+            shiroRedisTemplate.expire(key, expire, unit);
+        } catch (Exception e) {
+            logger.warn("", e);
         }
+    }
+
+    public RedisTemplate<String, Object> getShiroRedisTemplate() {
+        return shiroRedisTemplate;
     }
 }

@@ -16,9 +16,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.jee.learn.manager.config.shiro.CustomCredentialsMatcher;
-import com.jee.learn.manager.config.shiro.CustomToken;
 import com.jee.learn.manager.config.shiro.ShiroContants;
+import com.jee.learn.manager.config.shiro.security.CustomCredentialsMatcher;
+import com.jee.learn.manager.config.shiro.security.CustomToken;
 import com.jee.learn.manager.domain.sys.SysUser;
 import com.jee.learn.manager.service.sys.SysUserService;
 import com.jee.learn.manager.util.Constants;

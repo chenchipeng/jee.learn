@@ -1,7 +1,8 @@
-package com.jee.learn.manager.config.shiro;
+package com.jee.learn.manager.config.shiro.security;
 
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 
+import com.jee.learn.manager.config.shiro.ShiroContants;
 import com.jee.learn.manager.util.text.EncodeUtils;
 import com.jee.learn.manager.util.text.EscapeUtil;
 import com.jee.learn.manager.util.text.HashUtil;

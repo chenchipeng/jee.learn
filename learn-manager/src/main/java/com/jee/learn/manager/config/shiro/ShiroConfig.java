@@ -13,15 +13,19 @@ import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 
 import com.jee.learn.manager.config.SystemConfig;
 import com.jee.learn.manager.config.shiro.mv.CustomRealm;
+import com.jee.learn.manager.config.shiro.security.CustomFormAuthenticationFilter;
 import com.jee.learn.manager.config.shiro.session.CacheSessionDAO;
 import com.jee.learn.manager.config.shiro.session.CustomSessionIdGenerator;
 import com.jee.learn.manager.config.shiro.session.CustomWebSessionManager;
+import com.jee.learn.manager.config.shiro.session.JedisSessionDAO;
 import com.jee.learn.manager.config.shiro.session.SessionDAO;
 import com.jee.learn.manager.support.cache.CacheConstants;
 
@@ -97,7 +101,7 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setFilters(customFilters());
         shiroFilterFactoryBean.setFilterChainDefinitionMap(urlFilter());
 
-        LOGGER.debug("shiro拦截器工厂类注入成功");
+        LOGGER.debug("shiro 拦截 注入成功");
         return shiroFilterFactoryBean;
     }
 
@@ -112,8 +116,11 @@ public class ShiroConfig {
         securityManager.setRealm(customRealm);
         // 设置session manager
         securityManager.setSessionManager(sessionManager);
-        // 设置cacheManager
-        securityManager.setCacheManager(shiroCacheManager);
+
+        if (SystemConfig.EHCACHE_NAME.equals(systemConfig.getShiroCacherName())) {
+            // 设置cacheManager
+            securityManager.setCacheManager(shiroCacheManager);
+        }
 
         return securityManager;
     }
@@ -130,7 +137,7 @@ public class ShiroConfig {
         // 会话超时时间，单位：毫秒
         sessionManager.setGlobalSessionTimeout(systemConfig.getSessionTimeout());
 
-        // 定时清理失效会话, 清理用户直接关闭浏览器造成的孤立会话
+        // 定时清理失效会话, 清理用户直接关闭浏览器造成的孤立会话, 用户量过多会影响性能
         sessionManager.setSessionValidationInterval(systemConfig.getSessionTimeoutClean());
         sessionManager.setSessionValidationSchedulerEnabled(true);
 
@@ -142,8 +149,7 @@ public class ShiroConfig {
     }
 
     /**
-     * 指定本系统SESSIONID, 默认为: JSESSIONID 问题: 与SERVLET容器名冲突, 如JETTY, TOMCAT
-     * 等默认JSESSIONID,当跳出SHIRO SERVLET时如ERROR-PAGE容器会为JSESSIONID重新分配值导致登录会话丢失!
+     * 指定本系统SESSIONID, 默认为: JSESSIONID 问题: 与SERVLET容器名冲突, 如JETTY, TOMCAT 等默认JSESSIONID,当跳出SHIRO SERVLET时如ERROR-PAGE容器会为JSESSIONID重新分配值导致登录会话丢失!
      */
     private SimpleCookie sessionIdCookie() {
         return new SimpleCookie(systemConfig.getApplicationName() + SIMPLE_COOKIE_NAME_SUFFIX);
@@ -152,11 +158,20 @@ public class ShiroConfig {
     /** 自定义Session存储容器 */
     @Bean
     public SessionDAO sessionDAO(CustomSessionIdGenerator sessionIdGenerator, EhCacheManager shiroCacheManager) {
-        CacheSessionDAO sessionDao = new CacheSessionDAO();
-        sessionDao.setSessionIdGenerator(sessionIdGenerator);
-        sessionDao.setCacheManager(shiroCacheManager);
-        sessionDao.setActiveSessionsCacheName(CacheConstants.EHCACHE_SHIRO);
-        return sessionDao;
+        if (SystemConfig.EHCACHE_NAME.equals(systemConfig.getShiroCacherName())) {
+            CacheSessionDAO sessionDao = new CacheSessionDAO();
+            sessionDao.setSessionIdGenerator(sessionIdGenerator);
+            sessionDao.setCacheManager(shiroCacheManager);
+            sessionDao.setActiveSessionsCacheName(CacheConstants.EHCACHE_SHIRO);
+            return sessionDao;
+        }
+        if (SystemConfig.REDIS_NAME.equals(systemConfig.getShiroCacherName())) {
+            JedisSessionDAO sessionDao = new JedisSessionDAO();
+            sessionDao.setSessionIdGenerator(sessionIdGenerator);
+            return sessionDao;
+        }
+        LOGGER.debug("没有指定 自定义Session存储容器");
+        return null;
     }
 
     //////// cache ////////
@@ -170,6 +185,15 @@ public class ShiroConfig {
     }
 
     //////// 开启shiro aop注解支持 ////////
+
+    /** AOP式方法级权限检查 Enable Shiro Annotations for Spring-configured beans. Only run after */
+    @Bean
+    @DependsOn("lifecycleBeanPostProcessor")
+    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
+        DefaultAdvisorAutoProxyCreator creator = new DefaultAdvisorAutoProxyCreator();
+        creator.setProxyTargetClass(true);
+        return creator;
+    }
 
     @Bean
     public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {

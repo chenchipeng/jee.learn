@@ -16,7 +16,10 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "system")
 public class SystemConfig {
 
-    @Value("${spring.application.name}")
+    public static final String EHCACHE_NAME = "ehcache";
+    public static final String REDIS_NAME = "redis";
+
+    @Value("${spring.application.name:''}")
     private String applicationName;
 
     private String name = "后台管理系统";
@@ -25,6 +28,8 @@ public class SystemConfig {
 
     private Long sessionTimeout = 1800000L;// sessoin默认30分钟有效期
     private Long sessionTimeoutClean = 180000L;// 默认关闭浏览器后3分钟清除session
+    private String shiroCacherName = EHCACHE_NAME;// shiro缓存管理器的类型
+    private String shiroKeyPrefix = "shiro:session_";// shiro缓存在redis里面的前缀
 
     public String getApplicationName() {
         return applicationName;
@@ -68,6 +73,22 @@ public class SystemConfig {
 
     public void setSessionTimeoutClean(Long sessionTimeoutClean) {
         this.sessionTimeoutClean = sessionTimeoutClean;
+    }
+
+    public String getShiroCacherName() {
+        return shiroCacherName;
+    }
+
+    public void setShiroCacherName(String shiroCacherName) {
+        this.shiroCacherName = shiroCacherName;
+    }
+
+    public String getShiroKeyPrefix() {
+        return shiroKeyPrefix;
+    }
+
+    public void setShiroKeyPrefix(String shiroKeyPrefix) {
+        this.shiroKeyPrefix = shiroKeyPrefix;
     }
 
 }

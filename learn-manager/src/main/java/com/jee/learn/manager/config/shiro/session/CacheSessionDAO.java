@@ -2,7 +2,6 @@ package com.jee.learn.manager.config.shiro.session;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,15 +11,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.UnknownSessionException;
 import org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO;
-import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.subject.support.DefaultSubjectContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.jee.learn.manager.config.SystemConfig;
 import com.jee.learn.manager.config.shiro.ShiroContants;
 import com.jee.learn.manager.util.Constants;
 import com.jee.learn.manager.util.net.ServletUtil;
-import com.jee.learn.manager.util.time.DateUtil;
 
 /**
  * ehcache session dao
@@ -37,6 +33,21 @@ public class CacheSessionDAO extends EnterpriseCacheSessionDAO implements Sessio
 
     public CacheSessionDAO() {
         super();
+    }
+
+    @Override
+    protected Serializable doCreate(Session session) {
+        HttpServletRequest request = ServletUtil.getRequest();
+        if (request != null) {
+            String uri = request.getServletPath();
+            // 如果是静态文件，则不创建SESSION
+            if (ServletUtil.isStaticFile(uri)) {
+                return null;
+            }
+        }
+        super.doCreate(session);
+        logger.debug("doCreate {} {}", session, request != null ? request.getRequestURI() : StringUtils.EMPTY);
+        return session.getId();
     }
 
     @Override
@@ -67,6 +78,11 @@ public class CacheSessionDAO extends EnterpriseCacheSessionDAO implements Sessio
     }
 
     @Override
+    protected Session doReadSession(Serializable sessionId) {
+        return super.doReadSession(sessionId);
+    }
+
+    @Override
     protected void doDelete(Session session) {
         if (session == null || session.getId() == null) {
             return;
@@ -74,26 +90,6 @@ public class CacheSessionDAO extends EnterpriseCacheSessionDAO implements Sessio
 
         super.doDelete(session);
         logger.debug("delete {} ", session.getId());
-    }
-
-    @Override
-    protected Serializable doCreate(Session session) {
-        HttpServletRequest request = ServletUtil.getRequest();
-        if (request != null) {
-            String uri = request.getServletPath();
-            // 如果是静态文件，则不创建SESSION
-            if (ServletUtil.isStaticFile(uri)) {
-                return null;
-            }
-        }
-        super.doCreate(session);
-        logger.debug("doCreate {} {}", session, request != null ? request.getRequestURI() : StringUtils.EMPTY);
-        return session.getId();
-    }
-
-    @Override
-    protected Session doReadSession(Serializable sessionId) {
-        return super.doReadSession(sessionId);
     }
 
     @Override
@@ -140,25 +136,8 @@ public class CacheSessionDAO extends EnterpriseCacheSessionDAO implements Sessio
         Long minute = systemConfig.getSessionTimeoutClean() / 60000L;
         Set<Session> sessions = new HashSet<>();
         for (Session session : getActiveSessions()) {
-            boolean isActiveSession = false;
-            // 不包括离线并符合最后访问时间小于等于3分钟条件
-            if (includeLeave || DateUtil.isSameTime(DateUtil.subMinutes(new Date(), minute.intValue()),
-                    session.getLastAccessTime())) {
-                isActiveSession = true;
-            }
-            // 符合登陆者条件。
-            if (principal != null) {
-                PrincipalCollection pc = (PrincipalCollection) session
-                        .getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY);
-                if (principal.toString().equals(pc != null ? pc.getPrimaryPrincipal().toString() : StringUtils.EMPTY)) {
-                    isActiveSession = true;
-                }
-            }
-            // 过滤掉的SESSION
-            if (filterSession != null && filterSession.getId().equals(session.getId())) {
-                isActiveSession = false;
-            }
-            if (isActiveSession) {
+            boolean isActive = isActiveSession(session, includeLeave, principal, filterSession, minute.intValue());
+            if (isActive) {
                 sessions.add(session);
             }
         }
