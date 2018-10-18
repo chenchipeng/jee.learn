@@ -16,6 +16,7 @@ import org.apache.shiro.session.mgt.eis.AbstractSessionDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.jee.learn.manager.config.SystemConfig;
+import com.jee.learn.manager.config.shiro.ShiroContants;
 import com.jee.learn.manager.support.cache.RedisService;
 import com.jee.learn.manager.util.Constants;
 import com.jee.learn.manager.util.net.ServletUtil;
@@ -31,8 +32,6 @@ import com.jee.learn.manager.util.net.ServletUtil;
  */
 public class JedisSessionDAO extends AbstractSessionDAO implements CustomSessionDAO {
 
-    private static final String SESSION_REQUEST_ATTRIBUTE_PREFIX = "session_";
-    private static final String SESSION_UPDATE_PARAMETER = "updateSession";
     private static final String ASTERISK = "*";
 
     @Autowired
@@ -76,7 +75,7 @@ public class JedisSessionDAO extends AbstractSessionDAO implements CustomSession
             if (ServletUtil.isStaticFile(uri)) {
                 return null;
             }
-            s = (Session) request.getAttribute(SESSION_REQUEST_ATTRIBUTE_PREFIX + sessionId);
+            s = (Session) request.getAttribute(ShiroContants.SESSION_REQUEST_ATTRIBUTE_PREFIX + sessionId);
         }
         if (s != null) {
             return s;
@@ -91,7 +90,7 @@ public class JedisSessionDAO extends AbstractSessionDAO implements CustomSession
         }
 
         if (request != null && session != null) {
-            request.setAttribute(SESSION_REQUEST_ATTRIBUTE_PREFIX + sessionId, session);
+            request.setAttribute(ShiroContants.SESSION_REQUEST_ATTRIBUTE_PREFIX + sessionId, session);
         }
 
         return session;
@@ -116,7 +115,7 @@ public class JedisSessionDAO extends AbstractSessionDAO implements CustomSession
                 return;
             }
             // 手动控制不更新SESSION
-            if (Constants.N.equals(request.getParameter(SESSION_UPDATE_PARAMETER))) {
+            if (Constants.N.equals(request.getParameter(ShiroContants.SESSION_UPDATE_PARAMETER))) {
                 return;
             }
         }
@@ -143,6 +142,7 @@ public class JedisSessionDAO extends AbstractSessionDAO implements CustomSession
     }
 
     //////// SessionDAO interface ////////
+
     @Override
     public Collection<Session> getActiveSessions(boolean includeLeave) {
         return getActiveSessions(includeLeave, null, null);

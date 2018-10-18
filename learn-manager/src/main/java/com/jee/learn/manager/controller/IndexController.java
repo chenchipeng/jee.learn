@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.jee.learn.manager.config.SystemConfig;
+import com.jee.learn.manager.config.shiro.session.CustomSessionDAO;
 
 /**
  * 登陆/首页 页面controller
@@ -22,6 +23,8 @@ public class IndexController extends BaseController {
 
     @Autowired
     private SystemConfig systemConfig;
+    @Autowired
+    private CustomSessionDAO sessionDao;
 
     @GetMapping("${system.authc-path}/login")
     public String loginPage(Model model) {
@@ -49,6 +52,7 @@ public class IndexController extends BaseController {
     @RequiresPermissions("user")
     @GetMapping("${system.authc-path}")
     public String indexPage() {
+        logger.info("当前活跃人数 {}", sessionDao.getActiveSessions(false).size());
         return "hello";
     }
 

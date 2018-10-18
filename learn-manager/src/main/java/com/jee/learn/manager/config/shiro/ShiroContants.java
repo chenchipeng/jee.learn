@@ -17,6 +17,7 @@ public class ShiroContants {
     public static final String SYSTEM_ERROR = "系统出现点问题, 请稍后再试!";
 
     //////// session dao 相关 ////////
-    public static final String UPDATE_SESSION_PARAM = "updateSession";
     public static final String SESSION_PARAM_PREFIX = "session_";
+    public static final String SESSION_UPDATE_PARAMETER = "updateSession";
+    public static final String SESSION_REQUEST_ATTRIBUTE_PREFIX = "session_";
 }

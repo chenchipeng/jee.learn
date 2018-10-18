@@ -70,4 +70,14 @@ public interface CustomSessionDAO extends org.apache.shiro.session.mgt.eis.Sessi
         return isActiveSession;
     }
 
+    /**
+     * 获取当前在线的session 个数
+     * 
+     * @param includeLeave 是否包括离线（最后访问时间大于 {@link SystemConfig#getSessionTimeoutClean()} 为离线会话）
+     * @return
+     */
+    default long getActiveSessionCount(boolean includeLeave) {
+        return getActiveSessions(includeLeave).size();
+    }
+
 }

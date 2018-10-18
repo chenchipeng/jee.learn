@@ -121,8 +121,8 @@ public class ShiroConfig {
         securityManager.setSessionManager(sessionManager);
 
         if (SystemConfig.EHCACHE_NAME.equals(systemConfig.getShiroCacherName())) {
-            // 设置cacheManager
-            securityManager.setCacheManager(shiroCacheManager);
+            // 设置cacheManager 当使用了自定义的ehcache管理后, 无需设置这东西
+            // securityManager.setCacheManager(shiroCacheManager);
         }
 
         return securityManager;

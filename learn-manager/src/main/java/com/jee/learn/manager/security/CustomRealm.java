@@ -55,7 +55,7 @@ public class CustomRealm extends AuthorizingRealm {
         CustomPrincipal principal = (CustomPrincipal) getAvailablePrincipal(principals);
 
         // 获取当前已登录的用户
-        if (systemConfig.isMultiAccountLogin()) {
+        if (!systemConfig.isMultiAccountLogin()) {
             Collection<Session> sessions = sessionDao.getActiveSessions(true, principal, ShiroUtil.getSession());
             if (sessions.size() > 0) {
                 if (ShiroUtil.getSubject().isAuthenticated()) {
