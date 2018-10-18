@@ -1,5 +1,8 @@
 package com.jee.learn.manager.support.cache;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,8 @@ public class EhcacheService {
 
     @Autowired
     private CacheManager ehCacheManager;
+    
+    //////// K V ////////
 
     public void put(String cacheName, String key, Object value) {
         Cache cache = ehCacheManager.getCache(cacheName);
@@ -38,4 +43,51 @@ public class EhcacheService {
         cache.remove(key);
     }
     
+    //////// K HASH ////////
+
+    @SuppressWarnings("unchecked")
+    public void put(String cacheName, String key, String hashKey, Object value) {
+        Cache cache = ehCacheManager.getCache(cacheName);
+        Element element = cache.get(key);
+
+        Map<String, Object> map = null;
+        if (element != null) {
+            map = (Map<String, Object>) element.getObjectValue();
+        }
+        if (map == null) {
+            map = new HashMap<>(1);
+        }
+
+        map.put(hashKey, value);
+        element = new Element(key, map);
+        cache.put(element);
+    }
+
+    @SuppressWarnings("unchecked")
+    public Object get(String cacheName, String key, String hashKey) {
+        Cache cache = ehCacheManager.getCache(cacheName);
+        Element element = cache.get(key);
+        if (element == null) {
+            return null;
+        }
+        Map<String, Object> map = (Map<String, Object>) element.getObjectValue();
+        return map.get(hashKey);
+    }
+
+    @SuppressWarnings("unchecked")
+    public void delete(String cacheName, String key, String hashKey) {
+        Cache cache = ehCacheManager.getCache(cacheName);
+        Element element = cache.get(key);
+        if (element == null) {
+            return;
+        }
+        Map<String, Object> map = (Map<String, Object>) element.getObjectValue();
+        map.remove(hashKey);
+
+        element = new Element(key, map);
+        cache.put(element);
+    }
+
+    // 得到内存的真实大小calculateInMemorySize()
+
 }

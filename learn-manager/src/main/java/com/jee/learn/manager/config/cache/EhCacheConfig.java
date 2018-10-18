@@ -47,21 +47,33 @@ public class EhCacheConfig implements CachingConfigurer {
 
         net.sf.ehcache.config.Configuration config = new net.sf.ehcache.config.Configuration();
         config.setName(DEFAULT_CONFIG_NAME);
-        config.setDefaultCacheConfiguration(defCache(persistence));
+        config.setDefaultCacheConfiguration(defCacheConfig(persistence));
         config.diskStore(diskStore);
 
         /* 可以创建多个cacheConfiguration，都添加到Config中 */
         // 系统活动会话缓存
+        config.addCache(defCache(persistence));
         config.addCache(shiroCache(persistence));
 
         return net.sf.ehcache.CacheManager.newInstance(config);
     }
 
     /** 默认配置 */
+    private CacheConfiguration defCacheConfig(PersistenceConfiguration persistence) {
+        CacheConfiguration dcf = new CacheConfiguration();
+        dcf.setTimeToIdleSeconds(300L);
+        dcf.setTimeToLiveSeconds(600L);
+        dcf.setMaxEntriesLocalHeap(100);
+        dcf.setMaxEntriesLocalDisk(100000);
+        dcf.persistence(persistence);
+        return dcf;
+    }
+
+    /** 默认缓存 */
     private CacheConfiguration defCache(PersistenceConfiguration persistence) {
         CacheConfiguration defCache = new CacheConfiguration();
         defCache.setName(CacheConstants.EHCACHE_DEFAULT);
-        defCache.setTimeToIdleSeconds(1800);
+        defCache.setTimeToIdleSeconds(180L);
         defCache.setMaxEntriesLocalHeap(100);
         defCache.setMaxEntriesLocalDisk(100000);
         defCache.persistence(persistence);
@@ -72,9 +84,7 @@ public class EhCacheConfig implements CachingConfigurer {
     private CacheConfiguration shiroCache(PersistenceConfiguration persistence) {
         CacheConfiguration shiroCache = new CacheConfiguration();
         shiroCache.setName(CacheConstants.EHCACHE_SHIRO);
-        shiroCache.setTimeToIdleSeconds(0);
-        shiroCache.setTimeToIdleSeconds(0);
-        shiroCache.setDiskExpiryThreadIntervalSeconds(180L);
+        shiroCache.setTimeToIdleSeconds(1800L);
         shiroCache.setMaxEntriesLocalHeap(100);
         shiroCache.setMaxEntriesLocalDisk(100000);
         shiroCache.persistence(persistence);

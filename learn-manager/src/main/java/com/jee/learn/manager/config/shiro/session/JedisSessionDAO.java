@@ -29,7 +29,7 @@ import com.jee.learn.manager.util.net.ServletUtil;
  *          修改记录:<br/>
  *          1.2018年10月13日 下午5:38:17 ccp 新建
  */
-public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
+public class JedisSessionDAO extends AbstractSessionDAO implements CustomSessionDAO {
 
     private static final String SESSION_REQUEST_ATTRIBUTE_PREFIX = "session_";
     private static final String SESSION_UPDATE_PARAMETER = "updateSession";

@@ -7,12 +7,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 
+import com.jee.learn.manager.support.servlet.BaseServlet;
+
 @SpringBootApplication
 @EnableAsync
+@ServletComponentScan(basePackageClasses = BaseServlet.class)
 public class LearnManagerApplication {
 
     private static final Logger logger = LoggerFactory.getLogger(LearnManagerApplication.class);

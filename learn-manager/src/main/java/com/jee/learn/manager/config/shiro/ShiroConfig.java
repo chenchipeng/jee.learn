@@ -25,7 +25,7 @@ import com.jee.learn.manager.config.shiro.session.CacheSessionDAO;
 import com.jee.learn.manager.config.shiro.session.CustomSessionIdGenerator;
 import com.jee.learn.manager.config.shiro.session.CustomWebSessionManager;
 import com.jee.learn.manager.config.shiro.session.JedisSessionDAO;
-import com.jee.learn.manager.config.shiro.session.SessionDAO;
+import com.jee.learn.manager.config.shiro.session.CustomSessionDAO;
 import com.jee.learn.manager.security.CustomRealm;
 import com.jee.learn.manager.support.cache.CacheConstants;
 
@@ -73,6 +73,9 @@ public class ShiroConfig {
         filterChainDefinitionMap.put(systemConfig.getGuestPath() + ANY_REQUEST, "anon");
         // 用户，需要权限 "user"
         filterChainDefinitionMap.put(systemConfig.getAuthcPath() + ANY_REQUEST, "user");
+        
+        // 拦截所有
+        filterChainDefinitionMap.put(ANY_REQUEST, "user");
 
         return filterChainDefinitionMap;
     }
@@ -128,7 +131,7 @@ public class ShiroConfig {
     //////// shiro sessionManager配置 ////////
 
     @Bean("sessionManager")
-    public CustomWebSessionManager sessionManager(SessionDAO sessionDAO) {
+    public CustomWebSessionManager sessionManager(CustomSessionDAO sessionDAO) {
         CustomWebSessionManager sessionManager = new CustomWebSessionManager();
 
         // Session存储容器
@@ -157,7 +160,7 @@ public class ShiroConfig {
 
     /** 自定义Session存储容器 */
     @Bean
-    public SessionDAO sessionDAO(CustomSessionIdGenerator sessionIdGenerator, EhCacheManager shiroCacheManager) {
+    public CustomSessionDAO sessionDAO(CustomSessionIdGenerator sessionIdGenerator, EhCacheManager shiroCacheManager) {
         if (SystemConfig.EHCACHE_NAME.equals(systemConfig.getShiroCacherName())) {
             CacheSessionDAO sessionDao = new CacheSessionDAO();
             sessionDao.setSessionIdGenerator(sessionIdGenerator);
@@ -186,7 +189,7 @@ public class ShiroConfig {
 
     //////// 开启shiro aop注解支持 ////////
 
-    /** AOP式方法级权限检查 Enable Shiro Annotations for Spring-configured beans. Only run after */
+    /** Shiro 过滤器代理配置 */
     @Bean
     @DependsOn("lifecycleBeanPostProcessor")
     public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
@@ -195,6 +198,7 @@ public class ShiroConfig {
         return creator;
     }
 
+    /**启用Shrio授权注解拦截方式，AOP式方法级权限检查*/
     @Bean
     public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
         AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();

@@ -78,7 +78,7 @@ public class CustomFormAuthenticationFilter extends FormAuthenticationFilter {
     }
 
     protected String getCaptcha(ServletRequest request) {
-        return WebUtils.getCleanParam(request, ShiroContants.DEFAULT_CAPTCHA_PARAM);
+        return WebUtils.getCleanParam(request, CustomToken.DEFAULT_CAPTCHA_PARAM);
     }
 
 }

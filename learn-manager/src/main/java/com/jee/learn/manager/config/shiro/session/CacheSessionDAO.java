@@ -26,7 +26,7 @@ import com.jee.learn.manager.util.net.ServletUtil;
  *          修改记录:<br/>
  *          1.2018年10月16日 上午9:56:49 ccp 新建
  */
-public class CacheSessionDAO extends EnterpriseCacheSessionDAO implements SessionDAO {
+public class CacheSessionDAO extends EnterpriseCacheSessionDAO implements CustomSessionDAO {
 
     @Autowired
     private SystemConfig systemConfig;
@@ -142,13 +142,16 @@ public class CacheSessionDAO extends EnterpriseCacheSessionDAO implements Sessio
         }
         Long minute = systemConfig.getSessionTimeoutClean() / 60000L;
         Set<Session> sessions = new HashSet<>();
-        for (Session session : getActiveSessions()) {
+        
+        Collection<Session> activeSessions = super.getActiveSessions();
+        for (Session session : activeSessions) {
             boolean isActive = isActiveSession(session, includeLeave, principal, filterSession, minute.intValue());
             if (isActive) {
                 sessions.add(session);
             }
         }
-        logger.info("after getActiveSessions size: {} ", sessions.size());
+        
+        logger.info("getActiveSessions size: {} ", sessions.size());
         return sessions;
     }
 

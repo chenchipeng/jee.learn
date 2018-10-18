@@ -10,6 +10,8 @@ package com.jee.learn.manager.config.shiro.security;
  */
 public class CustomToken extends org.apache.shiro.authc.UsernamePasswordToken {
     private static final long serialVersionUID = 1L;
+    
+    public static final String DEFAULT_CAPTCHA_PARAM = "captcha";
 
     private String captcha;
 

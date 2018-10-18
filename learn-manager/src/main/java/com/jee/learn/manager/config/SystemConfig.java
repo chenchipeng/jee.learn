@@ -30,6 +30,7 @@ public class SystemConfig {
     private Long sessionTimeoutClean = 180000L;// 默认关闭浏览器后3分钟清除session
     private String shiroCacherName = EHCACHE_NAME;// shiro缓存管理器的类型
     private String shiroKeyPrefix = "shiro:session_";// shiro缓存在redis里面的前缀
+    private boolean multiAccountLogin = true; // 是否允许账号同时登录
 
     public String getApplicationName() {
         return applicationName;
@@ -89,6 +90,14 @@ public class SystemConfig {
 
     public void setShiroKeyPrefix(String shiroKeyPrefix) {
         this.shiroKeyPrefix = shiroKeyPrefix;
+    }
+
+    public boolean isMultiAccountLogin() {
+        return multiAccountLogin;
+    }
+
+    public void setMultiAccountLogin(boolean multiAccountLogin) {
+        this.multiAccountLogin = multiAccountLogin;
     }
 
 }

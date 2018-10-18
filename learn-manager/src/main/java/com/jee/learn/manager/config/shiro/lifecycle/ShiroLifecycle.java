@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * 保证实现了Shiro内部lifecycle函数的bean执行
+ * Shiro 生命周期处理器，实现初始化和销毁回调
  * 
  * @author ccp
  * @version 1.0<br/>

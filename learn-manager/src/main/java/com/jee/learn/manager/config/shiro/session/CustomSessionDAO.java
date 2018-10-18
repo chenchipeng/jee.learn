@@ -13,9 +13,9 @@ import com.jee.learn.manager.config.SystemConfig;
 import com.jee.learn.manager.util.time.ClockUtil;
 import com.jee.learn.manager.util.time.DateUtil;
 
-public interface SessionDAO extends org.apache.shiro.session.mgt.eis.SessionDAO {
+public interface CustomSessionDAO extends org.apache.shiro.session.mgt.eis.SessionDAO {
 
-    public Logger logger = LoggerFactory.getLogger(SessionDAO.class);
+    public Logger logger = LoggerFactory.getLogger(CustomSessionDAO.class);
 
     /**
      * 获取活动会话
