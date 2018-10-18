@@ -22,10 +22,10 @@ import org.springframework.context.annotation.DependsOn;
 import com.jee.learn.manager.config.SystemConfig;
 import com.jee.learn.manager.config.shiro.security.CustomFormAuthenticationFilter;
 import com.jee.learn.manager.config.shiro.session.CacheSessionDAO;
+import com.jee.learn.manager.config.shiro.session.CustomSessionDAO;
 import com.jee.learn.manager.config.shiro.session.CustomSessionIdGenerator;
 import com.jee.learn.manager.config.shiro.session.CustomWebSessionManager;
 import com.jee.learn.manager.config.shiro.session.JedisSessionDAO;
-import com.jee.learn.manager.config.shiro.session.CustomSessionDAO;
 import com.jee.learn.manager.security.CustomRealm;
 import com.jee.learn.manager.support.cache.CacheConstants;
 
@@ -73,7 +73,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put(systemConfig.getGuestPath() + ANY_REQUEST, "anon");
         // 用户，需要权限 "user"
         filterChainDefinitionMap.put(systemConfig.getAuthcPath() + ANY_REQUEST, "user");
-        
+
         // 拦截所有
         filterChainDefinitionMap.put(ANY_REQUEST, "user");
 
@@ -120,10 +120,8 @@ public class ShiroConfig {
         // 设置session manager
         securityManager.setSessionManager(sessionManager);
 
-        if (SystemConfig.EHCACHE_NAME.equals(systemConfig.getShiroCacherName())) {
-            // 设置cacheManager 当使用了自定义的ehcache管理后, 无需设置这东西
-            // securityManager.setCacheManager(shiroCacheManager);
-        }
+        // 设置cacheManager 小测后发现该设置会缓存权鉴信息, 避免doGetAuthorizationInfo()重复执行
+        securityManager.setCacheManager(shiroCacheManager);
 
         return securityManager;
     }
@@ -198,7 +196,7 @@ public class ShiroConfig {
         return creator;
     }
 
-    /**启用Shrio授权注解拦截方式，AOP式方法级权限检查*/
+    /** 启用Shrio授权注解拦截方式，AOP式方法级权限检查 */
     @Bean
     public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
         AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();

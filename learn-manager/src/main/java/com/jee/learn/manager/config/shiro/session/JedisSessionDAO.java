@@ -12,7 +12,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.UnknownSessionException;
-import org.apache.shiro.session.mgt.eis.AbstractSessionDAO;
+import org.apache.shiro.session.mgt.eis.CachingSessionDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.jee.learn.manager.config.SystemConfig;
@@ -30,7 +30,7 @@ import com.jee.learn.manager.util.net.ServletUtil;
  *          修改记录:<br/>
  *          1.2018年10月13日 下午5:38:17 ccp 新建
  */
-public class JedisSessionDAO extends AbstractSessionDAO implements CustomSessionDAO {
+public class JedisSessionDAO extends CachingSessionDAO implements CustomSessionDAO {
 
     private static final String ASTERISK = "*";
 
@@ -39,6 +39,10 @@ public class JedisSessionDAO extends AbstractSessionDAO implements CustomSession
 
     @Autowired
     private RedisService redisService;
+    
+    public JedisSessionDAO() {
+        super();
+    }
 
     @Override
     protected Serializable doCreate(Session session) {
@@ -97,7 +101,7 @@ public class JedisSessionDAO extends AbstractSessionDAO implements CustomSession
     }
 
     @Override
-    public void update(Session session) throws UnknownSessionException {
+    protected void doUpdate(Session session) {
         if (session == null || session.getId() == null) {
             return;
         }
@@ -125,7 +129,7 @@ public class JedisSessionDAO extends AbstractSessionDAO implements CustomSession
     }
 
     @Override
-    public void delete(Session session) {
+    protected void doDelete(Session session) {
         if (session == null || session.getId() == null) {
             return;
         }
