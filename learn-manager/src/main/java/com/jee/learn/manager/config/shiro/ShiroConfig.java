@@ -34,6 +34,7 @@ import net.sf.ehcache.CacheManager;
 /**
  * shiro config<br/>
  * 参考:https://blog.csdn.net/weixin_38132621/article/details/80216056
+ * 参考:https://blog.csdn.net/qq_34021712/article/details/80791219
  * 
  * @author ccp
  * @version 1.0<br/>

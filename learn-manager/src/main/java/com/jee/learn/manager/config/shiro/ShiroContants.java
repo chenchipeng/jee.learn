@@ -7,7 +7,6 @@ public class ShiroContants {
     public static final int SALT_LENGTH = 4;
     public static final int SALT_SIZE = 8;// 必须为 SALT_LENGTH 的两倍
 
-    public static final String DEFAULT_MESSAGE_PARAM = "message";
     public static final String MESSAGE_PREFIX = "msg:";
 
     public static final String INVALID_USERNAME_ERROR = "账号禁止登录.";

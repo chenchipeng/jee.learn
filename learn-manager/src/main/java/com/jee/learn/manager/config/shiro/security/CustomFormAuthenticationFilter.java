@@ -25,6 +25,8 @@ import com.jee.learn.manager.config.shiro.ShiroContants;
  */
 public class CustomFormAuthenticationFilter extends FormAuthenticationFilter {
 
+    public static final String DEFAULT_MESSAGE_PARAM = "message";
+
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
@@ -62,7 +64,7 @@ public class CustomFormAuthenticationFilter extends FormAuthenticationFilter {
 
         // 输出到页面
         request.setAttribute(getFailureKeyAttribute(), className);
-        request.setAttribute(ShiroContants.DEFAULT_MESSAGE_PARAM, message);
+        request.setAttribute(DEFAULT_MESSAGE_PARAM, message);
 
         return true;
     }

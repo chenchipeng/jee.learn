@@ -22,7 +22,7 @@ public class SystemConfig {
     @Value("${spring.application.name:''}")
     private String applicationName;
 
-    private String name = "后台管理系统";
+    private String name = "后台管理系统";// 系统名称
     private String authcPath = "/u";// 用户
     private String guestPath = "/g";// 游客
 
@@ -31,6 +31,7 @@ public class SystemConfig {
     private String shiroCacherName = EHCACHE_NAME;// shiro缓存管理器的类型
     private String shiroKeyPrefix = "shiro:session_";// shiro缓存在redis里面的前缀
     private boolean multiAccountLogin = true; // 是否允许账号同时登录
+    private boolean notAllowRefreshIndex = true; // 已登录后再次访问登录页, 是否退出原账号
 
     public String getApplicationName() {
         return applicationName;
@@ -98,6 +99,14 @@ public class SystemConfig {
 
     public void setMultiAccountLogin(boolean multiAccountLogin) {
         this.multiAccountLogin = multiAccountLogin;
+    }
+
+    public boolean isNotAllowRefreshIndex() {
+        return notAllowRefreshIndex;
+    }
+
+    public void setNotAllowRefreshIndex(boolean notAllowRefreshIndex) {
+        this.notAllowRefreshIndex = notAllowRefreshIndex;
     }
 
 }

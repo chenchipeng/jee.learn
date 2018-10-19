@@ -1,6 +1,11 @@
 package com.jee.learn.manager.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,7 +13,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.jee.learn.manager.config.SystemConfig;
+import com.jee.learn.manager.config.shiro.ShiroContants;
+import com.jee.learn.manager.config.shiro.security.CustomFormAuthenticationFilter;
+import com.jee.learn.manager.config.shiro.security.CustomPrincipal;
+import com.jee.learn.manager.config.shiro.security.CustomToken;
 import com.jee.learn.manager.config.shiro.session.CustomSessionDAO;
+import com.jee.learn.manager.security.ShiroUtil;
+import com.jee.learn.manager.support.servlet.captcha.CaptchaUtil;
+import com.jee.learn.manager.util.Constants;
+import com.jee.learn.manager.util.net.CookieUtils;
 
 /**
  * 登陆/首页 页面controller
@@ -21,38 +34,111 @@ import com.jee.learn.manager.config.shiro.session.CustomSessionDAO;
 @Controller
 public class IndexController extends BaseController {
 
+    private static final String LOGINED_COOKIE_NAME = "isLogined";
+
     @Autowired
     private SystemConfig systemConfig;
     @Autowired
     private CustomSessionDAO sessionDao;
+    @Autowired
+    private CaptchaUtil captchaUtil;
 
     @GetMapping("${system.authc-path}/login")
     public String loginPage(Model model) {
 
-        // 1.统计session活跃人数
+        // 统计session活跃数
+        if (logger.isDebugEnabled()) {
+            logger.debug("login, active session size:", sessionDao.getActiveSessions(false).size());
+        }
 
-        // 2.如果已登录，再次访问主页，则退出原账号。
+        // 如果已登录，再次访问登录页，则退出原账号。
+        if (systemConfig.isNotAllowRefreshIndex()) {
+            CookieUtils.setCookie(systemConfig.getApplicationName() + LOGINED_COOKIE_NAME, Constants.N,
+                    CookieUtils.THREE_MINUTE_COOKIE);
+        }
 
-        // 3.如果已经登录，则跳转到管理首页
+        // 如果已经登录，则跳转到管理首页
+        CustomPrincipal principal = ShiroUtil.getPrincipal();
+        if (principal != null) {
+            return REDIRECT + systemConfig.getAuthcPath();
+        }
 
         model.addAttribute("name", systemConfig.getName());
         return "main/login";
     }
 
     @PostMapping("${system.authc-path}/login")
-    public String loginFail() {
+    public String loginFail(HttpServletRequest request, Model model) {
 
         // 如果已经登录，则跳转到管理首页
+        CustomPrincipal principal = ShiroUtil.getPrincipal();
+        if (principal != null) {
+            return REDIRECT + systemConfig.getAuthcPath();
+        }
 
-        logger.debug("loginFail...");
+        // 获取并设置登录参数信息
+        String username = WebUtils.getCleanParam(request, CustomFormAuthenticationFilter.DEFAULT_USERNAME_PARAM);
+        boolean rememberMe = WebUtils.isTrue(request, CustomFormAuthenticationFilter.DEFAULT_REMEMBER_ME_PARAM);
+        String exception = (String) request
+                .getAttribute(CustomFormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
+        String message = (String) request.getAttribute(CustomFormAuthenticationFilter.DEFAULT_MESSAGE_PARAM);
+        if (StringUtils.isBlank(message) || StringUtils.equals(message, "null")) {
+            message = ShiroContants.USERNAME_PASSWORD_ERROR;
+        }
+        model.addAttribute(CustomFormAuthenticationFilter.DEFAULT_USERNAME_PARAM, username);
+        model.addAttribute(CustomFormAuthenticationFilter.DEFAULT_REMEMBER_ME_PARAM, rememberMe);
+        model.addAttribute(CustomFormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME, exception);
+        model.addAttribute(CustomFormAuthenticationFilter.DEFAULT_MESSAGE_PARAM, message);
 
+        // 统计session活跃数
+        if (logger.isDebugEnabled()) {
+            logger.debug("login fail, active session size: {}, message: {}, exception: {}",
+                    sessionDao.getActiveSessions(false).size(), message, exception);
+        }
+
+        // 非授权异常，登录失败，验证码加1。
+        if (!UnauthorizedException.class.getName().equals(exception)) {
+            model.addAttribute("isCaptchaLogin", captchaUtil.isCaptchaLogin(username, true, false));
+        }
+
+        // 验证失败清空验证码
+        request.getSession().setAttribute(CustomToken.DEFAULT_CAPTCHA_PARAM, StringUtils.EMPTY);
         return "main/login";
     }
 
     @RequiresPermissions("user")
     @GetMapping("${system.authc-path}")
     public String indexPage() {
-        logger.info("当前活跃人数 {}", sessionDao.getActiveSessions(false).size());
+
+        // 统计session活跃人数
+        if (logger.isDebugEnabled()) {
+            logger.debug("show index, active session size: {}", sessionDao.getActiveSessions(false).size());
+        }
+
+        // 登录成功后，验证码计算器清零
+        CustomPrincipal principal = ShiroUtil.getPrincipal();
+        captchaUtil.isCaptchaLogin(principal.getLoginName(), false, true);
+
+        // 如果已登录，再次访问登录页，则退出原账号
+        if (systemConfig.isNotAllowRefreshIndex()) {
+            String logined = CookieUtils.getCookie(systemConfig.getApplicationName() + LOGINED_COOKIE_NAME);
+
+            if (StringUtils.equals(logined, Constants.Y)) {
+                ShiroUtil.getSubject().logout();
+                return REDIRECT + systemConfig.getAuthcPath() + "/login";
+            }
+            if (StringUtils.isBlank(logined) || Constants.N.equals(logined)) {
+                CookieUtils.setCookie(systemConfig.getApplicationName() + LOGINED_COOKIE_NAME, Constants.Y,
+                        CookieUtils.THREE_MINUTE_COOKIE);
+            }
+        }
+
+        // 登录成功后，获取上次登录IP和时间
+
+        // 更新登录IP和时间
+
+        // 记录登录日志
+
         return "hello";
     }
 

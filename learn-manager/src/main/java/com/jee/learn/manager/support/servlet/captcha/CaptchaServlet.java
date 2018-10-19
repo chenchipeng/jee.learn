@@ -33,6 +33,7 @@ import com.jee.learn.manager.config.shiro.security.CustomToken;
 public class CaptchaServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
+    private static final int CAPTCHA_LENGTH = 4;
 
     private int w = 70;
     private int h = 26;
@@ -133,7 +134,7 @@ public class CaptchaServlet extends HttpServlet {
         String[] fontTypes = { "Arial", "Arial Black", "AvantGarde Bk BT", "Calibri" };
         Random random = new Random();
         StringBuilder s = new StringBuilder();
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < CAPTCHA_LENGTH; i++) {
             String r = String.valueOf(codeSeq[random.nextInt(codeSeq.length)]);// random.nextInt(10));
             g.setColor(new Color(50 + random.nextInt(100), 50 + random.nextInt(100), 50 + random.nextInt(100)));
             g.setFont(new Font(fontTypes[random.nextInt(fontTypes.length)], Font.BOLD, 26));
