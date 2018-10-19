@@ -34,7 +34,7 @@ import com.jee.learn.manager.util.net.CookieUtils;
 @Controller
 public class IndexController extends BaseController {
 
-    private static final String LOGINED_COOKIE_NAME = "isLogined";
+    private static final String LOGINED_COOKIE_NAME_SUFFIX = ".isLogined";
 
     @Autowired
     private SystemConfig systemConfig;
@@ -53,7 +53,7 @@ public class IndexController extends BaseController {
 
         // 如果已登录，再次访问登录页，则退出原账号。
         if (systemConfig.isNotAllowRefreshIndex()) {
-            CookieUtils.setCookie(systemConfig.getApplicationName() + LOGINED_COOKIE_NAME, Constants.N,
+            CookieUtils.setCookie(systemConfig.getApplicationName() + LOGINED_COOKIE_NAME_SUFFIX, Constants.N,
                     CookieUtils.THREE_MINUTE_COOKIE);
         }
 
@@ -121,14 +121,14 @@ public class IndexController extends BaseController {
 
         // 如果已登录，再次访问登录页，则退出原账号
         if (systemConfig.isNotAllowRefreshIndex()) {
-            String logined = CookieUtils.getCookie(systemConfig.getApplicationName() + LOGINED_COOKIE_NAME);
+            String logined = CookieUtils.getCookie(systemConfig.getApplicationName() + LOGINED_COOKIE_NAME_SUFFIX);
 
             if (StringUtils.equals(logined, Constants.Y)) {
                 ShiroUtil.getSubject().logout();
                 return REDIRECT + systemConfig.getAuthcPath() + "/login";
             }
             if (StringUtils.isBlank(logined) || Constants.N.equals(logined)) {
-                CookieUtils.setCookie(systemConfig.getApplicationName() + LOGINED_COOKIE_NAME, Constants.Y,
+                CookieUtils.setCookie(systemConfig.getApplicationName() + LOGINED_COOKIE_NAME_SUFFIX, Constants.Y,
                         CookieUtils.THREE_MINUTE_COOKIE);
             }
         }
