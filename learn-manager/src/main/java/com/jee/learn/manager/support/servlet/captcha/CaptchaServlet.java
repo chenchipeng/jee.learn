@@ -29,7 +29,7 @@ import com.jee.learn.manager.config.shiro.security.CustomToken;
  *          修改记录:<br/>
  *          1.2018年10月17日 下午5:36:31 ccp 新建
  */
-@WebServlet(urlPatterns = "/img/captcha")
+@WebServlet(urlPatterns = "/img/captcha.jpg")
 public class CaptchaServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;

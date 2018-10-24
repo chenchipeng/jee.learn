@@ -18,9 +18,12 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 public class ServletUtil {
 
     /** 静态文件列表 */
-    private static final String[] STATIC_FILES_SUFFIX = { ".css", ".js", ".png", ".gif", ".jpeg", ".bmp", ".ico", ".swf",
-            ".psd", ".htc", ".crx", ".xpi", ".exe", ".ipa", ".apk",".map", ".hml" };
-    private static final String STATIC_FILES_PREFIX ="/hml";
+    private static final String[] STATIC_FILES_SUFFIX = { ".css", ".js", ".png", ".gif", ".jpeg", ".jpg", ".bmp",
+            ".ico", ".swf", ".psd", ".htc", ".crx", ".xpi", ".exe", ".ipa", ".apk", ".map", ".hml" };
+    private static final String STATIC_FILES_PREFIX = "/hml";
+
+    /** 根目录 */
+    private static final String ROOT = "/";
 
     /**
      * 获取当前请求对象
@@ -60,10 +63,11 @@ public class ServletUtil {
         }
         return false;
     }
-    
+
     /**
      * 判断访问URI是否是静态文件请求<br/>
      * 静态文件路径
+     * 
      * @param uri
      * @return
      */
@@ -72,6 +76,16 @@ public class ServletUtil {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 判断访问URI是否是根目录请求
+     * 
+     * @param uri
+     * @return
+     */
+    public static boolean isRoot(String uri) {
+        return ROOT.equals(uri);
     }
 
 }

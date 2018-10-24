@@ -39,7 +39,7 @@ public class JedisSessionDAO extends CachingSessionDAO implements CustomSessionD
 
     @Autowired
     private RedisService redisService;
-    
+
     public JedisSessionDAO() {
         super();
     }
@@ -50,6 +50,10 @@ public class JedisSessionDAO extends CachingSessionDAO implements CustomSessionD
 
         if (request != null) {
             String uri = request.getServletPath();
+            // 如果是根目录请求，则不处理SESSION
+            if (ServletUtil.isRoot(uri)) {
+                return null;
+            }
             // 如果是静态文件，则不创建SESSION
             if (ServletUtil.isStaticFile(uri)) {
                 return null;
@@ -75,6 +79,10 @@ public class JedisSessionDAO extends CachingSessionDAO implements CustomSessionD
         Session s = null;
         if (request != null) {
             String uri = request.getServletPath();
+            // 如果是根目录请求，则不处理SESSION
+            if (ServletUtil.isRoot(uri)) {
+                return null;
+            }
             // 如果是静态文件，则不获取SESSION
             if (ServletUtil.isStaticFile(uri)) {
                 return null;
@@ -110,6 +118,10 @@ public class JedisSessionDAO extends CachingSessionDAO implements CustomSessionD
 
         if (request != null) {
             String uri = request.getServletPath();
+            // 如果是根目录请求，则不处理SESSION
+            if (ServletUtil.isRoot(uri)) {
+                return;
+            }
             // 如果是静态文件，则不更新SESSION
             if (ServletUtil.isStaticFile(uri)) {
                 return;

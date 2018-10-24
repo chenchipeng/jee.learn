@@ -19,6 +19,7 @@ import com.jee.learn.manager.config.shiro.security.CustomPrincipal;
 import com.jee.learn.manager.config.shiro.security.CustomToken;
 import com.jee.learn.manager.config.shiro.session.CustomSessionDAO;
 import com.jee.learn.manager.security.ShiroUtil;
+import com.jee.learn.manager.service.sys.SysUserService;
 import com.jee.learn.manager.support.servlet.captcha.CaptchaUtil;
 import com.jee.learn.manager.util.Constants;
 import com.jee.learn.manager.util.net.CookieUtils;
@@ -39,16 +40,18 @@ public class IndexController extends BaseController {
     @Autowired
     private SystemConfig systemConfig;
     @Autowired
+    private CaptchaUtil captchaUtil;
+    @Autowired
     private CustomSessionDAO sessionDao;
     @Autowired
-    private CaptchaUtil captchaUtil;
+    private SysUserService sysUserService;
 
     @GetMapping("${system.authc-path}/login")
     public String loginPage(Model model) {
 
         // 统计session活跃数
         if (logger.isDebugEnabled()) {
-            logger.debug("login, active session size:", sessionDao.getActiveSessions(false).size());
+            logger.debug("login, active session size: {}", sessionDao.getActiveSessions(false).size());
         }
 
         // 如果已登录，再次访问登录页，则退出原账号。
@@ -92,7 +95,7 @@ public class IndexController extends BaseController {
 
         // 统计session活跃数
         if (logger.isDebugEnabled()) {
-            logger.debug("login fail, active session size: {}, message: {}, exception: {}",
+            logger.debug("login fail, active session size: {} message: {} exception: {}",
                     sessionDao.getActiveSessions(false).size(), message, exception);
         }
 
@@ -108,7 +111,7 @@ public class IndexController extends BaseController {
 
     @RequiresPermissions("user")
     @GetMapping("${system.authc-path}")
-    public String indexPage() {
+    public String indexPage(Model model) {
 
         // 统计session活跃人数
         if (logger.isDebugEnabled()) {
@@ -133,9 +136,8 @@ public class IndexController extends BaseController {
             }
         }
 
-        // 登录成功后，获取上次登录IP和时间
-
         // 更新登录IP和时间
+        sysUserService.updateUserLoginInfo(principal.getId());
 
         // 记录登录日志
 
