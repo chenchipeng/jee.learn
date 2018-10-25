@@ -1,4 +1,4 @@
-package com.jee.learn.test.manager;
+package com.jee.learn.manager;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

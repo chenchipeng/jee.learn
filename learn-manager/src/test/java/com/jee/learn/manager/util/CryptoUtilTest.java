@@ -1,4 +1,4 @@
-package com.jee.learn.test.manager.util;
+package com.jee.learn.manager.util;
 
 import org.junit.Test;
 import org.slf4j.Logger;

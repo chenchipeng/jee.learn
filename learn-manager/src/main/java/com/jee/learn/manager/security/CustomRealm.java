@@ -26,25 +26,34 @@ import com.jee.learn.manager.config.shiro.security.CustomPrincipal;
 import com.jee.learn.manager.config.shiro.security.CustomToken;
 import com.jee.learn.manager.config.shiro.session.CustomSessionDAO;
 import com.jee.learn.manager.domain.sys.SysUser;
-import com.jee.learn.manager.service.sys.SysUserService;
+import com.jee.learn.manager.repository.sys.SysUserRepository;
 import com.jee.learn.manager.support.servlet.captcha.CaptchaUtil;
 import com.jee.learn.manager.util.Constants;
 import com.jee.learn.manager.util.text.EncodeUtils;
 
+/**
+ * 自定义shiro realm<br/>
+ * 注意: 在操作业务对象时, 不要注入service层! https://blog.csdn.net/libraryhu/article/details/50224269
+ * 
+ * @author ccp
+ * @version 1.0<br/>
+ *          修改记录:<br/>
+ *          1.2018年10月25日 下午5:41:40 ccp 新建
+ */
 @Component
 public class CustomRealm extends AuthorizingRealm {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomRealm.class);
-    private static final String ENTITY_PROPERTIES_LOGIN_NAME = "loginName";
 
     @Autowired
     private SystemConfig systemConfig;
     @Autowired
     private CustomSessionDAO sessionDao;
     @Autowired
-    private SysUserService userService;
-    @Autowired
     private CaptchaUtil captchaUtil;
+
+    @Autowired
+    private SysUserRepository userRepository;
 
     /**
      * 获取授权信息
@@ -72,11 +81,11 @@ public class CustomRealm extends AuthorizingRealm {
         }
 
         // 获得该用户角色
-        SysUser user = userService.findOne(ENTITY_PROPERTIES_LOGIN_NAME, principal.getLoginName());
+        SysUser user = userRepository.findOneByLoginName(principal.getLoginName());
         if (user != null) {
             SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 
-            // 添加用户权限
+            // TODO 添加用户权限
             info.addStringPermission("user");
 
             /**
@@ -134,7 +143,7 @@ public class CustomRealm extends AuthorizingRealm {
         }
 
         // 校验账号密码
-        SysUser user = userService.findOne(ENTITY_PROPERTIES_LOGIN_NAME, customToken.getUsername());
+        SysUser user = userRepository.findOneByLoginName(customToken.getUsername());
         if (user != null) {
             if (!Constants.Y.equals(user.getLoginFlag())) {
                 throw new AuthenticationException(ShiroContants.MESSAGE_PREFIX + ShiroContants.INVALID_USERNAME_ERROR);

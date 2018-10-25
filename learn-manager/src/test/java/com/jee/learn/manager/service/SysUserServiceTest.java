@@ -1,4 +1,4 @@
-package com.jee.learn.test.manager.service;
+package com.jee.learn.manager.service;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

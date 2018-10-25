@@ -1,4 +1,4 @@
-package com.jee.learn.test.manager.cache;
+package com.jee.learn.manager.cache;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

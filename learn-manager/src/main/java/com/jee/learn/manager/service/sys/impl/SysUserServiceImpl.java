@@ -36,8 +36,7 @@ public class SysUserServiceImpl extends EntityServiceImpl<SysUser, String> imple
             user.setLoginIp(ShiroUtil.getSession().getHost());
             user.setLoginDate(ClockUtil.currentDate());
             user.setUpdateDate(user.getLoginDate());
-            // TODO 无法保存，待调试
-            // super.saveOrUpdate(user);
+            super.saveOrUpdate(user);
         }
     }
 
