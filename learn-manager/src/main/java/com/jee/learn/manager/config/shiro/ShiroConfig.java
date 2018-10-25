@@ -9,6 +9,7 @@ import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
 import org.slf4j.Logger;
@@ -28,13 +29,13 @@ import com.jee.learn.manager.config.shiro.session.CustomWebSessionManager;
 import com.jee.learn.manager.config.shiro.session.JedisSessionDAO;
 import com.jee.learn.manager.security.CustomRealm;
 import com.jee.learn.manager.support.cache.CacheConstants;
+import com.jee.learn.manager.util.security.CryptoUtil;
 
 import net.sf.ehcache.CacheManager;
 
 /**
  * shiro config<br/>
- * 参考:https://blog.csdn.net/weixin_38132621/article/details/80216056
- * 参考:https://blog.csdn.net/qq_34021712/article/details/80791219
+ * 参考:https://blog.csdn.net/weixin_38132621/article/details/80216056 参考:https://blog.csdn.net/qq_34021712/article/details/80791219
  * 
  * @author ccp
  * @version 1.0<br/>
@@ -47,6 +48,8 @@ public class ShiroConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(ShiroConfig.class);
     private static final String ANY_REQUEST = "/**";
     private static final String SIMPLE_COOKIE_NAME_SUFFIX = ".session.id";
+    private static final String REMEMBER_ME_SUFFIX = ".rememberMe";
+    private static final Integer REMEMBER_ME_MAX_AGE = 259200;// 三天内"记住我"
 
     @Autowired
     private SystemConfig systemConfig;
@@ -124,6 +127,9 @@ public class ShiroConfig {
         // 设置cacheManager 小测后发现该设置会缓存权鉴信息, 避免doGetAuthorizationInfo()重复执行
         securityManager.setCacheManager(shiroCacheManager);
 
+        // 注入记住我管理器
+        securityManager.setRememberMeManager(rememberMeManager());
+
         return securityManager;
     }
 
@@ -184,6 +190,28 @@ public class ShiroConfig {
         EhCacheManager em = new EhCacheManager();
         em.setCacheManager(ehCacheManager);
         return em;
+    }
+
+    //////// rememberMe ////////
+
+    /**
+     * rememberMeManager, 将其设置到securityManager中
+     * 
+     * @return
+     */
+    private CookieRememberMeManager rememberMeManager() {
+
+        SimpleCookie simpleCookie = new SimpleCookie(systemConfig.getApplicationName() + REMEMBER_ME_SUFFIX);
+        // 记住我cookie生效时间, 单位秒
+        simpleCookie.setMaxAge(REMEMBER_ME_MAX_AGE);
+
+        CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
+        cookieRememberMeManager.setCookie(simpleCookie);
+
+        // rememberMe cookie加密的密钥 建议每个项目都不一样 默认AES算法 密钥长度(128 192 256 位)
+        cookieRememberMeManager.setCipherKey(CryptoUtil.generateAesKey(128));
+
+        return cookieRememberMeManager;
     }
 
     //////// 开启shiro aop注解支持 ////////

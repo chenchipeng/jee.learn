@@ -127,7 +127,8 @@ public class CustomRealm extends AuthorizingRealm {
         if (captchaUtil.isCaptchaLogin(customToken.getUsername(), false, false)) {
             Session session = ShiroUtil.getSession();
             String code = (String) session.getAttribute(CustomToken.DEFAULT_CAPTCHA_PARAM);
-            if (customToken.getCaptcha() == null || !customToken.getCaptcha().toUpperCase().equals(code)) {
+            if (customToken.getCaptcha() == null
+                    || !customToken.getCaptcha().toUpperCase().equals(code.toUpperCase())) {
                 throw new AuthenticationException(ShiroContants.MESSAGE_PREFIX + ShiroContants.CAPTCH_ERROR);
             }
         }

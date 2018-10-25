@@ -1,5 +1,6 @@
 package com.jee.learn.manager.service.sys.impl;
 
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,8 +36,8 @@ public class SysUserServiceImpl extends EntityServiceImpl<SysUser, String> imple
             user.setLoginIp(ShiroUtil.getSession().getHost());
             user.setLoginDate(ClockUtil.currentDate());
             user.setUpdateDate(user.getLoginDate());
-
-            super.saveOrUpdate(user);
+            // TODO 无法保存，待调试
+            // super.saveOrUpdate(user);
         }
     }
 

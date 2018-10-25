@@ -46,6 +46,7 @@ public class CaptchaServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String validateCode = req.getParameter(CustomToken.DEFAULT_CAPTCHA_PARAM); // AJAX验证，成功返回true
         if (StringUtils.isNotBlank(validateCode)) {
+            resp.setContentType("application/json");
             resp.getOutputStream().print(validate(req, validateCode) ? "true" : "false");
         } else {
             this.doPost(req, resp);
@@ -58,9 +59,12 @@ public class CaptchaServlet extends HttpServlet {
     }
 
     /** 判断校验码是否相等 */
-    public static boolean validate(HttpServletRequest request, String validateCode) {
+    private static boolean validate(HttpServletRequest request, String validateCode) {
+        if(StringUtils.isBlank(validateCode)) {
+            return false;
+        }
         String code = (String) request.getSession().getAttribute(CustomToken.DEFAULT_CAPTCHA_PARAM);
-        return validateCode.toUpperCase().equals(code);
+        return validateCode.toUpperCase().equals(code.toUpperCase());
     }
 
     /** 生成校验码图片 */

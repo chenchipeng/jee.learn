@@ -34,7 +34,7 @@
                     <input name="username" class="form-control" placeholder="用户名" required="" th:value="${username}" />
                 </div>
                 <div class="form-group">
-                    <input id="pwd" type="password" class="form-control" placeholder="密码" required="" />
+                    <input id="pwd" name="pwd" type="password" class="form-control" placeholder="密码" required="" />
                     <input type='hidden' name='password' id='md5_pwd' value=''/>
                 </div>
                 <div class="form-group" id="captchaBox">
@@ -42,7 +42,7 @@
                 </div>
                 <div class="form-group">
                     <span style="float: left; margin: 5px 5px;" >
-                        <input id="rememberMe" type="checkbox" /> 
+                        <input id="rememberMe" name="rememberMe" type="checkbox" /> 
                         <label for="rememberMe">记住我</label>
                     </span>
                     <span style="float: right;" id="captchaImgBox">
@@ -51,7 +51,7 @@
                         <a id='captchaReload' href="javascript:void(0)">看不清</a>
                     </span>
                 </div>
-                <button type="submit" class="btn btn-primary block full-width m-b">登 录</button>
+                <button type="submit" name="login" class="btn btn-primary block full-width m-b">登 录</button>
 
                 <div style="display: none;">
                     <p class="text-muted text-center">
@@ -65,10 +65,6 @@
                 
                 <div id="messageBox" th:text="${message}" class="errorTip">
                     message
-                </div>
-                <div th:text="${rememberMe}">
-                </div>
-                <div th:text="${isCaptchaLogin}">
                 </div>
                 
             </form>
@@ -95,6 +91,20 @@
     
     $(document).ready(function() {
         validateForm=$("#inputForm").validate({
+        	debug: false,
+        	rules:{
+        		captcha:{
+                	remote:{
+                		url:"/img/captcha.jpg",
+                		async: true
+                	}
+        		}
+        	},
+        	messages:{
+        		captcha:{
+                	remote:""
+        		}
+        	},
         	submitHandler: function(form){
         		checkForm();
         		form.submit();

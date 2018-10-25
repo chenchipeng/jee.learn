@@ -20,7 +20,7 @@ public class ServletUtil {
     /** 静态文件列表 */
     private static final String[] STATIC_FILES_SUFFIX = { ".css", ".js", ".png", ".gif", ".jpeg", ".jpg", ".bmp",
             ".ico", ".swf", ".psd", ".htc", ".crx", ".xpi", ".exe", ".ipa", ".apk", ".map", ".hml" };
-    private static final String STATIC_FILES_PREFIX = "/hml";
+    private static final String[] STATIC_FILES_PREFIX = { "/hml, /img, /js, /css, /plugins" };
 
     /** 根目录 */
     private static final String ROOT = "/";
@@ -72,7 +72,7 @@ public class ServletUtil {
      * @return
      */
     public static boolean isViewFile(String uri) {
-        if (StringUtils.startsWith(uri, STATIC_FILES_PREFIX)) {
+        if (StringUtils.startsWithAny(uri, STATIC_FILES_PREFIX)) {
             return true;
         }
         return false;

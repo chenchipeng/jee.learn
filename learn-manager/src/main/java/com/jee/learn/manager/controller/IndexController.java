@@ -46,6 +46,12 @@ public class IndexController extends BaseController {
     @Autowired
     private SysUserService sysUserService;
 
+    /**
+     * 登录页面
+     * 
+     * @param model
+     * @return
+     */
     @GetMapping("${system.authc-path}/login")
     public String loginPage(Model model) {
 
@@ -70,6 +76,13 @@ public class IndexController extends BaseController {
         return "main/login";
     }
 
+    /**
+     * 通过shiro拦截器执行登录验证, 登录失败执行此方法
+     * 
+     * @param request
+     * @param model
+     * @return
+     */
     @PostMapping("${system.authc-path}/login")
     public String loginFail(HttpServletRequest request, Model model) {
 
@@ -109,6 +122,12 @@ public class IndexController extends BaseController {
         return "main/login";
     }
 
+    /**
+     * 打开首页
+     * 
+     * @param model
+     * @return
+     */
     @RequiresPermissions("user")
     @GetMapping("${system.authc-path}")
     public String indexPage(Model model) {
@@ -142,6 +161,16 @@ public class IndexController extends BaseController {
         // 记录登录日志
 
         return "hello";
+    }
+
+    @GetMapping("${system.authc-path}/logout")
+    public String logout() {
+        CustomPrincipal principal = ShiroUtil.getPrincipal();
+        // 如果已经登录，则跳转到管理首页
+        if (principal != null) {
+            ShiroUtil.getSubject().logout();
+        }
+        return REDIRECT + systemConfig.getAuthcPath() + "/login";
     }
 
 }

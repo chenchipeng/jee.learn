@@ -1,8 +1,5 @@
 package com.jee.learn.manager.support.servlet.captcha;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +10,7 @@ import com.jee.learn.manager.support.cache.EhcacheService;
 public class CaptchaUtil {
 
     public static final int LIGIN_FAIL_NUM = 3;// 校验码错误次数
-    public static final String LOGIN_FAIL_MAP = "loginFailMap";
+    public static final String LOGIN_FAIL_TIMES = "_loginFailTimes";
 
     @Autowired
     private EhcacheService ehcacheService;
@@ -26,27 +23,22 @@ public class CaptchaUtil {
      * @param clean true->计数清零
      * @return
      */
-    @SuppressWarnings("unchecked")
     public boolean isCaptchaLogin(String useruame, boolean isFail, boolean clean) {
-        Map<String, Integer> loginFailMap = (Map<String, Integer>) ehcacheService.get(CacheConstants.EHCACHE_SHIRO,
-                LOGIN_FAIL_MAP);
-        if (loginFailMap == null) {
-            loginFailMap = new HashMap<>(1);
-            ehcacheService.put(CacheConstants.EHCACHE_SHIRO, LOGIN_FAIL_MAP, loginFailMap);
-        }
+        String key = useruame + LOGIN_FAIL_TIMES;
 
-        Integer loginFailNum = loginFailMap.get(useruame);
-        if (loginFailNum == null) {
-            loginFailNum = 0;
+        Integer loginFailTimes = (Integer) ehcacheService.get(CacheConstants.EHCACHE_SHIRO, key);
+        if (loginFailTimes == null) {
+            loginFailTimes = 0;
         }
         if (isFail) {
-            loginFailNum++;
-            loginFailMap.put(useruame, loginFailNum);
+            loginFailTimes++;
+            ehcacheService.put(CacheConstants.EHCACHE_SHIRO, key, loginFailTimes);
         }
         if (clean) {
-            loginFailMap.remove(useruame);
+            ehcacheService.remove(CacheConstants.EHCACHE_SHIRO, key);
         }
-        return loginFailNum >= LIGIN_FAIL_NUM;
+
+        return loginFailTimes >= LIGIN_FAIL_NUM;
     }
 
 }
