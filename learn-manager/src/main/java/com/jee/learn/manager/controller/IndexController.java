@@ -18,11 +18,13 @@ import com.jee.learn.manager.config.shiro.security.CustomFormAuthenticationFilte
 import com.jee.learn.manager.config.shiro.security.CustomPrincipal;
 import com.jee.learn.manager.config.shiro.security.CustomToken;
 import com.jee.learn.manager.config.shiro.session.CustomSessionDAO;
+import com.jee.learn.manager.domain.sys.SysUser;
 import com.jee.learn.manager.security.ShiroUtil;
 import com.jee.learn.manager.service.sys.SysUserService;
 import com.jee.learn.manager.support.servlet.captcha.CaptchaUtil;
 import com.jee.learn.manager.util.Constants;
 import com.jee.learn.manager.util.net.CookieUtils;
+import com.jee.learn.manager.util.time.DateFormatUtil;
 
 /**
  * 登陆/首页 页面controller
@@ -155,14 +157,25 @@ public class IndexController extends BaseController {
             }
         }
 
+        // 另存上次登录IP和时间
+        SysUser user = sysUserService.findOne(principal.getId());
+        if (user != null) {
+            principal.setOldLoginIP(user.getLoginIp());
+            principal.setOldloginDate(DateFormatUtil.formatDateOnSecion(user.getLoginDate()));
+            model.addAttribute("user", user);
+        }
         // 更新登录IP和时间
         sysUserService.updateUserLoginInfo(principal.getId());
+        // TODO 记录登录日志
 
-        // 记录登录日志
-
-        return "hello";
+        model.addAttribute("title", systemConfig.getName());
+        return "main/index";
     }
 
+    /**
+     * 注销用户
+     * @return
+     */
     @GetMapping("${system.authc-path}/logout")
     public String logout() {
         CustomPrincipal principal = ShiroUtil.getPrincipal();
@@ -171,6 +184,16 @@ public class IndexController extends BaseController {
             ShiroUtil.getSubject().logout();
         }
         return REDIRECT + systemConfig.getAuthcPath() + "/login";
+    }
+    
+    /**
+     * ie兼容页面
+     * 
+     * @return
+     */
+    @GetMapping("${system.authc-path}/ie")
+    public String ie() {
+        return "main/ie";
     }
 
 }

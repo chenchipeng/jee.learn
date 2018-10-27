@@ -31,7 +31,6 @@ public class SysUserServiceImpl extends EntityServiceImpl<SysUser, String> imple
     public void updateUserLoginInfo(String id) {
         SysUser user = findOne(id);
         if (user != null) {
-            // 保存上次登录信息
             // 更新本次登录信息
             user.setLoginIp(ShiroUtil.getSession().getHost());
             user.setLoginDate(ClockUtil.currentDate());

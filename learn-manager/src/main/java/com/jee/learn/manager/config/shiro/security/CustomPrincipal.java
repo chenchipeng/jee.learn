@@ -17,6 +17,8 @@ public class CustomPrincipal implements Serializable {
     private String id; // 编号
     private String loginName; // 登录名
     private String name; // 姓名
+    private String oldLoginIP;// 上次登录IP
+    private String oldloginDate;// 上次登录时间
 
     public CustomPrincipal(String id, String loginName, String name) {
         super();
@@ -37,9 +39,26 @@ public class CustomPrincipal implements Serializable {
         return name;
     }
 
+    public String getOldLoginIP() {
+        return oldLoginIP;
+    }
+
+    public void setOldLoginIP(String oldLoginIP) {
+        this.oldLoginIP = oldLoginIP;
+    }
+
+    public String getOldloginDate() {
+        return oldloginDate;
+    }
+
+    public void setOldloginDate(String oldloginDate) {
+        this.oldloginDate = oldloginDate;
+    }
+
     @Override
     public String toString() {
-        return id;
+        return "CustomPrincipal [id=" + id + ", loginName=" + loginName + ", name=" + name + ", oldLoginIP="
+                + oldLoginIP + ", oldloginDate=" + oldloginDate + "]";
     }
 
 }

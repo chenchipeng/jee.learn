@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="commonHeader(title)">
+
+    <title th:text="${title}"></title>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+    
+    <link href="favicon.ico" th:href="@{/favicon.ico}" rel="shortcut icon" />
+    <link href="plugins/bootstrap-3.3.7/css/bootstrap.min.css" th:href="@{/plugins/bootstrap-3.3.7/css/bootstrap.min.css}" rel="stylesheet" />
+    <link href="plugins/font-awesome-4.7.0/css/font-awesome.css" th:href="@{/plugins/font-awesome-4.7.0/css/font-awesome.css}" rel="stylesheet" />
+    <link href="css/animate.3.5.2.min.css" th:href="@{/css/animate.3.5.2.min.css}" rel="stylesheet" />
+    <link href="css/style.css" th:href="@{/css/style.css}" rel="stylesheet" />
+    
+</head>
+
+</html>

@@ -70,12 +70,34 @@ public class DateFormatUtil {
     /**
      * 格式化日期, 仅用于不固定pattern不固定的情况.
      * 
-     * 否否则直接使用本类中封装好的FastDateFormat.
+     * 否则直接使用本类中封装好的FastDateFormat.
      * 
      * FastDateFormat.getInstance()已经做了缓存，不会每次创建对象，但直接使用对象仍然能减少在缓存中的查找.
      */
     public static String formatDate(@NotNull String pattern, long date) {
         return FastDateFormat.getInstance(pattern).format(date);
+    }
+
+    //////// 指定格式的格式化日期 ////////
+
+    /**
+     * 格式化日期, 固定{@link DateFormatUtil#PATTERN_ISO_ON_DATE}
+     * 
+     * @param date
+     * @return
+     */
+    public static String formatDateOnDay(@NotNull Date date) {
+        return FastDateFormat.getInstance(PATTERN_ISO_ON_DATE).format(date);
+    }
+
+    /**
+     * 格式化日期, 固定{@link DateFormatUtil#PATTERN_DEFAULT_ON_SECOND}
+     * 
+     * @param date
+     * @return
+     */
+    public static String formatDateOnSecion(@NotNull Date date) {
+        return FastDateFormat.getInstance(PATTERN_DEFAULT_ON_SECOND).format(date);
     }
 
     /////// 格式化间隔时间/////////
