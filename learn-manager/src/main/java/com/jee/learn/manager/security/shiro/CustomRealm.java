@@ -1,9 +1,11 @@
-package com.jee.learn.manager.security;
+package com.jee.learn.manager.security.shiro;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -25,8 +27,10 @@ import com.jee.learn.manager.config.shiro.security.CustomCredentialsMatcher;
 import com.jee.learn.manager.config.shiro.security.CustomPrincipal;
 import com.jee.learn.manager.config.shiro.security.CustomToken;
 import com.jee.learn.manager.config.shiro.session.CustomSessionDAO;
+import com.jee.learn.manager.domain.sys.SysMenu;
+import com.jee.learn.manager.domain.sys.SysRole;
 import com.jee.learn.manager.domain.sys.SysUser;
-import com.jee.learn.manager.repository.sys.SysUserRepository;
+import com.jee.learn.manager.security.UserUtil;
 import com.jee.learn.manager.support.servlet.captcha.CaptchaUtil;
 import com.jee.learn.manager.util.Constants;
 import com.jee.learn.manager.util.text.EncodeUtils;
@@ -51,9 +55,8 @@ public class CustomRealm extends AuthorizingRealm {
     private CustomSessionDAO sessionDao;
     @Autowired
     private CaptchaUtil captchaUtil;
-
     @Autowired
-    private SysUserRepository userRepository;
+    private UserUtil userUtil;
 
     /**
      * 获取授权信息
@@ -81,32 +84,28 @@ public class CustomRealm extends AuthorizingRealm {
         }
 
         // 获得该用户角色
-        SysUser user = userRepository.findOneByLoginName(principal.getLoginName());
+        SysUser user = userUtil.findOneByLoginName(principal.getLoginName());
         if (user != null) {
             SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 
-            // TODO 添加用户权限
+            // 添加用户权限
             info.addStringPermission("user");
 
-            /**
-             * <code>
-            // 添加用户菜单信息
-            List<SysMenu> list = UserUtils.getMenuList();
-            for (SysMenu menu : list) {
-                if (StringUtils.isNotBlank(menu.getPermission())) {
-                    // 添加基于Permission的权限信息
-                    for (String permission : StringUtils.split(menu.getPermission(), ",")) {
+            // 添加基于Permission的用户菜单权限
+            List<SysMenu> menuList = userUtil.getMenuList();
+            for (SysMenu sysMenu : menuList) {
+                if (StringUtils.isNotBlank(sysMenu.getPermission())) {
+                    for (String permission : StringUtils.split(sysMenu.getPermission(), Constants.COMMA)) {
                         info.addStringPermission(permission);
                     }
                 }
             }
-            
-            // 添加用户角色信息
-            for (SysUserRole sur : user.getUserRoleList()) {
-                info.addRole(sur.getSysRole().getEnname());
+
+            // 添加用户角色
+            List<SysRole> roleList = userUtil.getRoleList();
+            for (SysRole sysRole : roleList) {
+                info.addRole(sysRole.getEnname());
             }
-             </code>
-             */
 
             return info;
         }
@@ -143,7 +142,7 @@ public class CustomRealm extends AuthorizingRealm {
         }
 
         // 校验账号密码
-        SysUser user = userRepository.findOneByLoginName(customToken.getUsername());
+        SysUser user = userUtil.findOneByLoginName(customToken.getUsername());
         if (user != null) {
             if (!Constants.Y.equals(user.getLoginFlag())) {
                 throw new AuthenticationException(ShiroContants.MESSAGE_PREFIX + ShiroContants.INVALID_USERNAME_ERROR);

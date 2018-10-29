@@ -12,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jee.learn.manager.support.spec.Filter;
@@ -29,7 +28,6 @@ import com.jee.learn.manager.util.reflect.ReflectUtils;
  *          修改记录:<br/>
  *          1.2018年9月10日 上午10:47:25 ccp 新建
  */
-@Service
 @Transactional(readOnly = true)
 public class SpecSerciceImpl<T, ID extends Serializable> implements SpecSercice<T, ID> {
 
@@ -212,8 +210,7 @@ public class SpecSerciceImpl<T, ID extends Serializable> implements SpecSercice<
      * 
      * @param entity
      * @return primaryKey
-     * @throws IdentifierGenerationException when the entity does not have
-     *             primary key
+     * @throws IdentifierGenerationException when the entity does not have primary key
      */
     private Object primaryKeyValidation(T entity) {
         Object primaryKey = ReflectUtils.invokeGetter(entity, Constants.PRIMARY_KEY_NAME);

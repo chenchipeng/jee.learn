@@ -27,7 +27,7 @@ import com.jee.learn.manager.config.shiro.session.CustomSessionDAO;
 import com.jee.learn.manager.config.shiro.session.CustomSessionIdGenerator;
 import com.jee.learn.manager.config.shiro.session.CustomWebSessionManager;
 import com.jee.learn.manager.config.shiro.session.JedisSessionDAO;
-import com.jee.learn.manager.security.CustomRealm;
+import com.jee.learn.manager.security.shiro.CustomRealm;
 import com.jee.learn.manager.support.cache.CacheConstants;
 import com.jee.learn.manager.util.security.CryptoUtil;
 

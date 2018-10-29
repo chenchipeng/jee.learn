@@ -1,4 +1,4 @@
-package com.jee.learn.manager.security;
+package com.jee.learn.manager.security.shiro;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.InvalidSessionException;

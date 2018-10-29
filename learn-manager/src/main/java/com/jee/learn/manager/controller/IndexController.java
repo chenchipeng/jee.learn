@@ -19,7 +19,7 @@ import com.jee.learn.manager.config.shiro.security.CustomPrincipal;
 import com.jee.learn.manager.config.shiro.security.CustomToken;
 import com.jee.learn.manager.config.shiro.session.CustomSessionDAO;
 import com.jee.learn.manager.domain.sys.SysUser;
-import com.jee.learn.manager.security.ShiroUtil;
+import com.jee.learn.manager.security.shiro.ShiroUtil;
 import com.jee.learn.manager.service.sys.SysUserService;
 import com.jee.learn.manager.support.servlet.captcha.CaptchaUtil;
 import com.jee.learn.manager.util.Constants;

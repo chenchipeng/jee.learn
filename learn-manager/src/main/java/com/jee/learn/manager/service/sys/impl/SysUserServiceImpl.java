@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jee.learn.manager.domain.sys.SysUser;
-import com.jee.learn.manager.security.ShiroUtil;
+import com.jee.learn.manager.security.shiro.ShiroUtil;
 import com.jee.learn.manager.service.sys.SysUserService;
 import com.jee.learn.manager.support.dao.Condition;
 import com.jee.learn.manager.support.dao.Sort;

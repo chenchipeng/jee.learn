@@ -14,10 +14,20 @@ public class Constants {
         throw new IllegalStateException("Utility class");
     }
 
+    /** 逗号 */
+    public static final String COMMA = ",";
+    /** 点(句)号 */
+    public static final String PERIOD = ".";
+    /** 冒号 */
+    public static final String COLON = ":";
+
     /** 01是否-否 */
     public static final String N = "0";
     /** 01是否-是 */
     public static final String Y = "1";
+
+    /** 超管的id */
+    public static final String ADMIN_ID = "1";
 
     /** 主键属性名称 */
     public static final String PRIMARY_KEY_NAME = "id";
