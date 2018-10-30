@@ -11,7 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.jee.learn.manager.config.datasource.dynamic.TargetDataSource;
 import com.jee.learn.manager.domain.sys.SysRole;
 import com.jee.learn.manager.repository.sys.SysRoleRepository;
+import com.jee.learn.manager.security.UserUtil;
 import com.jee.learn.manager.service.sys.SysRoleService;
+import com.jee.learn.manager.support.cache.CacheConstants;
+import com.jee.learn.manager.support.cache.EhcacheService;
 import com.jee.learn.manager.support.dao.Condition;
 import com.jee.learn.manager.support.dao.Sort;
 import com.jee.learn.manager.support.dao.service.EntityServiceImpl;
@@ -19,6 +22,11 @@ import com.jee.learn.manager.support.dao.service.EntityServiceImpl;
 @Service
 @Transactional(readOnly = true)
 public class SysRoleServiceImpl extends EntityServiceImpl<SysRole, String> implements SysRoleService {
+
+    @Autowired
+    private UserUtil userUtil;
+    @Autowired
+    private EhcacheService ehcacheService;
 
     @Autowired
     private SysRoleRepository sysRoleRepository;
@@ -37,6 +45,14 @@ public class SysRoleServiceImpl extends EntityServiceImpl<SysRole, String> imple
     @Override
     public List<SysRole> findListByUserId(String userId) {
         return StringUtils.isBlank(userId) ? new ArrayList<>() : sysRoleRepository.findListByUserId(userId);
+    }
+
+    @Transactional(readOnly = false)
+    @Override
+    public void saveOrUpdate(SysRole entity) {
+        super.saveOrUpdate(entity);
+        ehcacheService.remove(CacheConstants.EHCACHE_USER,
+                CacheConstants.CACHE_KEY_USER_ROLE + userUtil.getUser().getId());
     }
 
 }

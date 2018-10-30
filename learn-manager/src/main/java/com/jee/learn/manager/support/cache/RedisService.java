@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 /**
  * RedisTemplate 工具类<br/>
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
  *          修改记录:<br/>
  *          1.2018年6月22日 下午11:22:39 1002360 新建
  */
-@Service
+@Component
 public class RedisService {
 
     @Autowired

@@ -18,12 +18,18 @@ public class CacheConstants {
     public static final String CACHE_KEY_SEPARATOR = ":";
     public static final String CACHE_KEY_APIUSER = "apiuser";
     public static final String CACHE_KEY_TOKEN = "token";
+    public static final String CACHE_KEY_USER_MENU = "user:menu:";
+    public static final String CACHE_KEY_USER_ROLE = "user:role:";
 
     /** ehcache 默认存储空间 */
     public static final String EHCACHE_DEFAULT = "defCache";
     /** ehcache shiro 系统活动会话缓存存储空间 */
     public static final String EHCACHE_SHIRO = "shiroCache";
+    /** ehcache user 用户数据缓存存储空间 */
+    public static final String EHCACHE_USER = "userCache";
 
     /** "null"字符串 */
     public static final String NULL_STRING = "null";
+    
+    
 }

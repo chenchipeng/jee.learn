@@ -3,6 +3,7 @@ package com.jee.learn.manager.config.shiro;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.servlet.DispatcherType;
 import javax.servlet.Filter;
 
 import org.apache.shiro.cache.ehcache.EhCacheManager;
@@ -16,9 +17,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.web.filter.DelegatingFilterProxy;
 
 import com.jee.learn.manager.config.SystemConfig;
 import com.jee.learn.manager.config.shiro.security.CustomFormAuthenticationFilter;
@@ -231,6 +234,19 @@ public class ShiroConfig {
         AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
         authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
         return authorizationAttributeSourceAdvisor;
+    }
+
+    //////// 开启异步支持 ////////
+
+    @Bean
+    public FilterRegistrationBean<DelegatingFilterProxy> filterRegistrationBean() {
+        FilterRegistrationBean<DelegatingFilterProxy> registration = new FilterRegistrationBean<DelegatingFilterProxy>();
+        registration.setFilter(new DelegatingFilterProxy());
+        registration.setName("shiroFilter");
+        registration.addInitParameter("targetFilterLifecycle", "true");
+        registration.addUrlPatterns("/*");
+        registration.setDispatcherTypes(DispatcherType.REQUEST, DispatcherType.ASYNC);
+        return registration;
     }
 
 }

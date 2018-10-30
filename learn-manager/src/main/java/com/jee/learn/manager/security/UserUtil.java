@@ -15,6 +15,8 @@ import com.jee.learn.manager.repository.sys.SysMenuRepository;
 import com.jee.learn.manager.repository.sys.SysRoleRepository;
 import com.jee.learn.manager.repository.sys.SysUserRepository;
 import com.jee.learn.manager.security.shiro.ShiroUtil;
+import com.jee.learn.manager.support.cache.CacheConstants;
+import com.jee.learn.manager.support.cache.EhcacheService;
 import com.jee.learn.manager.util.Constants;
 
 /**
@@ -34,6 +36,9 @@ public class UserUtil {
     private SysMenuRepository menuRepository;
     @Autowired
     private SysRoleRepository roleRepository;
+
+    @Autowired
+    private EhcacheService ehcacheService;
 
     /**
      * 根据登录名查找用户
@@ -74,17 +79,26 @@ public class UserUtil {
      * 
      * @return
      */
+    @SuppressWarnings("unchecked")
     public List<SysMenu> getMenuList() {
         List<SysMenu> menuList = null;
-        if (CollectionUtils.isEmpty(menuList)) {
+        SysUser user = getUser();
+        if (user == null) {
+            return menuList;
+        }
 
-            SysUser user = getUser();
+        menuList = (List<SysMenu>) ehcacheService.get(CacheConstants.EHCACHE_USER,
+                CacheConstants.CACHE_KEY_USER_MENU + user.getId());
+
+        if (CollectionUtils.isEmpty(menuList)) {
             if (isAdmin()) {
                 menuList = menuRepository.findAll();
             } else {
                 menuList = menuRepository.findListByUserId(user.getId());
             }
+            ehcacheService.put(CacheConstants.EHCACHE_USER, CacheConstants.CACHE_KEY_USER_MENU + user.getId(), menuList);
         }
+
         return menuList;
     }
 
@@ -93,12 +107,22 @@ public class UserUtil {
      * 
      * @return
      */
+    @SuppressWarnings("unchecked")
     public List<SysRole> getRoleList() {
         List<SysRole> roleList = null;
-        if (CollectionUtils.isEmpty(roleList)) {
-            SysUser user = getUser();
-            roleList = roleRepository.findListByUserId(user.getId());
+        SysUser user = getUser();
+        if (user == null) {
+            return roleList;
         }
+
+        roleList = (List<SysRole>) ehcacheService.get(CacheConstants.EHCACHE_USER,
+                CacheConstants.CACHE_KEY_USER_ROLE + user.getId());
+
+        if (CollectionUtils.isEmpty(roleList)) {
+            roleList = roleRepository.findListByUserId(user.getId());
+            ehcacheService.put(CacheConstants.EHCACHE_USER, CacheConstants.CACHE_KEY_USER_ROLE + user.getId(), roleList);
+        }
+
         return roleList;
     }
 

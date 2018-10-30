@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
@@ -18,12 +18,12 @@ import net.sf.ehcache.Element;
  *          修改记录:<br/>
  *          1.2018年6月15日 下午8:44:54 1002360 新建
  */
-@Service
+@Component
 public class EhcacheService {
 
     @Autowired
     private CacheManager ehCacheManager;
-    
+
     //////// K V ////////
 
     public void put(String cacheName, String key, Object value) {
@@ -42,7 +42,7 @@ public class EhcacheService {
         Cache cache = ehCacheManager.getCache(cacheName);
         cache.remove(key);
     }
-    
+
     //////// K HASH ////////
 
     @SuppressWarnings("unchecked")

@@ -1,5 +1,7 @@
 package com.jee.learn.manager.controller;
 
+import java.util.concurrent.CompletableFuture;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -7,6 +9,7 @@ import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,7 +58,7 @@ public class IndexController extends BaseController {
      * @return
      */
     @GetMapping("${system.authc-path}/login")
-    public String loginPage(Model model) {
+    public CompletableFuture<String> loginPage(Model model) {
 
         // 统计session活跃数
         if (logger.isDebugEnabled()) {
@@ -71,11 +74,11 @@ public class IndexController extends BaseController {
         // 如果已经登录，则跳转到管理首页
         CustomPrincipal principal = ShiroUtil.getPrincipal();
         if (principal != null) {
-            return REDIRECT + systemConfig.getAuthcPath();
+            return CompletableFuture.completedFuture(REDIRECT + systemConfig.getAuthcPath());
         }
 
         model.addAttribute("name", systemConfig.getName());
-        return "main/login";
+        return CompletableFuture.completedFuture("main/login");
     }
 
     /**
@@ -86,12 +89,12 @@ public class IndexController extends BaseController {
      * @return
      */
     @PostMapping("${system.authc-path}/login")
-    public String loginFail(HttpServletRequest request, Model model) {
+    public CompletableFuture<String> loginFail(HttpServletRequest request, Model model) {
 
         // 如果已经登录，则跳转到管理首页
         CustomPrincipal principal = ShiroUtil.getPrincipal();
         if (principal != null) {
-            return REDIRECT + systemConfig.getAuthcPath();
+            return CompletableFuture.completedFuture(REDIRECT + systemConfig.getAuthcPath());
         }
 
         // 获取并设置登录参数信息
@@ -121,7 +124,7 @@ public class IndexController extends BaseController {
 
         // 验证失败清空验证码
         request.getSession().setAttribute(CustomToken.DEFAULT_CAPTCHA_PARAM, StringUtils.EMPTY);
-        return "main/login";
+        return CompletableFuture.completedFuture("main/login");
     }
 
     /**
@@ -132,7 +135,7 @@ public class IndexController extends BaseController {
      */
     @RequiresPermissions("user")
     @GetMapping("${system.authc-path}")
-    public String indexPage(Model model) {
+    public CompletableFuture<String> indexPage(Model model) {
 
         // 统计session活跃人数
         if (logger.isDebugEnabled()) {
@@ -149,7 +152,7 @@ public class IndexController extends BaseController {
 
             if (StringUtils.equals(logined, Constants.Y)) {
                 ShiroUtil.getSubject().logout();
-                return REDIRECT + systemConfig.getAuthcPath() + "/login";
+                return CompletableFuture.completedFuture(REDIRECT + systemConfig.getAuthcPath() + "/login");
             }
             if (StringUtils.isBlank(logined) || Constants.N.equals(logined)) {
                 CookieUtils.setCookie(systemConfig.getApplicationName() + LOGINED_COOKIE_NAME_SUFFIX, Constants.Y,
@@ -169,31 +172,33 @@ public class IndexController extends BaseController {
         // TODO 记录登录日志
 
         model.addAttribute("title", systemConfig.getName());
-        return "main/index";
+        return CompletableFuture.completedFuture("main/index");
     }
 
     /**
      * 注销用户
+     * 
      * @return
      */
     @GetMapping("${system.authc-path}/logout")
-    public String logout() {
+    public CompletableFuture<String> logout() {
         CustomPrincipal principal = ShiroUtil.getPrincipal();
         // 如果已经登录，则跳转到管理首页
         if (principal != null) {
             ShiroUtil.getSubject().logout();
         }
-        return REDIRECT + systemConfig.getAuthcPath() + "/login";
+        return CompletableFuture.completedFuture(REDIRECT + systemConfig.getAuthcPath() + "/login");
     }
-    
+
     /**
      * ie兼容页面
      * 
      * @return
      */
+    @Async
     @GetMapping("${system.authc-path}/ie")
-    public String ie() {
-        return "main/ie";
+    public CompletableFuture<String> ie() {
+        return CompletableFuture.completedFuture("main/ie");
     }
 
 }

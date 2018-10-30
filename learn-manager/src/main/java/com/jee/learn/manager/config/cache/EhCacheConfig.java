@@ -51,9 +51,9 @@ public class EhCacheConfig implements CachingConfigurer {
         config.diskStore(diskStore);
 
         /* 可以创建多个cacheConfiguration，都添加到Config中 */
-        // 系统活动会话缓存
         config.addCache(defCache(persistence));
         config.addCache(shiroCache(persistence));
+        config.addCache(userCache(persistence));
 
         return net.sf.ehcache.CacheManager.newInstance(config);
     }
@@ -84,6 +84,17 @@ public class EhCacheConfig implements CachingConfigurer {
     private CacheConfiguration shiroCache(PersistenceConfiguration persistence) {
         CacheConfiguration shiroCache = new CacheConfiguration();
         shiroCache.setName(CacheConstants.EHCACHE_SHIRO);
+        shiroCache.setTimeToIdleSeconds(1800L);
+        shiroCache.setMaxEntriesLocalHeap(100);
+        shiroCache.setMaxEntriesLocalDisk(100000);
+        shiroCache.persistence(persistence);
+        return shiroCache;
+    }
+    
+    /** 用户数据缓存 */
+    private CacheConfiguration userCache(PersistenceConfiguration persistence) {
+        CacheConfiguration shiroCache = new CacheConfiguration();
+        shiroCache.setName(CacheConstants.EHCACHE_USER);
         shiroCache.setTimeToIdleSeconds(1800L);
         shiroCache.setMaxEntriesLocalHeap(100);
         shiroCache.setMaxEntriesLocalDisk(100000);
