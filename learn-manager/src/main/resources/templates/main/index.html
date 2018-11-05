@@ -25,19 +25,17 @@
                         </div>
                         <div class="logo-element"><i class="fa fa-server"></i></div>
                     </li>
+                    <li>
+                        <a class="J_menuItem" href="#" th:href="${authcPath+'/ie'}">
+                            <i class="fa fa-home"></i>
+                            <span class="nav-label">主页</span>
+                        </a>
+                    </li>
                     <!-- 菜单分类
                     <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
                         <span class="ng-scope">分类</span>
                     </li>
                     <li class="line dk"></li>
-                     -->
-                     
-                    <li>
-                        <a class="J_menuItem" href="index_v1.html">
-                            <i class="fa fa-home"></i>
-                            <span class="nav-label">主页</span>
-                        </a>
-                    </li>
                     <li>
                         <a href="#">
                             <i class="fa fa fa-bar-chart-o"></i>
@@ -50,14 +48,29 @@
                             </li>
                         </ul>
                     </li>
+                    -->
+                    
+                    <li th:each="m2 : ${menu.childrenList[0].childrenList}">
+                        <a href="#">
+                            <i th:class="${m2.icon}"></i>
+                            <span class="nav-label" th:text="${m2.name}">二级菜单</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-second-level" th:each="m3 : ${m2.childrenList}">
+                            <li>
+                                <a class="J_menuItem" href="#" th:href="${authcPath+m3.href}" th:text="${m3.name}">二级菜单</a>
+                            </li>
+                        </ul>
+                    </li>
+                    
                 </ul>
             </div>
         </nav>
         <!--左侧导航结束-->
         <!--右侧部分开始-->
         <div id="page-wrapper" class="gray-bg dashbard-1">
-            <div class="row border-bottom">
-                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="row border-bottom" style="height: 50px;">
+                <nav id="topNavbar" class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
                     <!-- 右侧顶端 -->
                     <div class="navbar-header">
                         <a class="navbar-minimalize minimalize-styl-2 btn btn-info " href="#"><i class="fa fa-bars"></i> </a>
@@ -70,7 +83,7 @@
                             </a>
                             <ul class="dropdown-menu dropdown-alerts">
                                 <li>
-                                    <a href="mailbox.html">
+                                    <a class="J_menuItem" href="#" th:href="${authcPath+'/ie'}" onclick="freshenNavbar();">
                                         <div>
                                             <i class="fa fa-info"></i>&nbsp;个人信息
                                             <span class="pull-right text-muted small">查看或修改</span>
@@ -104,5 +117,4 @@
     <div th:replace="common/common.foot :: indexFoot"></div>
 
 </body>
-
 </html>

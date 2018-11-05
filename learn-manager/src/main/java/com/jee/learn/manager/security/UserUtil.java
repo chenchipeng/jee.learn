@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import com.jee.learn.manager.config.shiro.security.CustomPrincipal;
@@ -92,11 +93,12 @@ public class UserUtil {
 
         if (CollectionUtils.isEmpty(menuList)) {
             if (isAdmin()) {
-                menuList = menuRepository.findAll();
+                menuList = menuRepository.findAll(Sort.by(Constants.SORT_NAME));
             } else {
                 menuList = menuRepository.findListByUserId(user.getId());
             }
-            ehcacheService.put(CacheConstants.EHCACHE_USER, CacheConstants.CACHE_KEY_USER_MENU + user.getId(), menuList);
+            ehcacheService.put(CacheConstants.EHCACHE_USER, CacheConstants.CACHE_KEY_USER_MENU + user.getId(),
+                    menuList);
         }
 
         return menuList;
@@ -120,7 +122,8 @@ public class UserUtil {
 
         if (CollectionUtils.isEmpty(roleList)) {
             roleList = roleRepository.findListByUserId(user.getId());
-            ehcacheService.put(CacheConstants.EHCACHE_USER, CacheConstants.CACHE_KEY_USER_ROLE + user.getId(), roleList);
+            ehcacheService.put(CacheConstants.EHCACHE_USER, CacheConstants.CACHE_KEY_USER_ROLE + user.getId(),
+                    roleList);
         }
 
         return roleList;

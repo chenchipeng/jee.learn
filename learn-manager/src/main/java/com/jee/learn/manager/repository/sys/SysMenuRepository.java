@@ -18,7 +18,7 @@ public interface SysMenuRepository extends SpecRepository<SysMenu, String> {
      * @return
      */
     @TargetDataSource
-    @Query(value = "SELECT a.* FROM sys_menu a LEFT JOIN sys_role_menu b ON a.id = b.menu_id LEFT JOIN sys_user_role c ON b.role_id = c.role_id WHERE c.user_id = :userId", nativeQuery = true)
+    @Query(value = "SELECT a.* FROM sys_menu a LEFT JOIN sys_role_menu b ON a.id = b.menu_id LEFT JOIN sys_user_role c ON b.role_id = c.role_id WHERE c.user_id = :userId ORDER BY a.sort", nativeQuery = true)
     List<SysMenu> findListByUserId(@Param("userId") String userId);
 
 }

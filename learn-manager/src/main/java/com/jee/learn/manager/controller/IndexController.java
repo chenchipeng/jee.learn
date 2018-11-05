@@ -9,11 +9,13 @@ import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jee.learn.manager.config.SystemConfig;
 import com.jee.learn.manager.config.shiro.ShiroContants;
@@ -22,10 +24,14 @@ import com.jee.learn.manager.config.shiro.security.CustomPrincipal;
 import com.jee.learn.manager.config.shiro.security.CustomToken;
 import com.jee.learn.manager.config.shiro.session.CustomSessionDAO;
 import com.jee.learn.manager.domain.sys.SysUser;
+import com.jee.learn.manager.dto.ResponseDto;
+import com.jee.learn.manager.dto.sys.MenuDto;
 import com.jee.learn.manager.security.shiro.ShiroUtil;
+import com.jee.learn.manager.service.sys.SysMenuService;
 import com.jee.learn.manager.service.sys.SysUserService;
 import com.jee.learn.manager.support.servlet.captcha.CaptchaUtil;
 import com.jee.learn.manager.util.Constants;
+import com.jee.learn.manager.util.mapper.JsonMapper;
 import com.jee.learn.manager.util.net.CookieUtils;
 import com.jee.learn.manager.util.time.DateFormatUtil;
 
@@ -50,6 +56,8 @@ public class IndexController extends BaseController {
     private CustomSessionDAO sessionDao;
     @Autowired
     private SysUserService sysUserService;
+    @Autowired
+    private SysMenuService sysMenuService;
 
     /**
      * 登录页面
@@ -58,7 +66,7 @@ public class IndexController extends BaseController {
      * @return
      */
     @GetMapping("${system.authc-path}/login")
-    public CompletableFuture<String> loginPage(Model model) {
+    public CompletableFuture<String> login(Model model) {
 
         // 统计session活跃数
         if (logger.isDebugEnabled()) {
@@ -135,7 +143,7 @@ public class IndexController extends BaseController {
      */
     @RequiresPermissions("user")
     @GetMapping("${system.authc-path}")
-    public CompletableFuture<String> indexPage(Model model) {
+    public CompletableFuture<String> index(Model model) {
 
         // 统计session活跃人数
         if (logger.isDebugEnabled()) {
@@ -159,7 +167,11 @@ public class IndexController extends BaseController {
                         CookieUtils.THREE_MINUTE_COOKIE);
             }
         }
-
+        
+        // 获取左侧菜单
+        ResponseDto<MenuDto> result = sysMenuService.getCurrentUserMenu();
+        model.addAttribute("menu", result.getD());
+        
         // 另存上次登录IP和时间
         SysUser user = sysUserService.findOne(principal.getId());
         if (user != null) {
@@ -167,8 +179,10 @@ public class IndexController extends BaseController {
             principal.setOldloginDate(DateFormatUtil.formatDateOnSecion(user.getLoginDate()));
             model.addAttribute("user", user);
         }
+        
         // 更新登录IP和时间
         sysUserService.updateUserLoginInfo(principal.getId());
+        
         // TODO 记录登录日志
 
         model.addAttribute("title", systemConfig.getName());
@@ -199,6 +213,20 @@ public class IndexController extends BaseController {
     @GetMapping("${system.authc-path}/ie")
     public CompletableFuture<String> ie() {
         return CompletableFuture.completedFuture("main/ie");
+    }
+
+    /**
+     * 获取左侧菜单
+     * 
+     * @return
+     */
+    @Async
+    @ResponseBody
+    @RequiresPermissions("user")
+    @PostMapping(path = "${system.authc-path}/menu", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public CompletableFuture<ResponseDto<MenuDto>> menu() {
+        ResponseDto<MenuDto> result = sysMenuService.getCurrentUserMenu();
+        return CompletableFuture.completedFuture(result);
     }
 
 }

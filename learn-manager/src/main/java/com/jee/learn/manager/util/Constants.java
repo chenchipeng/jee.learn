@@ -33,5 +33,7 @@ public class Constants {
     public static final String PRIMARY_KEY_NAME = "id";
     /** 删除标记属性名称 */
     public static final String DEL_FLAG_NAME = "delFlag";
+    /** 通用排序号属性名称 */
+    public static final String SORT_NAME = "sort";
 
 }
