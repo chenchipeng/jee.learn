@@ -30,8 +30,8 @@ public class MonitorController extends BaseController {
     }
 
     @Async
-    @GetMapping("ex")
-    public CompletableFuture<String> ex() {
+    @GetMapping("error")
+    public CompletableFuture<String> error() {
         throw new NullPointerException("作死的空指针");
     }
 

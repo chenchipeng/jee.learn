@@ -9,15 +9,20 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.jee.learn.manager.util.base.ExceptionUtil;
 
+/**
+ * 异常处理<br/>
+ * 参考: https://www.jianshu.com/p/aa507b3552fa
+ * 
+ * @author admin
+ *
+ */
 @ControllerAdvice
 public class GlobalExceptionHandler extends BaseController {
 
     protected static final String DEFAULT_ERROR_VIEW = "error/error";
 
-    // https://www.jianshu.com/p/aa507b3552fa
-
     @ExceptionHandler({ Exception.class })
-    public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
+    public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) {
         String error = e.getClass().getSimpleName();
         if (StringUtils.isNotBlank(e.getMessage())) {
             error += ": " + e.getMessage();

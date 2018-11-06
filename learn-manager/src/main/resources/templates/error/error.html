@@ -4,25 +4,26 @@
 
 <body class="gray-bg">
      
-    <div class="wrapper wrapper-content  animated fadeInRight article">
+    <div class="wrapper wrapper-content animated fadeInRight article">
         <div class="row">
             <div class="col-lg-10 col-lg-offset-1">
                 <div class="ibox">
                     <div class="ibox-content">
                         <div class="pull-right">
-                            <button class="btn btn-success btn-xs" type="button">下载</button>
+                        	<button class="btn btn-danger btn-xs" type="button" onclick="view(this);">展开</button>
+                            <button class="btn btn-success btn-xs" type="button" onclick="download();">下载</button>
                             <button class="btn btn-primary btn-xs" type="button" onclick="history.go(-1);">返回上一页</button>
                         </div>
                         <div class="text-center article-title">
                             <h1>震惊！服务器怒抛错误异常</h1>
-                            <h2 th:text="${error}">异常</h2>
+                            <h2 id="error" th:text="${error}">异常</h2>
                             <div class="text-left pull-right">
-                                <strong th:text="${url}">url</strong><br/>
-                                <strong>1970-01-01 08:00:00.000</strong>
+                                <strong id="url" th:text="${url}">url</strong><br/>
+                                <strong id="date">1970-01-01 08:00:00.000</strong>
                             </div>
                         </div>
                         <br/>
-                        <p th:text="${message}">stackTraceText</p>
+                        <p id="text">stackTraceText</p>
                     </div>
                 </div>
             </div>
@@ -30,6 +31,43 @@
     </div>
     
     <div th:replace="common/common.foot :: commonFoot"></div>
-                   
+    
+<script src="plugins/FileSaver.js" th:src="@{/plugins/FileSaver.js}"></script>    
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+	
+	$(document).ready(function(){
+		let text = /*[[${message}]]*/ '';
+		text = text.replace(/Caused /g, "<br />Caused&nbsp;");
+		text = text.replace(/at /g, "<br />&nbsp;&nbsp;&nbsp;&nbsp;at&nbsp;");
+		$('#text').html(text);
+		$('#text').css('display','none');
+	})
+	
+	/*下载文件*/
+	function download(){
+		let error = $("#error").html();
+		let url = $("#url").html();
+		let date = $("#date").html();
+		let text = /*[[${message}]]*/ '';
+		let content = error + "\r\n" + url + "\r\n" + date + "\r\n\r\n" + text;
+		
+		let blob = new Blob([content], {type: "text/plain;charset=utf-8"});
+		saveAs(blob, "report.txt");// 使用FileSaver.js插件
+	}
+	
+	/*展示与隐藏*/
+	function view(obj){
+		if($('#text').css('display') == 'none'){
+			$('#text').css('display','inline');
+			$(obj).html('收起');
+		}else{
+			$('#text').css('display','none');
+			$(obj).html('展开');
+		}
+	}
+
+/*]]>*/
+</script>            
 </body>
 </html>
