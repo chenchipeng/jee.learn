@@ -33,6 +33,7 @@ public class DateFormatUtil {
     // 以空格分隔日期和时间，不带时区信息
     public static final String PATTERN_DEFAULT = "yyyy-MM-dd HH:mm:ss.SSS";
     public static final String PATTERN_DEFAULT_ON_SECOND = "yyyy-MM-dd HH:mm:ss";
+    public static final String PATTERN_DEFAULT_ON_TIME_MSEC = "HH:mm:ss.SSS";
 
     // 使用工厂方法FastDateFormat.getInstance(), 从缓存中获取实例
 
@@ -44,6 +45,8 @@ public class DateFormatUtil {
     // 以空格分隔日期和时间，不带时区信息
     public static final FastDateFormat DEFAULT_FORMAT = FastDateFormat.getInstance(PATTERN_DEFAULT);
     public static final FastDateFormat DEFAULT_ON_SECOND_FORMAT = FastDateFormat.getInstance(PATTERN_DEFAULT_ON_SECOND);
+    public static final FastDateFormat DEFAULT_ON_TIME_MSEC_FORMAT = FastDateFormat
+            .getInstance(PATTERN_DEFAULT_ON_TIME_MSEC);
 
     /**
      * 分析日期字符串, 仅用于pattern不固定的情况.
@@ -87,7 +90,7 @@ public class DateFormatUtil {
      * @return
      */
     public static String formatDateOnDay(@NotNull Date date) {
-        return FastDateFormat.getInstance(PATTERN_ISO_ON_DATE).format(date);
+        return ISO_ON_DATE_FORMAT.format(date);
     }
 
     /**
@@ -97,7 +100,27 @@ public class DateFormatUtil {
      * @return
      */
     public static String formatDateOnSecion(@NotNull Date date) {
-        return FastDateFormat.getInstance(PATTERN_DEFAULT_ON_SECOND).format(date);
+        return DEFAULT_ON_SECOND_FORMAT.format(date);
+    }
+
+    /**
+     * 格式化日期, 固定{@link DateFormatUtil#PATTERN_DEFAULT_ON_SECOND}
+     * 
+     * @param millis
+     * @return
+     */
+    public static String formatDateOnSecion(@NotNull long millis) {
+        return DEFAULT_ON_SECOND_FORMAT.format(millis);
+    }
+
+    /**
+     * 格式化日期, 固定{@link DateFormatUtil#PATTERN_DEFAULT_ON_TIME_MSEC}
+     * 
+     * @param millis
+     * @return
+     */
+    public static String formatDateOnTimeMesc(@NotNull long millis) {
+        return DEFAULT_ON_TIME_MSEC_FORMAT.format(millis);
     }
 
     /////// 格式化间隔时间/////////

@@ -21,7 +21,7 @@ import com.jee.learn.manager.support.cache.EhcacheService;
 import com.jee.learn.manager.util.Constants;
 
 /**
- * 跳过service层查找用户相关数据
+ * 跳过service层查找用户相关数据, 避开shiro调service的异常
  * 
  * @author ccp
  * @version 1.0<br/>

@@ -26,13 +26,14 @@ import com.jee.learn.manager.config.shiro.session.CustomSessionDAO;
 import com.jee.learn.manager.domain.sys.SysUser;
 import com.jee.learn.manager.dto.ResponseDto;
 import com.jee.learn.manager.dto.sys.MenuDto;
+import com.jee.learn.manager.security.LogUtil;
 import com.jee.learn.manager.security.shiro.ShiroUtil;
 import com.jee.learn.manager.service.sys.SysMenuService;
 import com.jee.learn.manager.service.sys.SysUserService;
 import com.jee.learn.manager.support.servlet.captcha.CaptchaUtil;
 import com.jee.learn.manager.util.Constants;
-import com.jee.learn.manager.util.mapper.JsonMapper;
 import com.jee.learn.manager.util.net.CookieUtils;
+import com.jee.learn.manager.util.net.ServletUtil;
 import com.jee.learn.manager.util.time.DateFormatUtil;
 
 /**
@@ -52,6 +53,8 @@ public class IndexController extends BaseController {
     private SystemConfig systemConfig;
     @Autowired
     private CaptchaUtil captchaUtil;
+    @Autowired
+    private LogUtil logUtil;
     @Autowired
     private CustomSessionDAO sessionDao;
     @Autowired
@@ -167,11 +170,11 @@ public class IndexController extends BaseController {
                         CookieUtils.THREE_MINUTE_COOKIE);
             }
         }
-        
+
         // 获取左侧菜单
         ResponseDto<MenuDto> result = sysMenuService.getCurrentUserMenu();
         model.addAttribute("menu", result.getD());
-        
+
         // 另存上次登录IP和时间
         SysUser user = sysUserService.findOne(principal.getId());
         if (user != null) {
@@ -179,11 +182,11 @@ public class IndexController extends BaseController {
             principal.setOldloginDate(DateFormatUtil.formatDateOnSecion(user.getLoginDate()));
             model.addAttribute("user", user);
         }
-        
+
         // 更新登录IP和时间
         sysUserService.updateUserLoginInfo(principal.getId());
-        
-        // TODO 记录登录日志
+        // 记录登录日志
+        logUtil.saveLog(ServletUtil.getRequest(), "系统登录");
 
         model.addAttribute("title", systemConfig.getName());
         return CompletableFuture.completedFuture("main/index");

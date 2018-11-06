@@ -7,10 +7,13 @@ import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
+
+import com.jee.learn.manager.support.interceptor.LogInterceptor;
 
 /**
  * mvc config
@@ -23,11 +26,16 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
+    private static final String ANY_REQUEST = "/**";
+
     @Resource(name = "thymeleafViewResolver")
     private ThymeleafViewResolver thymeleafViewResolver;
 
     @Autowired
     private SystemConfig systemConfig;
+
+    @Autowired
+    private LogInterceptor logInterceptor;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -46,6 +54,14 @@ public class WebConfig implements WebMvcConfigurer {
         }
 
         WebMvcConfigurer.super.configureViewResolvers(registry);
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        // 增加URL拦截
+        registry.addInterceptor(logInterceptor).addPathPatterns(systemConfig.getAuthcPath() + ANY_REQUEST);
+
+        WebMvcConfigurer.super.addInterceptors(registry);
     }
 
 }
