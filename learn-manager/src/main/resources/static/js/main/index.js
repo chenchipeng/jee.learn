@@ -6,8 +6,6 @@ $(function(){
         $("#J_iframe").attr('src',url);
         return false;
     });
-    
-    
 });
 
 // 过时的，勿用

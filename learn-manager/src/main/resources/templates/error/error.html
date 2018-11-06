@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/common.head :: commonHeader('500 异常打印')" />
+
+<body class="gray-bg">
+     
+    <div class="wrapper wrapper-content  animated fadeInRight article">
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <div class="pull-right">
+                            <button class="btn btn-success btn-xs" type="button">下载</button>
+                            <button class="btn btn-primary btn-xs" type="button" onclick="history.go(-1);">返回上一页</button>
+                        </div>
+                        <div class="text-center article-title">
+                            <h1>震惊！服务器怒抛错误异常</h1>
+                            <h2 th:text="${error}">异常</h2>
+                            <div class="text-left pull-right">
+                                <strong th:text="${url}">url</strong><br/>
+                                <strong>1970-01-01 08:00:00.000</strong>
+                            </div>
+                        </div>
+                        <br/>
+                        <p th:text="${message}">stackTraceText</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div th:replace="common/common.foot :: commonFoot"></div>
+                   
+</body>
+</html>

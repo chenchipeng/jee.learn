@@ -2,11 +2,19 @@ package com.jee.learn.manager.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-public abstract class BaseController {
+import com.jee.learn.manager.config.SystemConfig;
+
+@Component
+public class BaseController {
 
     protected static final String REDIRECT = "redirect:";
-    
+
     protected Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    protected SystemConfig systemConfig;
 
 }

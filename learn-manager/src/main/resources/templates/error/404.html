@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="common/common.head :: commonHeader('404')" />
 
@@ -8,15 +8,12 @@
     <div class="middle-box text-center animated fadeInDown">
         <h1>404</h1>
         <h3 class="font-bold">页面未找到！</h3>
-
         <div class="error-desc">
-            抱歉，页面好像去火星了~
-            <form class="form-inline m-t" role="form">
-                <div class="form-group">
-                    <input type="email" class="form-control" placeholder="请输入您需要查找的内容 …">
-                </div>
-                <button type="submit" class="btn btn-primary">搜索</button>
-            </form>
+            抱歉，页面好像去无主之地了~
+            <br />
+            不如返回上一页看看?
+            <br />
+            <a href="javascript:void(0)" onclick="history.go(-1);" class="btn btn-primary m-t">返回上一页</a>
         </div>
     </div>
 

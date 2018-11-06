@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<body>
 
 <div th:fragment="commonFoot">
 
@@ -17,9 +18,19 @@
 
 <div th:fragment="indexFoot">
 
-<!-- 自定义js -->
+<!-- 自定义主框架js -->
 <script src="js/common.js" th:src="@{/js/common.js}"></script>
 <script src="js/main/index.js" th:src="@{/js/main/index.js}"></script>
 <script src="plugins/pace/pace.min.1.0.2.js" th:src="@{/plugins/pace/pace.min.1.0.2.js}"></script>
 
 </div>
+
+<div th:fragment="contentFoot">
+
+<!-- 自定义右侧 iframe js -->
+<script src="js/content.js" th:src="@{/js/content.js}"></script>
+    
+</div>
+
+</body>
+</html>

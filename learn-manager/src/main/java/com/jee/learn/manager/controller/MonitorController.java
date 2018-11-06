@@ -12,9 +12,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class MonitorController extends BaseController {
 
     @Async
-    @GetMapping("hello")
+    @GetMapping("")
     public CompletableFuture<String> hello() {
-        return CompletableFuture.completedFuture("hello");
+        return CompletableFuture.completedFuture("main/monitor");
+    }
+
+    @Async
+    @GetMapping("404")
+    public CompletableFuture<String> notFound() {
+        return CompletableFuture.completedFuture("error/404");
+    }
+
+    @Async
+    @GetMapping("500")
+    public CompletableFuture<String> internalServerError() {
+        return CompletableFuture.completedFuture("error/500");
+    }
+
+    @Async
+    @GetMapping("ex")
+    public CompletableFuture<String> ex() {
+        throw new NullPointerException("作死的空指针");
     }
 
 }

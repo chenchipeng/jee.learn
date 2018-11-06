@@ -50,8 +50,6 @@ public class IndexController extends BaseController {
     private static final String LOGINED_COOKIE_NAME_SUFFIX = ".isLogined";
 
     @Autowired
-    private SystemConfig systemConfig;
-    @Autowired
     private CaptchaUtil captchaUtil;
     @Autowired
     private LogUtil logUtil;
@@ -147,6 +145,7 @@ public class IndexController extends BaseController {
     @RequiresPermissions("user")
     @GetMapping("${system.authc-path}")
     public CompletableFuture<String> index(Model model) {
+        CustomPrincipal principal = ShiroUtil.getPrincipal();
 
         // 统计session活跃人数
         if (logger.isDebugEnabled()) {
@@ -154,7 +153,6 @@ public class IndexController extends BaseController {
         }
 
         // 登录成功后，验证码计算器清零
-        CustomPrincipal principal = ShiroUtil.getPrincipal();
         captchaUtil.isCaptchaLogin(principal.getLoginName(), false, true);
 
         // 如果已登录，再次访问登录页，则退出原账号
@@ -219,6 +217,40 @@ public class IndexController extends BaseController {
     }
 
     /**
+     * 主页
+     * 
+     * @return
+     */
+    @Async
+    @RequiresPermissions("user")
+    @GetMapping("${system.authc-path}/welcome")
+    public CompletableFuture<String> welcome() {
+        return CompletableFuture.completedFuture("main/welcome");
+    }
+
+    /**
+     * 个人信息页面
+     * 
+     * @return
+     */
+    @RequiresPermissions("user")
+    @GetMapping("${system.authc-path}/profile")
+    public CompletableFuture<String> profile(Model model) {
+        CustomPrincipal principal = ShiroUtil.getPrincipal();
+        if (principal != null) {
+            // 获取上次登录IP和时间
+            model.addAttribute("oldLoginIP", principal.getOldLoginIP());
+            model.addAttribute("oldloginDate", principal.getOldloginDate());
+            // 获取用户信息
+            SysUser user = sysUserService.findOne(principal.getId());
+            if (user != null) {
+                model.addAttribute("user", user);
+            }
+        }
+        return CompletableFuture.completedFuture("main/profile");
+    }
+
+    /**
      * 获取左侧菜单
      * 
      * @return
@@ -230,6 +262,19 @@ public class IndexController extends BaseController {
     public CompletableFuture<ResponseDto<MenuDto>> menu() {
         ResponseDto<MenuDto> result = sysMenuService.getCurrentUserMenu();
         return CompletableFuture.completedFuture(result);
+    }
+
+    /**
+     * 获取{@link SystemConfig#getAuthcPath()}
+     * 
+     * @return
+     */
+    @Async
+    @ResponseBody
+    @RequiresPermissions("user")
+    @GetMapping(path = "/authcPath", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
+    public CompletableFuture<String> authcPath() {
+        return CompletableFuture.completedFuture(systemConfig.getAuthcPath());
     }
 
 }

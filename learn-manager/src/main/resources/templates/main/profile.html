@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/common.head :: commonHeader('个人资料')" />
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content">
+        <div class="row animated fadeInRight">
+            <div class="col-sm-4 col-sm-offset-4">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>个人资料</h5>
+                    </div>
+                    <div>
+                        <div class="ibox-content no-padding border-left-right">
+                            <br/>
+                            <img alt="image" class="img-responsive col-sm-4 col-sm-offset-4 img-circle" src="/img/user.png" th:src="${user.photo}" />
+                        </div>
+                        <div class="ibox-content profile-content">
+                            <h2><strong th:text="${user.name}">user name</strong></h2>
+                            <h5>关于我</h5>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <span>工号&nbsp;:&nbsp;<strong th:text="${user.no}">no</strong></span>
+                                </div>
+                                <div class="col-sm-6">
+                                    <span>登录名&nbsp;:&nbsp;<strong th:text="${user.loginName}">loginName</strong></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <span>固话&nbsp;:&nbsp;<strong th:text="${user.phone == null}? '保密' : ${user.phone}">phone</strong></span>
+                                </div>
+                                <div class="col-sm-6">
+                                    <span>手机号&nbsp;:&nbsp;<strong th:text="${user.mobile == null}? '保密' : ${user.mobile}">mobile</strong></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <span>邮箱&nbsp;:&nbsp;<strong th:text="${user.email == null}? '保密' : ${user.email}">email</strong></span>
+                                </div>
+                            </div>
+                            <div class="row m-t-lg">
+                                <div class="col-sm-6">
+                                    <h5>上次登录IP&nbsp;:&nbsp;<strong th:text="${oldLoginIP}">127.0.0.1</strong></h5>
+                                </div>
+                                <div class="col-sm-6">
+                                    <h5>上次登录时间&nbsp;:&nbsp;<strong th:text="${oldloginDate}">1970-01-01 08:00:00</strong></h5>
+                                </div>
+                            </div>
+                            <div class="user-button">
+                                <div class="row">
+                                    <div class="col-sm-4 col-sm-offset-8">
+                                        <button type="button" class="btn btn-primary btn-sm btn-block"><i class="fa fa-pencil-square-o"></i>修改</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div th:replace="common/common.foot :: commonFoot"></div>
+    <div th:replace="common/common.foot :: contentFoot"></div>
+
+</body>
+</html>
