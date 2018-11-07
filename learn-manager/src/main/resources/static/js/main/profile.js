@@ -1,5 +1,7 @@
 $(function() {
 
+	// 隐藏编辑区
+	$("#form").css("display", "none");
 	// 绑定按钮事件-控制编辑区显隐
 	$("#cancelBtn,#formBtn").on("click", function() {
 		formViewDisplsy();
@@ -8,19 +10,10 @@ $(function() {
 	$("#submitBtn").on("click", function() {
 		submitForm();
 	});
-
-	// 控制编辑区显隐
-	$("#form").css("display", "none");
-	function formViewDisplsy() {
-		if ($("#view").css("display") == "block") {
-			$("#view").css("display", "none");
-			$("#form").css("display", "block");
-		} else {
-			$("#view").css("display", "block");
-			$("#form").css("display", "none");
-		}
-	}
-
+	// 绑定头像事件
+	$("#photo").on("click", function() {
+		photoUpload();
+	});
 	// 清空密码
 	$("#password").val("");
 	// 表单校验
@@ -48,6 +41,17 @@ $(function() {
 
 });
 
+/* 控制编辑区显隐 */
+function formViewDisplsy() {
+	if ($("#view").css("display") == "block") {
+		$("#view").css("display", "none");
+		$("#form").css("display", "block");
+	} else {
+		$("#view").css("display", "block");
+		$("#form").css("display", "none");
+	}
+}
+
 /* 表单提交 */
 function submitForm() {
 	// md5加密
@@ -56,3 +60,9 @@ function submitForm() {
 	
 	$("#editForm").submit();
 }
+
+/* 上传头像 */
+function photoUpload(){
+	
+}
+

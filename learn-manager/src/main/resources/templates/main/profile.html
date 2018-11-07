@@ -68,7 +68,7 @@
                     <div>
                         <div class="ibox-content no-padding border-left-right">
                             <br/>
-                            <img alt="image" class="img-responsive col-sm-4 col-sm-offset-4 img-circle" src="/img/user.png" th:src="${user.photo}" />
+                            <img id="photo" alt="image" class="img-responsive col-sm-4 col-sm-offset-4 img-circle" src="/img/user.png" th:src="${user.photo}" />
                         </div>
                         <div class="ibox-content profile-content">
                             <form id="editForm" method="post" class="form-horizontal" action="#" th:action="${authcPath+'/profile/save'}" th:object="${user}">
