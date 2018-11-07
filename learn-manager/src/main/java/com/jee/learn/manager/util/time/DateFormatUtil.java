@@ -94,6 +94,16 @@ public class DateFormatUtil {
     }
 
     /**
+     * 格式化日期, 固定{@link DateFormatUtil#PATTERN_DEFAULT}
+     * 
+     * @param date
+     * @return
+     */
+    public static String formatDateDefault(@NotNull Date date) {
+        return DEFAULT_FORMAT.format(date);
+    }
+
+    /**
      * 格式化日期, 固定{@link DateFormatUtil#PATTERN_DEFAULT_ON_SECOND}
      * 
      * @param date

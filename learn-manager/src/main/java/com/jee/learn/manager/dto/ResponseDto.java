@@ -10,6 +10,21 @@ public class ResponseDto<T> implements Serializable {
     private String e;// 异常信息
     private T d;
 
+    public ResponseDto() {
+        super();
+    }
+
+    public ResponseDto(String c) {
+        super();
+        this.c = c;
+    }
+
+    public ResponseDto(String c, String e) {
+        super();
+        this.c = c;
+        this.e = e;
+    }
+
     public String getC() {
         return c;
     }

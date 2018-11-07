@@ -229,28 +229,6 @@ public class IndexController extends BaseController {
     }
 
     /**
-     * 个人信息页面
-     * 
-     * @return
-     */
-    @RequiresPermissions("user")
-    @GetMapping("${system.authc-path}/profile")
-    public CompletableFuture<String> profile(Model model) {
-        CustomPrincipal principal = ShiroUtil.getPrincipal();
-        if (principal != null) {
-            // 获取上次登录IP和时间
-            model.addAttribute("oldLoginIP", principal.getOldLoginIP());
-            model.addAttribute("oldloginDate", principal.getOldloginDate());
-            // 获取用户信息
-            SysUser user = sysUserService.findOne(principal.getId());
-            if (user != null) {
-                model.addAttribute("user", user);
-            }
-        }
-        return CompletableFuture.completedFuture("main/profile");
-    }
-
-    /**
      * 获取左侧菜单
      * 
      * @return
@@ -275,6 +253,41 @@ public class IndexController extends BaseController {
     @GetMapping(path = "/authcPath", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
     public CompletableFuture<String> authcPath() {
         return CompletableFuture.completedFuture(systemConfig.getAuthcPath());
+    }
+
+    /**
+     * 个人信息页面
+     * 
+     * @return
+     */
+    @RequiresPermissions("user")
+    @GetMapping("${system.authc-path}/profile")
+    public CompletableFuture<String> profile(Model model) {
+        CustomPrincipal principal = ShiroUtil.getPrincipal();
+        if (principal != null) {
+            // 获取上次登录IP和时间
+            model.addAttribute("oldLoginIP", principal.getOldLoginIP());
+            model.addAttribute("oldloginDate", principal.getOldloginDate());
+            // 获取用户信息
+            SysUser user = sysUserService.findOne(principal.getId());
+            if (user != null) {
+                model.addAttribute("user", user);
+            }
+        }
+        return CompletableFuture.completedFuture("main/profile");
+    }
+
+    /**
+     * 更新个人信息
+     * 
+     * @param user
+     * @return
+     */
+    @RequiresPermissions("user")
+    @PostMapping(path = "${system.authc-path}/profile/save")
+    public CompletableFuture<String> saveProfile(SysUser user) {
+        sysUserService.updateUserProfileInfo(user);
+        return CompletableFuture.completedFuture(REDIRECT + systemConfig.getAuthcPath() + "/profile");
     }
 
 }
