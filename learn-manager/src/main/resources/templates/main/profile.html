@@ -29,15 +29,15 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <span>固话&nbsp;:&nbsp;<strong th:text="${user.phone == null}? '保密' : ${user.phone}">phone</strong></span>
+                                    <span>固话&nbsp;:&nbsp;<strong th:text="${user.phone == null}? '未知' : ${user.phone}">phone</strong></span>
                                 </div>
                                 <div class="col-sm-6">
-                                    <span>手机号&nbsp;:&nbsp;<strong th:text="${user.mobile == null}? '保密' : ${user.mobile}">mobile</strong></span>
+                                    <span>手机号&nbsp;:&nbsp;<strong th:text="${user.mobile == null}? '未知' : ${user.mobile}">mobile</strong></span>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <span>邮箱&nbsp;:&nbsp;<strong th:text="${user.email == null}? '保密' : ${user.email}">email</strong></span>
+                                    <span>邮箱&nbsp;:&nbsp;<strong th:text="${user.email == null}? '未知' : ${user.email}">email</strong></span>
                                 </div>
                             </div>
                             <div class="row m-t-lg">
@@ -112,10 +112,10 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="col-sm-offset-8 col-sm-2">
+                                    <div class="col-sm-offset-4 col-sm-4">
                                         <button id="submitBtn" type="button" class="btn btn-primary btn-sm btn-block"><i class="fa fa-floppy-o"></i>&nbsp;保存</button>
                                     </div>
-                                    <div class="col-sm-2">
+                                    <div class="col-sm-4">
                                         <button id="cancelBtn" type="button" class="btn btn-default btn-sm btn-block"><i class="fa fa-times"></i>&nbsp;取消</button>
                                     </div>
                                 </div>

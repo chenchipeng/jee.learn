@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="common/common.head :: commonHeader(${title})" />
@@ -84,19 +84,19 @@
                             <ul class="dropdown-menu dropdown-alerts">
                                 <li>
                                     <a class="J_menuItem" href="#" th:href="${authcPath+'/profile'}" onclick="freshenNavbar();">
-                                        <div>
+                                    	<span style="white-space: normal;">
                                             <i class="fa fa-info"></i>&nbsp;个人信息
                                             <span class="pull-right text-muted small">查看或修改</span>
-                                        </div>
+                                    	</span>
                                     </a>
                                 </li>
                                 <li class="divider"></li>
                                 <li>
                                     <a href="login.html" th:href="${authcPath+'/logout'}">
-                                        <div>
+                                        <span style="white-space: normal;">
                                             <i class="fa fa-sign-out"></i>&nbsp;注销
                                             <span class="pull-right text-muted small">退出当前用户</span>
-                                        </div>
+                                        </span>
                                     </a>
                                 </li>
                             </ul>
@@ -107,7 +107,7 @@
             
             <!-- 右侧主窗体 -->
             <div class="row J_mainContent" id="content-main">
-                <iframe id="J_iframe" width="100%" height="100%" src="ie.html" th:src="${authcPath+'/welcome'}" frameborder="0" data-id="index_v1.html" seamless></iframe>
+                <iframe id="J_iframe" width="100%" height="100%" src="ie.html" th:src="${authcPath+'/welcome'}" style="border:none" data-id="index_v1.html" seamless></iframe>
             </div>
         </div>
         <!--右侧部分结束-->

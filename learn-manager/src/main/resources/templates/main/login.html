@@ -14,14 +14,14 @@
 
             <form id="inputForm" class="m-t" role="form" th:attr="action=${authcPath+'/login'}" action="#" method="post">
                 <div class="form-group">
-                    <input name="username" class="form-control" placeholder="用户名" required="" th:value="${username}" />
+                    <input name="username" class="form-control" placeholder="用户名" required="required" th:value="${username}" />
                 </div>
                 <div class="form-group">
-                    <input id="pwd" name="pwd" type="password" class="form-control" placeholder="密码" required="" />
+                    <input id="pwd" name="pwd" type="password" class="form-control" placeholder="密码" required="required" />
                     <input type='hidden' name='password' id='md5_pwd' value=''/>
                 </div>
                 <div class="form-group" id="captchaBox">
-                    <input name="captcha" class="form-control" placeholder="验证码" required="" />
+                    <input name="captcha" class="form-control" placeholder="验证码" required="required" />
                 </div>
                 <div class="form-group">
                     <span style="float: left; margin: 5px 5px;" >
