@@ -65,6 +65,5 @@ function submitForm() {
 function photoUpload(){
 	console.info("************");
 	//https://blog.csdn.net/creabine/article/details/50983022
-	// 火狐标题的小图标没有显示
 }
 

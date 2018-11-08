@@ -10,9 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import com.jee.learn.manager.support.servlet.BaseServlet;
 
@@ -26,16 +24,6 @@ public class LearnManagerApplication {
     /** 启动入口 */
     public static void main(String[] args) {
         SpringApplication.run(LearnManagerApplication.class, args);
-    }
-
-    /** 自定义异步线程池 */
-    @Bean
-    public AsyncTaskExecutor taskExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setThreadNamePrefix("taskExecutor");
-        executor.setCorePoolSize(50);
-        executor.setMaxPoolSize(200);
-        return executor;
     }
 
     /** bean打印 */

@@ -71,6 +71,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/img/**", "anon");
         filterChainDefinitionMap.put("/js/**", "anon");
         filterChainDefinitionMap.put("/plugins/**", "anon");
+        filterChainDefinitionMap.put("/favicon.ico", "anon");
 
         // 登录页面拦截
         filterChainDefinitionMap.put(systemConfig.getAuthcPath() + "/login", "authc");

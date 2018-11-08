@@ -57,15 +57,10 @@ public class SysUserServiceImpl extends EntityServiceImpl<SysUser, String> imple
         if (StringUtils.isNotBlank(user.getPassword())) {
             entity.setPassword(CustomCredentialsMatcher.entryptPassword(user.getPassword()));
         }
-        if (StringUtils.isNotBlank(user.getPhone())) {
-            entity.setPhone(user.getPhone());
-        }
-        if (StringUtils.isNotBlank(user.getMobile())) {
-            entity.setMobile(user.getMobile());
-        }
-        if (StringUtils.isNotBlank(user.getEmail())) {
-            entity.setEmail(user.getEmail());
-        }
+        entity.setPhone(user.getPhone());
+        entity.setMobile(user.getMobile());
+        entity.setEmail(user.getEmail());
+        
         saveOrUpdate(entity);
     }
 
