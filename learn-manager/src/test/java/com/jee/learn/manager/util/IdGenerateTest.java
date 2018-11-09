@@ -31,4 +31,9 @@ public class IdGenerateTest {
         log.debug("{}", IdGenerate.randomBase62(8));
     }
 
+    @Test
+    public void numidTest() {
+        log.debug("{}", IdGenerate.numid());
+    }
+
 }

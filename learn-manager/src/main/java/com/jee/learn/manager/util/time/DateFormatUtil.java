@@ -35,6 +35,9 @@ public class DateFormatUtil {
     public static final String PATTERN_DEFAULT_ON_SECOND = "yyyy-MM-dd HH:mm:ss";
     public static final String PATTERN_DEFAULT_ON_TIME_MSEC = "HH:mm:ss.SSS";
 
+    // 没有分隔的日期和时间，不带时区信息
+    public static final String PATTERN_SIMPLE = "yyMMddHHmmss";
+
     // 使用工厂方法FastDateFormat.getInstance(), 从缓存中获取实例
 
     // 以T分隔日期和时间，并带时区信息，符合ISO8601规范
@@ -47,6 +50,9 @@ public class DateFormatUtil {
     public static final FastDateFormat DEFAULT_ON_SECOND_FORMAT = FastDateFormat.getInstance(PATTERN_DEFAULT_ON_SECOND);
     public static final FastDateFormat DEFAULT_ON_TIME_MSEC_FORMAT = FastDateFormat
             .getInstance(PATTERN_DEFAULT_ON_TIME_MSEC);
+
+    // 没有分隔的日期和时间，不带时区信息
+    public static final FastDateFormat SIMPLE_FORMAT = FastDateFormat.getInstance(PATTERN_SIMPLE);
 
     /**
      * 分析日期字符串, 仅用于pattern不固定的情况.

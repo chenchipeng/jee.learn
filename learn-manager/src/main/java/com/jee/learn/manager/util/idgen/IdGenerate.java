@@ -7,6 +7,9 @@ import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.jee.learn.manager.util.time.ClockUtil;
+import com.jee.learn.manager.util.time.DateFormatUtil;
+
 import io.netty.util.internal.ThreadLocalRandom;
 
 /**
@@ -20,7 +23,10 @@ import io.netty.util.internal.ThreadLocalRandom;
 public class IdGenerate {
 
     private static final char[] BASE62 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".toCharArray();
+
     private static IdWorker idWorker = new IdWorker(-1, -1);
+    private static String numIdPrefix;
+    private static long numIdSuffix = 0L;
 
     /**
      * 生成UUID, 中间无-分割.<br/>
@@ -54,8 +60,7 @@ public class IdGenerate {
     }
 
     /**
-     * 获取新唯一编号（18为数值） 来自于twitter项目snowflake的id产生方案，全局唯一，时间有序。 64位ID
-     * (42(毫秒)+5(机器ID)+5(业务编码)+12(重复累加))
+     * 获取新唯一编号（18为数值） 来自于twitter项目snowflake的id产生方案，全局唯一，时间有序。 64位ID (42(毫秒)+5(机器ID)+5(业务编码)+12(重复累加))
      */
     public static String nextId() {
         return String.valueOf(idWorker.nextId());
@@ -86,6 +91,27 @@ public class IdGenerate {
             return str;
         }
         return null;
+    }
+
+    /** 单号生成 */
+    public static synchronized String numid() {
+
+        // yyMMddHHmmss
+        String str = DateFormatUtil.SIMPLE_FORMAT.format(ClockUtil.currentDate());
+        if (numIdPrefix == null || !numIdPrefix.equals(str)) {
+            numIdPrefix = str;
+            numIdSuffix = 0l;
+        }
+
+        numIdSuffix++;
+        long orderNo = Long.parseLong(numIdPrefix) * 100;
+        orderNo += numIdSuffix;
+
+        // 生成100到999的随机数
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        int r = random.nextInt(9999) % (8998) + 1000;
+
+        return String.valueOf(orderNo) + String.valueOf(r);
     }
 
 }

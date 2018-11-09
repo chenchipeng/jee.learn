@@ -30,6 +30,9 @@ public class Constants {
     /** 01是否-是 */
     public static final String Y = "1";
 
+    /** 斜杠 */
+    public static final String SPRIT = "/";
+
     //////// 数据表相关 ////////
 
     /** 超管的id */

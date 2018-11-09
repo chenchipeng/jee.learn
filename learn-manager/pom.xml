@@ -26,6 +26,7 @@
         <thymeleaf-shiro.version>2.0.0</thymeleaf-shiro.version>
         <shiro-spring.version>1.4.0</shiro-spring.version>
         <commons-text.version>1.5</commons-text.version>
+        <guava.version>27.0-jre</guava.version>
     </properties>
 
     <dependencies>
@@ -109,6 +110,13 @@
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-ehcache</artifactId>
             <version>${shiro-spring.version}</version>
+        </dependency>
+
+        <!-- guava -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
         </dependency>
 
     </dependencies>

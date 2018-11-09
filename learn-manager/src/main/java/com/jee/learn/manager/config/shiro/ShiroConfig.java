@@ -66,6 +66,8 @@ public class ShiroConfig {
         // 设置拦截器
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>(9);
 
+        // 开放测试环境
+        filterChainDefinitionMap.put("/test/**", "anon");
         // 开放静态资源
         filterChainDefinitionMap.put("/css/**", "anon");
         filterChainDefinitionMap.put("/img/**", "anon");

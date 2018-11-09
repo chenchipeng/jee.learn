@@ -45,20 +45,27 @@ import com.jee.learn.manager.util.time.DateFormatUtil;
  *          1.2018年10月8日 上午11:19:05 ccp 新建
  */
 @Controller
-public class IndexController extends BaseController {
+public class IndexController extends FileUploadController {
 
     private static final String LOGINED_COOKIE_NAME_SUFFIX = ".isLogined";
+    private static final String SYS_USER_PHOTO_PATH = "/sysUserPhoto";
 
     @Autowired
     private CaptchaUtil captchaUtil;
-    @Autowired
-    private LogUtil logUtil;
+//    @Autowired
+//    private LogUtil logUtil;
     @Autowired
     private CustomSessionDAO sessionDao;
     @Autowired
     private SysUserService sysUserService;
     @Autowired
     private SysMenuService sysMenuService;
+    
+    @Override
+    protected String getRelativeDir() {
+        return SYS_USER_PHOTO_PATH;
+    }
+
 
     /**
      * 登录页面
@@ -290,4 +297,5 @@ public class IndexController extends BaseController {
         return CompletableFuture.completedFuture(REDIRECT + systemConfig.getAuthcPath() + "/profile");
     }
 
+    
 }
