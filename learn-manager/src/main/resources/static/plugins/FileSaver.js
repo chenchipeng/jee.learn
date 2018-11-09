@@ -1,3 +1,4 @@
+/*将页面文本另存为本地文件*/
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
     define([], factory);

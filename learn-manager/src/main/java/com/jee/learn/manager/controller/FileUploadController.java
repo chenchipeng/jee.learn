@@ -5,9 +5,9 @@ import java.util.concurrent.CompletableFuture;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,7 +40,6 @@ public abstract class FileUploadController extends BaseController {
     protected abstract String getRelativeDir();
 
     /** 文件上传 */
-    @Async
     @ResponseBody
     @PostMapping(path = "/test/fileUpload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public CompletableFuture<ResponseDto<FileUploadDto>> fileUpload(HttpServletRequest request, MultipartFile file) {
@@ -55,11 +54,12 @@ public abstract class FileUploadController extends BaseController {
         // 写入本地文件
         File f = new File(path);
         try {
+            // FileUtil.createDir(dir);
             file.transferTo(f);
         } catch (Exception e) {
             responseDto.setC(WebConstants.BUSINESS_ERROR_CODE);
             responseDto.setE(WebConstants.BUSINESS_ERROR_MESSAGE);
-            logUtil.saveLog(request, null, e, "文件上传出错");// TODO 日志没有保存
+            logUtil.saveLog(request, null, e, "文件上传出错", StringUtils.EMPTY);
             logger.info("", e);
         }
 

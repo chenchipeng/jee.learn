@@ -54,20 +54,25 @@ public class LogUtil {
     public void saveLog(HttpServletRequest request, Object handler, Exception ex, String title) {
         SysUser user = userUtil.getUser();
         if (user != null && user.getId() != null) {
-            SysLog log = new SysLog();
-            log.setTitle(title);
-            log.setRemoteAddr(IPUtil.getIp(request));
-            log.setUserAgent(request.getHeader("user-agent"));
-            log.setRequestUri(request.getRequestURI());
-            log.setParams(getParams(request.getParameterMap()));
-            log.setMethod(request.getMethod());
-            log.setCreateBy(user.getId());
-            log.setType(ex == null ? Constants.LOG_TYPE_ACCESS : Constants.LOG_TYPE_EXCEPTION);
-            log.setCreateDate(ClockUtil.currentDate());
-            log.setId(IdGenerate.fastUUID());
-            // 异步保存日志
-            new SaveLogThread(log, handler, ex).start();
+            saveLog(request, handler, ex, title, user.getId());
         }
+    }
+
+    /** 保存日志 */
+    public void saveLog(HttpServletRequest request, Object handler, Exception ex, String title, String createrId) {
+        SysLog log = new SysLog();
+        log.setTitle(title);
+        log.setRemoteAddr(IPUtil.getIp(request));
+        log.setUserAgent(request.getHeader("user-agent"));
+        log.setRequestUri(request.getRequestURI());
+        log.setParams(getParams(request.getParameterMap()));
+        log.setMethod(request.getMethod());
+        log.setCreateBy(createrId);
+        log.setType(ex == null ? Constants.LOG_TYPE_ACCESS : Constants.LOG_TYPE_EXCEPTION);
+        log.setCreateDate(ClockUtil.currentDate());
+        log.setId(IdGenerate.fastUUID());
+        // 异步保存日志
+        new SaveLogThread(log, handler, ex).start();
     }
 
     /** 获取菜单名称路径（如：系统设置-机构用户-用户管理-编辑） */
@@ -122,10 +127,12 @@ public class LogUtil {
 
                 // 设置菜单名称路径
                 if (StringUtils.isNotBlank(menu.getHref())) {
-                    menuMap.put(menu.getHref(), namePath);// 如果有href, 则使用<href, namePath>
+                    menuMap.put(menu.getHref(), namePath);// 如果有href, 则使用<href,
+                                                          // namePath>
                 } else if (StringUtils.isNotBlank(menu.getPermission())) {
                     for (String p : StringUtils.split(menu.getPermission())) {
-                        menuMap.put(p, namePath);// 如果没有href, 则使用<permission, namePath>
+                        menuMap.put(p, namePath);// 如果没有href, 则使用<permission,
+                                                 // namePath>
                     }
                 }
 

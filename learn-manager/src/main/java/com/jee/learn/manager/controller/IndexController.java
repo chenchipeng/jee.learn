@@ -26,7 +26,6 @@ import com.jee.learn.manager.config.shiro.session.CustomSessionDAO;
 import com.jee.learn.manager.domain.sys.SysUser;
 import com.jee.learn.manager.dto.ResponseDto;
 import com.jee.learn.manager.dto.sys.MenuDto;
-import com.jee.learn.manager.security.LogUtil;
 import com.jee.learn.manager.security.shiro.ShiroUtil;
 import com.jee.learn.manager.service.sys.SysMenuService;
 import com.jee.learn.manager.service.sys.SysUserService;
@@ -52,20 +51,17 @@ public class IndexController extends FileUploadController {
 
     @Autowired
     private CaptchaUtil captchaUtil;
-//    @Autowired
-//    private LogUtil logUtil;
     @Autowired
     private CustomSessionDAO sessionDao;
     @Autowired
     private SysUserService sysUserService;
     @Autowired
     private SysMenuService sysMenuService;
-    
+
     @Override
     protected String getRelativeDir() {
         return SYS_USER_PHOTO_PATH;
     }
-
 
     /**
      * 登录页面
@@ -297,5 +293,4 @@ public class IndexController extends FileUploadController {
         return CompletableFuture.completedFuture(REDIRECT + systemConfig.getAuthcPath() + "/profile");
     }
 
-    
 }
