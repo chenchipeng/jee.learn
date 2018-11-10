@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jee.learn.manager.util.idgen.IdGenerate;
-import com.jee.learn.manager.util.text.EncodeUtils;
+import com.jee.learn.manager.util.text.EncodeUtil;
 
 public class EncodeUtilsTest {
 
@@ -14,7 +14,7 @@ public class EncodeUtilsTest {
     @Test
     public void encodeBase64Test() {
         String uuid = IdGenerate.fastUUID();
-        String str = EncodeUtils.encodeBase64(uuid);
+        String str = EncodeUtil.encodeBase64(uuid);
         log.debug("{}", str);
     }
 

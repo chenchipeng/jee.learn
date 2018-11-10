@@ -24,14 +24,14 @@ public class Constants {
     public static final String COLON = ":";
     /** 等号 */
     public static final String EQUAL = "=";
+    /** 斜杠 */
+    public static final String SPRIT = "/";
 
     /** 01是否-否 */
     public static final String N = "0";
     /** 01是否-是 */
     public static final String Y = "1";
 
-    /** 斜杠 */
-    public static final String SPRIT = "/";
 
     //////// 数据表相关 ////////
 

@@ -3,7 +3,7 @@ package com.jee.learn.manager.config.shiro.security;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 
 import com.jee.learn.manager.config.shiro.ShiroContants;
-import com.jee.learn.manager.util.text.EncodeUtils;
+import com.jee.learn.manager.util.text.EncodeUtil;
 import com.jee.learn.manager.util.text.EscapeUtil;
 import com.jee.learn.manager.util.text.HashUtil;
 
@@ -30,7 +30,7 @@ public class CustomCredentialsMatcher extends HashedCredentialsMatcher {
         plainPassword = EscapeUtil.unescapeHtml(plainPassword);
         byte[] salt = HashUtil.generateSalt(ShiroContants.SALT_LENGTH);
         byte[] hashPassword = HashUtil.sha1(plainPassword.getBytes(), salt, ShiroContants.HASH_INTERATIONS);
-        return EncodeUtils.encodeHex(salt) + EncodeUtils.encodeHex(hashPassword);
+        return EncodeUtil.encodeHex(salt) + EncodeUtil.encodeHex(hashPassword);
     }
 
     /**
@@ -42,9 +42,9 @@ public class CustomCredentialsMatcher extends HashedCredentialsMatcher {
      */
     public static boolean validatePassword(String plainPassword, String password) {
         plainPassword = EscapeUtil.unescapeHtml(plainPassword);
-        byte[] salt = EncodeUtils.decodeHex(password.substring(0, ShiroContants.SALT_SIZE));
+        byte[] salt = EncodeUtil.decodeHex(password.substring(0, ShiroContants.SALT_SIZE));
         byte[] hashPassword = HashUtil.sha1(plainPassword.getBytes(), salt, ShiroContants.HASH_INTERATIONS);
-        return password.equals(EncodeUtils.encodeHex(salt) + EncodeUtils.encodeHex(hashPassword));
+        return password.equals(EncodeUtil.encodeHex(salt) + EncodeUtil.encodeHex(hashPassword));
     }
 
 }

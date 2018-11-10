@@ -20,7 +20,7 @@ import org.apache.commons.codec.binary.Hex;
  * @author calvin
  * @version 2013-01-15
  */
-public class EncodeUtils {
+public class EncodeUtil {
 
     private static final char[] BASE62 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".toCharArray();
 

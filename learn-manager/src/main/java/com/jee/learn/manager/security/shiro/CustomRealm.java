@@ -33,7 +33,7 @@ import com.jee.learn.manager.domain.sys.SysUser;
 import com.jee.learn.manager.security.UserUtil;
 import com.jee.learn.manager.support.servlet.captcha.CaptchaUtil;
 import com.jee.learn.manager.util.Constants;
-import com.jee.learn.manager.util.text.EncodeUtils;
+import com.jee.learn.manager.util.text.EncodeUtil;
 
 /**
  * 自定义shiro realm<br/>
@@ -148,7 +148,7 @@ public class CustomRealm extends AuthorizingRealm {
                 throw new AuthenticationException(ShiroContants.MESSAGE_PREFIX + ShiroContants.INVALID_USERNAME_ERROR);
             }
             // 密码前八位作为盐值
-            byte[] salt = EncodeUtils.decodeHex(user.getPassword().substring(0, ShiroContants.SALT_SIZE));
+            byte[] salt = EncodeUtil.decodeHex(user.getPassword().substring(0, ShiroContants.SALT_SIZE));
             return new SimpleAuthenticationInfo(new CustomPrincipal(user.getId(), user.getLoginName(), user.getName()),
                     user.getPassword().substring(ShiroContants.SALT_SIZE), ByteSource.Util.bytes(salt), getName());
         } else {

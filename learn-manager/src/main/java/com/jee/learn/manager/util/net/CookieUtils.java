@@ -13,7 +13,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.jee.learn.manager.util.base.ExceptionUtil;
-import com.jee.learn.manager.util.text.EncodeUtils;
+import com.jee.learn.manager.util.text.EncodeUtil;
 
 public class CookieUtils {
 
@@ -71,7 +71,7 @@ public class CookieUtils {
     public static String getCookie(HttpServletRequest request, String name) {
         Cookie cookie = getCookieObj(request, name);
         if (cookie != null) {
-            return EncodeUtils.decodeUrl(cookie.getValue());
+            return EncodeUtil.decodeUrl(cookie.getValue());
         }
         return null;
     }
@@ -91,7 +91,7 @@ public class CookieUtils {
         if (null == value) {
             value = StringUtils.EMPTY;
         }
-        Cookie cookie = new Cookie(name, EncodeUtils.encodeUrl(value));
+        Cookie cookie = new Cookie(name, EncodeUtil.encodeUrl(value));
         cookie.setPath("/");
         cookie.setMaxAge(maxValue);
         setCookieObj(response, cookie);
@@ -174,7 +174,7 @@ public class CookieUtils {
             setCookie(response, name, value, seconds);
             return;
         }
-        cookie.setValue(EncodeUtils.encodeUrl(value));
+        cookie.setValue(EncodeUtil.encodeUrl(value));
         cookie.setMaxAge(seconds);
         setCookieObj(response, cookie);
     }

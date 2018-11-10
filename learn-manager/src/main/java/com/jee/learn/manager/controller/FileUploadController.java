@@ -1,11 +1,14 @@
 package com.jee.learn.manager.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.CompletableFuture;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +22,7 @@ import com.jee.learn.manager.util.Constants;
 import com.jee.learn.manager.util.WebConstants;
 import com.jee.learn.manager.util.base.Platforms;
 import com.jee.learn.manager.util.idgen.IdGenerate;
+import com.jee.learn.manager.util.io.FileTypeUtil;
 import com.jee.learn.manager.util.io.FileUtil;
 
 /**
@@ -45,17 +49,33 @@ public abstract class FileUploadController extends BaseController {
     @ResponseBody
     @PostMapping(path = "/test/fileUpload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public CompletableFuture<ResponseDto<FileUploadDto>> fileUpload(HttpServletRequest request, MultipartFile file) {
-        ResponseDto<FileUploadDto> responseDto = new ResponseDto<>();
-        responseDto.setC(WebConstants.SUCCESS_CODE);
+
         if (file == null) {
             CompletableFuture.completedFuture(
                     new ResponseDto<>(WebConstants.PARAMETER_ERROR_CODE, WebConstants.PARAMETER_ERROR_MESSAGE));
         }
+        // 保存文件
         FileUploadDto fileUploadDto = writeToFile(request, file);
         if (fileUploadDto.getIsFailure()) {
-            responseDto.setC(WebConstants.BUSINESS_ERROR_CODE);
-            responseDto.setE(WebConstants.BUSINESS_ERROR_MESSAGE);
+            CompletableFuture.completedFuture(
+                    new ResponseDto<>(WebConstants.BUSINESS_ERROR_CODE, WebConstants.BUSINESS_ERROR_MESSAGE));
         }
+        // 类型校验
+        if (!fileTypeCheck(fileUploadDto.getPath())) {
+            CompletableFuture.completedFuture(
+                    new ResponseDto<>(WebConstants.INVALID_FILE_TYPE_CODE, WebConstants.INVALID_FILE_TYPE_MESSAGE));
+        }
+        if (!extendCheck(Paths.get(fileUploadDto.getPath()))) {
+            try {
+                FileUtil.deleteFile(Paths.get(fileUploadDto.getPath()));
+            } catch (IOException e) {
+                logger.info("", e);
+            }
+            CompletableFuture.completedFuture(
+                    new ResponseDto<>(WebConstants.INVALID_FILE_TYPE_CODE, WebConstants.INVALID_FILE_TYPE_MESSAGE));
+        }
+
+        ResponseDto<FileUploadDto> responseDto = new ResponseDto<>(WebConstants.SUCCESS_CODE);
         responseDto.setD(fileUploadDto);
         return CompletableFuture.completedFuture(responseDto);
     }
@@ -91,6 +111,70 @@ public abstract class FileUploadController extends BaseController {
         FileUploadDto fileUploadDto = new FileUploadDto(file.getOriginalFilename(), fileName, absPath);
         fileUploadDto.setIsFailure(isFailure);
         return fileUploadDto;
+    }
+
+    /**
+     * 指定文件类型, 多个类型以','分隔, 任意类型返回一个{@link StringUtils#EMPTY}
+     * 
+     * @return
+     */
+    protected String getFileType() {
+        return StringUtils.EMPTY;
+    }
+
+    /**
+     * 文件类型检查
+     * 
+     * @param path
+     * @return true 表示验证通过
+     */
+    protected boolean fileTypeCheck(String path) {
+        String types = getFileType();
+        if (StringUtils.isBlank(types)) {
+            return true;
+        }
+
+        boolean isPass = false;
+        String fileType = StringUtils.EMPTY;
+        Path p = Paths.get(path);
+        // 获取文件类型
+        try {
+            fileType = FileTypeUtil.getFileType(p);
+        } catch (IOException e) {
+            logger.info("", e);
+            return false;
+        }
+        if (StringUtils.isBlank(fileType)) {
+            isPass = true;
+        }
+        // 校验
+        String[] ary = types.split(",");
+        for (String type : ary) {
+            if (fileType.equals(type)) {
+                isPass = true;
+                break;
+            }
+        }
+        // 清除文件
+        if (!isPass) {
+            try {
+                FileUtil.deleteFile(p);
+            } catch (IOException e) {
+                logger.info("", e);
+            }
+        }
+
+        return isPass;
+    }
+
+    /**
+     * 扩展文件检查
+     * 
+     * @param path
+     * @return
+     */
+    protected boolean extendCheck(Path path) {
+        return true;
     }
 
 }
