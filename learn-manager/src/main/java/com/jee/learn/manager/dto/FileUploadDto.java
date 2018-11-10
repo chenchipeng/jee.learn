@@ -6,6 +6,7 @@ public class FileUploadDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    private boolean isFailure;
     private String orignFileName;
     private String fileName;
     private String path;
@@ -19,6 +20,14 @@ public class FileUploadDto implements Serializable {
         this.orignFileName = orignFileName;
         this.fileName = fileName;
         this.path = path;
+    }
+
+    public boolean getIsFailure() {
+        return isFailure;
+    }
+
+    public void setIsFailure(boolean isFailure) {
+        this.isFailure = isFailure;
     }
 
     public String getOrignFileName() {

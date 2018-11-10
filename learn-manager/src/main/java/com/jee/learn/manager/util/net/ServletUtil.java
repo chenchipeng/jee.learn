@@ -25,6 +25,9 @@ public class ServletUtil {
     /** 根目录 */
     private static final String ROOT = "/";
 
+    /** API请求标识 */
+    private static final String[] REST_PREFIX = { "/rest, /test" };
+
     /**
      * 获取当前请求对象
      * 
@@ -86,6 +89,19 @@ public class ServletUtil {
      */
     public static boolean isRoot(String uri) {
         return ROOT.equals(uri);
+    }
+
+    /**
+     * 判断访问URI是否是REST请求, 结果返回json那种
+     * 
+     * @param uri
+     * @return
+     */
+    public static boolean isRest(String uri) {
+        if (StringUtils.startsWithAny(uri, REST_PREFIX)) {
+            return true;
+        }
+        return false;
     }
 
 }
