@@ -9,6 +9,7 @@ import java.util.concurrent.CompletableFuture;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,8 +48,10 @@ public abstract class FileUploadController extends BaseController {
 
     /** 文件上传 */
     @ResponseBody
-    @PostMapping(path = "/test/fileUpload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequiresPermissions("user")
+    @PostMapping(path = "${system.authc-path}/fileUpload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public CompletableFuture<ResponseDto<FileUploadDto>> fileUpload(HttpServletRequest request, MultipartFile file) {
+        logger.debug("进入普通文件上传接口 fileUpload");
 
         if (file == null) {
             CompletableFuture.completedFuture(
@@ -94,7 +97,7 @@ public abstract class FileUploadController extends BaseController {
         // 构建存储路径
         String dir = systemConfig.getFileUploadPath() + getRelativeDir();
         String fileName = IdGenerate.numid() + Constants.PERIOD + FileUtil.getFileExtension(file.getOriginalFilename());
-        String absPath = dir + Platforms.LINUX_FILE_PATH_SEPARATOR_CHAR + fileName;
+        String absPath = dir + Platforms.FILE_PATH_SEPARATOR + fileName;
 
         // 写入本地文件
         File f = Paths.get(absPath).toFile();

@@ -31,6 +31,7 @@ import com.jee.learn.manager.service.sys.SysMenuService;
 import com.jee.learn.manager.service.sys.SysUserService;
 import com.jee.learn.manager.support.servlet.captcha.CaptchaUtil;
 import com.jee.learn.manager.util.Constants;
+import com.jee.learn.manager.util.base.Platforms;
 import com.jee.learn.manager.util.net.CookieUtils;
 import com.jee.learn.manager.util.net.ServletUtil;
 import com.jee.learn.manager.util.time.DateFormatUtil;
@@ -47,7 +48,7 @@ import com.jee.learn.manager.util.time.DateFormatUtil;
 public class IndexController extends FileUploadController {
 
     private static final String LOGINED_COOKIE_NAME_SUFFIX = ".isLogined";
-    private static final String SYS_USER_PHOTO_PATH = "/sysUserPhoto";
+    private static final String SYS_USER_PHOTO_PATH = Platforms.FILE_PATH_SEPARATOR + "sysUserPhoto";
 
     @Autowired
     private CaptchaUtil captchaUtil;

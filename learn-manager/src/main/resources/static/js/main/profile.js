@@ -10,10 +10,6 @@ $(function() {
 	$("#submitBtn").on("click", function() {
 		submitForm();
 	});
-	// 绑定头像事件
-	$("#photo").on("click", function() {
-		photoUpload();
-	});
 	// 清空密码
 	$("#password").val("");
 	// 表单校验
@@ -62,8 +58,9 @@ function submitForm() {
 }
 
 /* 上传头像 */
-function photoUpload(){
-	console.info("************");
-	//https://blog.csdn.net/creabine/article/details/50983022
+function photoUpload(authcPath){
+	// 参考https://blog.csdn.net/creabine/article/details/50983022
+	// 文件上传
+	getUploader(authcPath+'/fileUpload', 'jpg,jpeg,png', 'image/jpeg,image/png', '#photo');
 }
 
