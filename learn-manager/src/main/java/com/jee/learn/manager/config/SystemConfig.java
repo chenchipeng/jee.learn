@@ -33,7 +33,9 @@ public class SystemConfig {
     private boolean multiAccountLogin = true; // 是否允许账号同时登录
     private boolean notAllowRefreshIndex = true; // 已登录后再次访问登录页, 是否退出原账号
 
-    private String fileUploadPath = "/data/" + applicationName + "/file";// 文件上传路径
+    private String fileRelativePath = "/" + applicationName + "/file";// 文件相对路径
+    private String fileUploadPath = "/data";// 文件上传路径
+    private String fileContentPath = "http://localhost/data";// 文件访问基础路径
 
     public String getApplicationName() {
         return applicationName;
@@ -111,12 +113,28 @@ public class SystemConfig {
         this.notAllowRefreshIndex = notAllowRefreshIndex;
     }
 
+    public String getFileRelativePath() {
+        return fileRelativePath;
+    }
+
+    public void setFileRelativePath(String fileRelativePath) {
+        this.fileRelativePath = fileRelativePath;
+    }
+
     public String getFileUploadPath() {
         return fileUploadPath;
     }
 
     public void setFileUploadPath(String fileUploadPath) {
         this.fileUploadPath = fileUploadPath;
+    }
+
+    public String getFileContentPath() {
+        return fileContentPath;
+    }
+
+    public void setFileContentPath(String fileContentPath) {
+        this.fileContentPath = fileContentPath;
     }
 
 }

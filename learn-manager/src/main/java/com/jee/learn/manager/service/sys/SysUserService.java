@@ -19,4 +19,12 @@ public interface SysUserService extends EntityService<SysUser, String> {
      */
     void updateUserProfileInfo(SysUser user);
 
+    /**
+     * 更新用户头像信息
+     * 
+     * @param id
+     * @param photo
+     */
+    void updatePhoto(String id, String photo);
+
 }

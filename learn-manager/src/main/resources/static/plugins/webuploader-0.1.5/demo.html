@@ -1,0 +1,62 @@
+
+<div id="picker">文件上传</div>
+
+<script type="text/javascript">
+jQuery(function() {
+    
+    
+    // WebUploader实例
+    var uploader,
+    // 服务器地址
+    fileServer="http://fileServer",
+    // swf文件路径
+    swfPath="base url",
+    // 文件类型
+    fileExtensions="jpg,jpeg,png",
+    fileMimeTypes="jpg,jpeg,png",
+    // 分片GUID
+    GUID=WebUploader.Base.guid(),
+    filePicker="#picker";
+    
+    // 实例化
+    uploader = WebUploader.create({
+        
+        // 文件接收服务端
+        server : fileServer, 
+        // 传入文件格式限制
+        accept : {
+            title : 'File',
+            extensions : fileExtensions,
+            mimeTypes : fileMimeTypes
+        },
+        // 传入参数
+        formData : {
+            guid: GUID //分片标识
+        },
+        // 上传触发控件
+        pick: {
+            id: filePicker,
+            multiple: false // 禁止多选
+        },
+        // 大小设置
+        fileNumLimit : 5, // 上传文件个数限制
+        fileSingleSizeLimit : 2 * 1024 * 1024, // 单个文件大小限制 2M
+        fileSizeLimit : 1024 * 1024 * 1024, // 总大小 1024M
+        // 分片上传设置
+        chunked : false, // 允许分片
+        chunkSize : 2 * 1024 * 1024, // 每片大小2M
+        chunkRetry : 3, // 分片上传失败之后的重试次数
+        threads : 5, // 上传并发数
+        // 杂项
+        swf : swfPath, // swf文件路径
+        auto : true, // 文件进入队列后自动开始上传
+        duplicate : true, // 去重
+        compress: false,//不启用压缩
+        resize: false//尺寸不改变
+
+    });
+    
+    
+});
+
+</script>

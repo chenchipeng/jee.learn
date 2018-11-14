@@ -60,7 +60,17 @@ public class SysUserServiceImpl extends EntityServiceImpl<SysUser, String> imple
         entity.setPhone(user.getPhone());
         entity.setMobile(user.getMobile());
         entity.setEmail(user.getEmail());
-        
+
+        saveOrUpdate(entity);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void updatePhoto(String id, String photo) {
+        SysUser entity = findOne(id);
+        if (entity != null) {
+            entity.setPhoto(photo);
+        }
         saveOrUpdate(entity);
     }
 

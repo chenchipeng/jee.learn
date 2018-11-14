@@ -31,7 +31,6 @@ import com.jee.learn.manager.service.sys.SysMenuService;
 import com.jee.learn.manager.service.sys.SysUserService;
 import com.jee.learn.manager.support.servlet.captcha.CaptchaUtil;
 import com.jee.learn.manager.util.Constants;
-import com.jee.learn.manager.util.base.Platforms;
 import com.jee.learn.manager.util.net.CookieUtils;
 import com.jee.learn.manager.util.net.ServletUtil;
 import com.jee.learn.manager.util.time.DateFormatUtil;
@@ -45,10 +44,9 @@ import com.jee.learn.manager.util.time.DateFormatUtil;
  *          1.2018年10月8日 上午11:19:05 ccp 新建
  */
 @Controller
-public class IndexController extends FileUploadController {
+public class IndexController extends BaseController {
 
     private static final String LOGINED_COOKIE_NAME_SUFFIX = ".isLogined";
-    private static final String SYS_USER_PHOTO_PATH = Platforms.FILE_PATH_SEPARATOR + "sysUserPhoto";
 
     @Autowired
     private CaptchaUtil captchaUtil;
@@ -58,11 +56,6 @@ public class IndexController extends FileUploadController {
     private SysUserService sysUserService;
     @Autowired
     private SysMenuService sysMenuService;
-
-    @Override
-    protected String getRelativeDir() {
-        return SYS_USER_PHOTO_PATH;
-    }
 
     /**
      * 登录页面
@@ -247,7 +240,8 @@ public class IndexController extends FileUploadController {
     }
 
     /**
-     * 获取{@link SystemConfig#getAuthcPath()}
+     * 获取{@link SystemConfig#getAuthcPath()}<br/>
+     * 目前用于在新标签页中打开连接时弹出的返回首页按钮
      * 
      * @return
      */
@@ -257,41 +251,6 @@ public class IndexController extends FileUploadController {
     @GetMapping(path = "/authcPath", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
     public CompletableFuture<String> authcPath() {
         return CompletableFuture.completedFuture(systemConfig.getAuthcPath());
-    }
-
-    /**
-     * 个人信息页面
-     * 
-     * @return
-     */
-    @RequiresPermissions("user")
-    @GetMapping("${system.authc-path}/profile")
-    public CompletableFuture<String> profile(Model model) {
-        CustomPrincipal principal = ShiroUtil.getPrincipal();
-        if (principal != null) {
-            // 获取上次登录IP和时间
-            model.addAttribute("oldLoginIP", principal.getOldLoginIP());
-            model.addAttribute("oldloginDate", principal.getOldloginDate());
-            // 获取用户信息
-            SysUser user = sysUserService.findOne(principal.getId());
-            if (user != null) {
-                model.addAttribute("user", user);
-            }
-        }
-        return CompletableFuture.completedFuture("main/profile");
-    }
-
-    /**
-     * 更新个人信息
-     * 
-     * @param user
-     * @return
-     */
-    @RequiresPermissions("user")
-    @PostMapping(path = "${system.authc-path}/profile/save")
-    public CompletableFuture<String> saveProfile(SysUser user) {
-        sysUserService.updateUserProfileInfo(user);
-        return CompletableFuture.completedFuture(REDIRECT + systemConfig.getAuthcPath() + "/profile");
     }
 
 }
