@@ -13,7 +13,8 @@
                     <div>
                         <div class="ibox-content no-padding border-left-right">
                             <br/>
-                            <img alt="image" class="img-responsive col-sm-4 col-sm-offset-4 img-circle" src="/img/user.png" th:src="${@systemConfig.fileContentPath + user.photo}" />
+                            <img alt="image" class="img-responsive col-sm-4 col-sm-offset-4 img-circle" onerror="this.onerror='';src='/img/user.png'" 
+                                src="/img/user.png" th:src="${@systemConfig.fileContentPath + user.photo}" />
                         </div>
                         <div class="ibox-content profile-content">
                             <h2><strong th:text="${user.name}">user name</strong></h2>
