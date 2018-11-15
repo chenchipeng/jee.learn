@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.jee.learn.manager.util.base.excrption.RestException;
+
 @Controller
 @RequestMapping("${system.authc-path}/monitor")
 public class MonitorController extends BaseController {
@@ -33,6 +35,12 @@ public class MonitorController extends BaseController {
     @GetMapping("error")
     public CompletableFuture<String> error() {
         throw new NullPointerException("作死的空指针");
+    }
+
+    @Async
+    @GetMapping("error/rest")
+    public CompletableFuture<String> restError() {
+        throw new RestException(new NullPointerException("no zuo no die"));
     }
 
 }

@@ -22,6 +22,7 @@ import com.jee.learn.manager.dto.RequestDto;
 import com.jee.learn.manager.dto.ResponseDto;
 import com.jee.learn.manager.service.FileUploadService;
 import com.jee.learn.manager.util.WebConstants;
+import com.jee.learn.manager.util.base.excrption.RestException;
 import com.jee.learn.manager.util.io.FileTypeUtil;
 import com.jee.learn.manager.util.io.FileUtil;
 
@@ -61,10 +62,7 @@ public abstract class FileUploadController extends BaseController {
         try {
             fileUploadDto = fileUploadService.writeToFile(file, getRelativeDir());
         } catch (IOException e) {
-            logUtil.saveLog(request, null, e, "文件上传出错");
-            logger.info("", e);
-            return CompletableFuture.completedFuture(
-                    new ResponseDto<>(WebConstants.BUSINESS_ERROR_CODE, WebConstants.BUSINESS_ERROR_MESSAGE));
+            throw new RestException(e);
         }
         // 类型校验
         if (!fileTypeCheck(fileUploadDto.getDiskPath())) {
@@ -109,7 +107,6 @@ public abstract class FileUploadController extends BaseController {
             return true;
         }
 
-        boolean isPass = false;
         String fileType = StringUtils.EMPTY;
         Path p = Paths.get(path);
         // 获取文件类型
@@ -119,9 +116,7 @@ public abstract class FileUploadController extends BaseController {
             logger.info("", e);
             return false;
         }
-        if (StringUtils.isBlank(fileType)) {
-            isPass = true;
-        }
+        boolean isPass = StringUtils.isBlank(fileType);
         // 校验
         String[] ary = types.split(",");
         for (String type : ary) {
@@ -139,7 +134,6 @@ public abstract class FileUploadController extends BaseController {
                 logger.info("", e);
             }
         }
-
         return isPass;
     }
 
@@ -173,10 +167,7 @@ public abstract class FileUploadController extends BaseController {
         try {
             fileUploadService.deleteFile(params.getD().getDiskPath());
         } catch (IOException e) {
-            logUtil.saveLog(request, null, e, "文件删除出错");
-            logger.info("", e);
-            return CompletableFuture.completedFuture(
-                    new ResponseDto<>(WebConstants.BUSINESS_ERROR_CODE, WebConstants.BUSINESS_ERROR_MESSAGE));
+            throw new RestException(e);
         }
 
         return CompletableFuture.completedFuture(new ResponseDto<>(WebConstants.SUCCESS_CODE));

@@ -16,13 +16,15 @@ $(function() {
 	$("#password").val("");
 	// 表单校验
 	$("#editForm").validate({
+		debug : false,
 		rules : {
 			name : {
 				required : true,
 				maxlength : 16
 			},
 			password : {
-				maxlength : 32
+				maxlength : 32,
+				minlength : 8
 			},
 			confirm_password : {
 				equalTo : "#password",
@@ -61,12 +63,7 @@ $(function() {
 	uploader.on('uploadSuccess', function(file, response) {
 		if (response.c === "200") {
 			// 更新图片和记录
-			let isOK = updatePicRecord(response.d.path);
-//			if(isOK){
-//				layer.msg('上传成功！');
-//			}else{
-//				layer.msg('上传异常！');
-//			}
+			updatePicRecord(response.d.path);
 			layer.msg('上传成功！');
 		} else {
 			layer.msg('上传失败！ ' + response.e);
@@ -96,9 +93,13 @@ function formViewDisplsy() {
 
 /* 表单提交 */
 function submitForm() {
-	// md5加密
-	$("#password").val(md5($("#password").val()));
-	$("#confirm_password").val($("#password").val());
+	let p = $("#password").val();
+	p = p.replace(/\s*/g, "");
+	if (p.length >= 8) {
+		// md5加密
+		$("#password").val(md5(p));
+		$("#confirm_password").val($("#password").val());
+	}
 
 	$("#editForm").submit();
 }
@@ -108,18 +109,20 @@ function updatePicRecord(path) {
 	// 换头像
 	$("#photo").attr("src", path);
 	// 存记录
-	let josn = {"path" : path};
+	let josn = {
+		"path" : path
+	};
 	$.ajax({
-    	url: $("#updatePic").html(),
-    	type: 'post',
-    	contentType: 'application/json;charset=UTF-8',
-    	data: path,
-        dataType: 'json',
-        success: function(data){
-        	if(data.c != "200"){
-        		layer.msg("更新头像图片和记录失败, 请联系开发员");
-        		console.info(data);
-        	}
-        }
+		url : $("#updatePic").html(),
+		type : 'post',
+		contentType : 'application/json;charset=UTF-8',
+		data : path,
+		dataType : 'json',
+		success : function(data) {
+			if (data.c != "200") {
+				layer.msg("更新头像图片和记录失败, 请联系开发员");
+				console.info(data);
+			}
+		}
 	});
 }

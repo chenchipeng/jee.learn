@@ -28,6 +28,15 @@ import com.jee.learn.manager.util.idgen.IdGenerate;
 import com.jee.learn.manager.util.net.IPUtil;
 import com.jee.learn.manager.util.time.ClockUtil;
 
+/**
+ * 日志拦截保存工具<br/>
+ * 当无法获取当前用户信息时, 不予保存日志
+ * 
+ * @author ccp
+ * @version 1.0<br/>
+ *          修改记录:<br/>
+ *          1.2018年11月15日 上午10:49:40 ccp 新建
+ */
 @Component
 public class LogUtil {
 

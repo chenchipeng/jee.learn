@@ -24,6 +24,7 @@ import com.jee.learn.manager.security.shiro.ShiroUtil;
 import com.jee.learn.manager.service.FileUploadService;
 import com.jee.learn.manager.service.sys.SysUserService;
 import com.jee.learn.manager.util.WebConstants;
+import com.jee.learn.manager.util.base.excrption.RestException;
 import com.jee.learn.manager.util.text.EscapeUtil;
 
 @Controller
@@ -123,10 +124,7 @@ public class ProfileController extends FileUploadController {
                 fileUploadService.deleteFile(diskPath);
             }
         } catch (Exception e) {
-            logUtil.saveLog(request, null, e, "更新个人头像出错");
-            logger.info("", e);
-            return CompletableFuture.completedFuture(
-                    new ResponseDto<>(WebConstants.BUSINESS_ERROR_CODE, WebConstants.BUSINESS_ERROR_MESSAGE));
+           throw new RestException(e);
         }
 
         return CompletableFuture.completedFuture(new ResponseDto<>(WebConstants.SUCCESS_CODE));
