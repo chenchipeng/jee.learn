@@ -110,15 +110,18 @@ public class ProfileController extends FileUploadController {
         }
 
         // 转码入库
-        path = EscapeUtil.unescapeHtml(path);
-        String diskPath = fileUploadService.vistPathToDiskPath(path);
-        String photoPath = path.replace(systemConfig.getFileContentPath(), StringUtils.EMPTY);
+        path = EscapeUtil.unescapeHtml(path).replace(systemConfig.getFileContentPath(), StringUtils.EMPTY);
         logger.debug("新头像={}", path);
         try {
-            // 保存
-            sysUserService.updatePhoto(userUtil.getUser().getId(), photoPath);
-            // 删除旧图像
-            fileUploadService.deleteFile(diskPath);
+            SysUser user = sysUserService.findOne(userUtil.getUser().getId());
+            if (user != null) {
+                // 缓存旧图像的路径
+                String diskPath = fileUploadService.pathToDiskPath(user.getPhoto());
+                // 保存
+                sysUserService.updatePhoto(user.getId(), path);
+                // 删除旧图像
+                fileUploadService.deleteFile(diskPath);
+            }
         } catch (Exception e) {
             logUtil.saveLog(request, null, e, "更新个人头像出错");
             logger.info("", e);

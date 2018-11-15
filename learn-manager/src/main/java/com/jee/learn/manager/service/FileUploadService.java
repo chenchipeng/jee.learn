@@ -42,24 +42,24 @@ public class FileUploadService {
                 + Platforms.LINUX_FILE_PATH_SEPARATOR_CHAR + fileName;
 
         // 构建存储路径
-        String absPath = FilePathUtil.normalizePath(systemConfig.getFileUploadPath() + relativePath);
-        logger.debug("文件保存路径={}", absPath);
+        String diskPath = pathToDiskPath(relativePath);
+        logger.debug("文件保存路径={}", diskPath);
 
         // 写入本地文件
-        FileUtil.createDir(FilePathUtil.getParentPath(absPath));// 通过获取上层目录来创建所需目录
-        file.transferTo(Paths.get(absPath).toFile());
+        FileUtil.createDir(FilePathUtil.getParentPath(diskPath));// 通过获取上层目录来创建所需目录
+        file.transferTo(Paths.get(diskPath).toFile());
 
         // 构建访问路径
-        String vistPath = systemConfig.getFileContentPath() + relativePath;
+        String vistPath = pathToVistPath(relativePath);
         logger.debug("文件访问路径={}", vistPath);
 
         FileUploadDto fileUploadDto = new FileUploadDto(file.getOriginalFilename(), fileName, vistPath);
-        fileUploadDto.setDiskPath(absPath);
+        fileUploadDto.setDiskPath(diskPath);
         return fileUploadDto;
     }
 
     /**
-     * 通过文件访问路径获取文件绝对路径
+     * 文件访问路径转绝对路径
      * 
      * @param vistPath
      * @return
@@ -71,6 +71,26 @@ public class FileUploadService {
                     FilePathUtil.normalizePath(systemConfig.getFileUploadPath()));
         }
         return diskPath;
+    }
+
+    /**
+     * 已存储的文件路径转绝对路径
+     * 
+     * @param path
+     * @return
+     */
+    public String pathToDiskPath(String path) {
+        return FilePathUtil.normalizePath(systemConfig.getFileUploadPath() + path);
+    }
+
+    /**
+     * 已存储的文件路径转访问路径
+     * 
+     * @param path
+     * @return
+     */
+    public String pathToVistPath(String path) {
+        return systemConfig.getFileContentPath() + path;
     }
 
     /**

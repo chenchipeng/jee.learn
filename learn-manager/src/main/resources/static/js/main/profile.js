@@ -103,14 +103,12 @@ function submitForm() {
 	$("#editForm").submit();
 }
 
-// TODO
 /* 更新头像图片和记录 */
 function updatePicRecord(path) {
 	// 换头像
 	$("#photo").attr("src", path);
 	// 存记录
 	let josn = {"path" : path};
-	let isOK = false;
 	$.ajax({
     	url: $("#updatePic").html(),
     	type: 'post',
@@ -118,8 +116,10 @@ function updatePicRecord(path) {
     	data: path,
         dataType: 'json',
         success: function(data){
-        	isOK = true;
+        	if(data.c != "200"){
+        		layer.msg("更新头像图片和记录失败, 请联系开发员");
+        		console.info(data);
+        	}
         }
 	});
-	return isOK;
 }
