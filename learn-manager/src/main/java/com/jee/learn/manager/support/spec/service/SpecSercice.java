@@ -11,7 +11,6 @@ import org.springframework.data.jpa.domain.Specification;
 import com.jee.learn.manager.support.spec.QueryParams;
 import com.jee.learn.manager.support.spec.repository.SpecRepository;
 
-
 /**
  * {@link Specification} 通用实体对象数据库操作接口
  * 

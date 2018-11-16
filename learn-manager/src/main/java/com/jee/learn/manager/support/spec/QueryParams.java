@@ -18,8 +18,7 @@ import org.springframework.util.CollectionUtils;
 
 /**
  * 封装查询条件的实体<br/>
- * 仅为继承了 {@link JpaSpecificationExecutor}
- * 的Repository提供参数(spec)支持，并没有实现完全的通用解耦<br/>
+ * 仅为继承了 {@link JpaSpecificationExecutor} 的Repository提供参数(spec)支持，并没有实现完全的通用解耦<br/>
  * example：<br/>
  * 
  * <pre>

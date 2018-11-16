@@ -20,6 +20,7 @@ import com.jee.learn.manager.service.sys.SysMenuService;
 import com.jee.learn.manager.support.cache.CacheConstants;
 import com.jee.learn.manager.support.cache.EhcacheService;
 import com.jee.learn.manager.support.dao.Condition;
+import com.jee.learn.manager.support.dao.Condition.Operator;
 import com.jee.learn.manager.support.dao.Sort;
 import com.jee.learn.manager.support.dao.service.EntityServiceImpl;
 import com.jee.learn.manager.util.WebConstants;
@@ -38,7 +39,16 @@ public class SysMenuServiceImpl extends EntityServiceImpl<SysMenu, String> imple
 
     @Override
     protected Condition parseQueryParams(SysMenu entity) {
-        return super.parseQueryParams(entity);
+        Condition con = super.parseQueryParams(entity);
+        if (entity == null) {
+            return con;
+        }
+
+        if (USER_PRIVATE_MENU_TAG.equals(entity.getDelFlag())) {
+            con.add("token", Operator.NEEX, entity.getDelFlag());
+        }
+
+        return con;
     }
 
     @Override

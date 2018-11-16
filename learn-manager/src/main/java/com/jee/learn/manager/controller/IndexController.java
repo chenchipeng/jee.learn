@@ -226,11 +226,13 @@ public class IndexController extends BaseController {
     }
 
     /**
-     * 获取左侧菜单
+     * 获取左侧菜单<br/>
+     * 左侧菜单改为直接通过 thymeleaf 生成, 不走json
      * 
      * @return
      */
     @Async
+    @Deprecated
     @ResponseBody
     @RequiresPermissions("user")
     @PostMapping(path = "${system.authc-path}/menu", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
