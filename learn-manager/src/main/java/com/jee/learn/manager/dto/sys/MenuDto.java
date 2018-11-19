@@ -3,6 +3,7 @@ package com.jee.learn.manager.dto.sys;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jee.learn.manager.domain.sys.SysMenu;
 
 public class MenuDto extends SysMenu {
@@ -39,6 +40,7 @@ public class MenuDto extends SysMenu {
         setUpdateDate(entity.getCreateDate());
     }
 
+    @JsonIgnore
     public void addChildren(MenuDto module) {
         if (this.childrenList == null) {
             this.childrenList = new ArrayList<>();

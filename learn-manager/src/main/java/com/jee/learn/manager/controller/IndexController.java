@@ -31,6 +31,7 @@ import com.jee.learn.manager.service.sys.SysMenuService;
 import com.jee.learn.manager.service.sys.SysUserService;
 import com.jee.learn.manager.support.servlet.captcha.CaptchaUtil;
 import com.jee.learn.manager.util.Constants;
+import com.jee.learn.manager.util.WebConstants;
 import com.jee.learn.manager.util.net.CookieUtils;
 import com.jee.learn.manager.util.net.ServletUtil;
 import com.jee.learn.manager.util.time.DateFormatUtil;
@@ -167,8 +168,10 @@ public class IndexController extends BaseController {
         }
 
         // 获取左侧菜单
-        ResponseDto<MenuDto> result = sysMenuService.getCurrentUserMenu();
-        model.addAttribute("menu", result.getD());
+        MenuDto menuDto = sysMenuService.getCurrentUserMenu(SysMenuService.LEFT_MENU);
+        if (menuDto != null) {
+            model.addAttribute("menu", menuDto);
+        }
 
         // 另存上次登录IP和时间
         SysUser user = sysUserService.findOne(principal.getId());
@@ -237,7 +240,11 @@ public class IndexController extends BaseController {
     @RequiresPermissions("user")
     @PostMapping(path = "${system.authc-path}/menu", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public CompletableFuture<ResponseDto<MenuDto>> menu() {
-        ResponseDto<MenuDto> result = sysMenuService.getCurrentUserMenu();
+        MenuDto menuDto = sysMenuService.getCurrentUserMenu(SysMenuService.LEFT_MENU);
+        ResponseDto<MenuDto> result = new ResponseDto<>(WebConstants.SUCCESS_CODE);
+        if (menuDto != null) {
+            result.setD(menuDto);
+        }
         return CompletableFuture.completedFuture(result);
     }
 

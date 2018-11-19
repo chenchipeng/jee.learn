@@ -3,14 +3,15 @@ package com.jee.learn.manager.service.sys;
 import java.util.List;
 
 import com.jee.learn.manager.domain.sys.SysMenu;
-import com.jee.learn.manager.dto.ResponseDto;
 import com.jee.learn.manager.dto.sys.MenuDto;
 import com.jee.learn.manager.support.dao.service.EntityService;
 
 public interface SysMenuService extends EntityService<SysMenu, String> {
-
-    /** 当{@link SysMenu#getDelFlag()} 等于 -1 时表示获取当前用户所拥有的菜单 */
-    String USER_PRIVATE_MENU_TAG = "-1";
+    
+    /** 左侧菜单, 含部分必要属性 */
+    int LEFT_MENU = 1;
+    /** 树形列表, 含所有属性 */
+    int TREE_LIST_MENU = 2;
 
     /**
      * 根据用户id查找其有用的菜单
@@ -23,8 +24,18 @@ public interface SysMenuService extends EntityService<SysMenu, String> {
     /**
      * 获取当前用户的菜单
      * 
+     * @param dtoType menuDto属性集合[{@link SysMenuService#LEFT_MENU}:左侧菜单, {@link SysMenuService#TREE_LIST_MENU}:树形列表]
      * @return
      */
-    ResponseDto<MenuDto> getCurrentUserMenu();
+    MenuDto getCurrentUserMenu(int dtoType);
+
+    /**
+     * 使用递归方法建树
+     * 
+     * @param menuList
+     * @param dtoType menuDto属性集合[{@link SysMenuService#LEFT_MENU}:左侧菜单, {@link SysMenuService#TREE_LIST_MENU}:树形列表]
+     * @return
+     */
+    MenuDto listToTree(List<SysMenu> menuList, int dtoType);
 
 }

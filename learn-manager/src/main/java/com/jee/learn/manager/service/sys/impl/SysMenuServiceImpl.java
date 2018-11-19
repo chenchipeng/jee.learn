@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.jee.learn.manager.config.datasource.dynamic.TargetDataSource;
 import com.jee.learn.manager.domain.sys.SysMenu;
-import com.jee.learn.manager.dto.ResponseDto;
 import com.jee.learn.manager.dto.sys.MenuDto;
 import com.jee.learn.manager.dto.util.TreeUtil;
 import com.jee.learn.manager.repository.sys.SysMenuRepository;
@@ -20,10 +19,8 @@ import com.jee.learn.manager.service.sys.SysMenuService;
 import com.jee.learn.manager.support.cache.CacheConstants;
 import com.jee.learn.manager.support.cache.EhcacheService;
 import com.jee.learn.manager.support.dao.Condition;
-import com.jee.learn.manager.support.dao.Condition.Operator;
 import com.jee.learn.manager.support.dao.Sort;
 import com.jee.learn.manager.support.dao.service.EntityServiceImpl;
-import com.jee.learn.manager.util.WebConstants;
 
 @Service
 @Transactional(readOnly = true)
@@ -39,16 +36,7 @@ public class SysMenuServiceImpl extends EntityServiceImpl<SysMenu, String> imple
 
     @Override
     protected Condition parseQueryParams(SysMenu entity) {
-        Condition con = super.parseQueryParams(entity);
-        if (entity == null) {
-            return con;
-        }
-
-        if (USER_PRIVATE_MENU_TAG.equals(entity.getDelFlag())) {
-            con.add("token", Operator.NEEX, entity.getDelFlag());
-        }
-
-        return con;
+        return super.parseQueryParams(entity);
     }
 
     @Override
@@ -72,31 +60,42 @@ public class SysMenuServiceImpl extends EntityServiceImpl<SysMenu, String> imple
 
     @TargetDataSource
     @Override
-    public ResponseDto<MenuDto> getCurrentUserMenu() {
-        ResponseDto<MenuDto> result = new ResponseDto<>();
-        result.setC(WebConstants.SUCCESS_CODE);
+    public MenuDto getCurrentUserMenu(int dtoType) {
 
         List<SysMenu> menuList = userUtil.getMenuList();
         if (CollectionUtils.isEmpty(menuList)) {
-            return result;
+            return null;
         }
 
+        return listToTree(menuList, dtoType);
+    }
+
+    @Override
+    public MenuDto listToTree(List<SysMenu> menuList, int dtoType) {
+        if (CollectionUtils.isEmpty(menuList)) {
+            return null;
+        }
         List<MenuDto> dtos = new ArrayList<>(menuList.size());
         MenuDto dto = null;
         for (SysMenu menu : menuList) {
-            dto = new MenuDto();
-            dto.setId(menu.getId());
-            dto.setHref(menu.getHref());
-            dto.setIcon(menu.getIcon());
-            dto.setName(menu.getName());
-            dto.setParentId(menu.getParentId());
-            dto.setTarget(menu.getTarget());
-            dtos.add(dto);
+            if (dtoType == 1) {
+                dto = new MenuDto();
+                dto.setId(menu.getId());
+                dto.setHref(menu.getHref());
+                dto.setIcon(menu.getIcon());
+                dto.setName(menu.getName());
+                dto.setParentId(menu.getParentId());
+                dto.setTarget(menu.getTarget());
+                dtos.add(dto);
+                continue;
+            }
+            if (dtoType == 2) {
+
+            }
         }
 
-        List<MenuDto> dtoList = TreeUtil.listToTree(dtos);
-        result.setD(new MenuDto(dtoList));
-        return result;
+        List<MenuDto> childrenList = TreeUtil.listToTree(dtos);
+        return new MenuDto(childrenList);
     }
 
 }
