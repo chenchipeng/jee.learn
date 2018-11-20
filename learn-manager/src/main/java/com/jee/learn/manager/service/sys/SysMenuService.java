@@ -1,5 +1,6 @@
 package com.jee.learn.manager.service.sys;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import com.jee.learn.manager.domain.sys.SysMenu;
@@ -26,8 +27,10 @@ public interface SysMenuService extends EntityService<SysMenu, String> {
      * 
      * @param dtoType menuDto属性集合[{@link SysMenuService#LEFT_MENU}:左侧菜单, {@link SysMenuService#TREE_LIST_MENU}:树形列表]
      * @return
+     * @throws InvocationTargetException 
+     * @throws IllegalAccessException 
      */
-    MenuDto getCurrentUserMenu(int dtoType);
+    MenuDto getCurrentUserMenu(int dtoType) throws IllegalAccessException, InvocationTargetException;
 
     /**
      * 使用递归方法建树
@@ -35,7 +38,9 @@ public interface SysMenuService extends EntityService<SysMenu, String> {
      * @param menuList
      * @param dtoType menuDto属性集合[{@link SysMenuService#LEFT_MENU}:左侧菜单, {@link SysMenuService#TREE_LIST_MENU}:树形列表]
      * @return
+     * @throws InvocationTargetException 
+     * @throws IllegalAccessException 
      */
-    MenuDto listToTree(List<SysMenu> menuList, int dtoType);
+    MenuDto listToTree(List<SysMenu> menuList, int dtoType) throws IllegalAccessException, InvocationTargetException;
 
 }

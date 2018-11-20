@@ -1,8 +1,10 @@
 package com.jee.learn.manager.service.sys.impl;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +62,7 @@ public class SysMenuServiceImpl extends EntityServiceImpl<SysMenu, String> imple
 
     @TargetDataSource
     @Override
-    public MenuDto getCurrentUserMenu(int dtoType) {
+    public MenuDto getCurrentUserMenu(int dtoType) throws IllegalAccessException, InvocationTargetException {
 
         List<SysMenu> menuList = userUtil.getMenuList();
         if (CollectionUtils.isEmpty(menuList)) {
@@ -71,26 +73,33 @@ public class SysMenuServiceImpl extends EntityServiceImpl<SysMenu, String> imple
     }
 
     @Override
-    public MenuDto listToTree(List<SysMenu> menuList, int dtoType) {
+    public MenuDto listToTree(List<SysMenu> menuList, int dtoType)
+            throws IllegalAccessException, InvocationTargetException {
         if (CollectionUtils.isEmpty(menuList)) {
             return null;
         }
         List<MenuDto> dtos = new ArrayList<>(menuList.size());
         MenuDto dto = null;
         for (SysMenu menu : menuList) {
-            if (dtoType == 1) {
-                dto = new MenuDto();
+            dto = new MenuDto();
+            switch (dtoType) {
+            case SysMenuService.LEFT_MENU:
                 dto.setId(menu.getId());
                 dto.setHref(menu.getHref());
                 dto.setIcon(menu.getIcon());
                 dto.setName(menu.getName());
                 dto.setParentId(menu.getParentId());
                 dto.setTarget(menu.getTarget());
-                dtos.add(dto);
-                continue;
+                break;
+            case SysMenuService.TREE_LIST_MENU:
+                BeanUtils.copyProperties(dto, menu);
+                break;
+            default:
+                dto = null;
+                break;
             }
-            if (dtoType == 2) {
-
+            if (dto != null) {
+                dtos.add(dto);
             }
         }
 

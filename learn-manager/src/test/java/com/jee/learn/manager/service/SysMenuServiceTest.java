@@ -1,5 +1,6 @@
 package com.jee.learn.manager.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.junit.Test;
@@ -14,6 +15,7 @@ import com.jee.learn.manager.LearnManagerApplication;
 import com.jee.learn.manager.domain.sys.SysMenu;
 import com.jee.learn.manager.dto.sys.MenuDto;
 import com.jee.learn.manager.service.sys.SysMenuService;
+import com.jee.learn.manager.util.base.excrption.RestException;
 import com.jee.learn.manager.util.mapper.JsonMapper;
 
 @RunWith(SpringRunner.class)
@@ -28,7 +30,12 @@ public class SysMenuServiceTest {
     @Test
     public void getCurrentUserMenuTest() {
         List<SysMenu> menuList = sysMenuService.findList(new SysMenu());
-        MenuDto dto = sysMenuService.listToTree(menuList, SysMenuService.TREE_LIST_MENU);
+        MenuDto dto = null;
+        try {
+            dto = sysMenuService.listToTree(menuList, SysMenuService.TREE_LIST_MENU);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RestException(e);
+        }
         log.debug("{}", JsonMapper.toJson(dto));
     }
 

@@ -1,5 +1,6 @@
 package com.jee.learn.manager.controller;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.CompletableFuture;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +33,7 @@ import com.jee.learn.manager.service.sys.SysUserService;
 import com.jee.learn.manager.support.servlet.captcha.CaptchaUtil;
 import com.jee.learn.manager.util.Constants;
 import com.jee.learn.manager.util.WebConstants;
+import com.jee.learn.manager.util.base.excrption.RestException;
 import com.jee.learn.manager.util.net.CookieUtils;
 import com.jee.learn.manager.util.net.ServletUtil;
 import com.jee.learn.manager.util.time.DateFormatUtil;
@@ -168,7 +170,12 @@ public class IndexController extends BaseController {
         }
 
         // 获取左侧菜单
-        MenuDto menuDto = sysMenuService.getCurrentUserMenu(SysMenuService.LEFT_MENU);
+        MenuDto menuDto = null;
+        try {
+            menuDto = sysMenuService.getCurrentUserMenu(SysMenuService.TREE_LIST_MENU);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RestException(e);
+        }
         if (menuDto != null) {
             model.addAttribute("menu", menuDto);
         }
@@ -240,7 +247,12 @@ public class IndexController extends BaseController {
     @RequiresPermissions("user")
     @PostMapping(path = "${system.authc-path}/menu", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public CompletableFuture<ResponseDto<MenuDto>> menu() {
-        MenuDto menuDto = sysMenuService.getCurrentUserMenu(SysMenuService.LEFT_MENU);
+        MenuDto menuDto = null;
+        try {
+            menuDto = sysMenuService.getCurrentUserMenu(SysMenuService.TREE_LIST_MENU);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RestException(e);
+        }
         ResponseDto<MenuDto> result = new ResponseDto<>(WebConstants.SUCCESS_CODE);
         if (menuDto != null) {
             result.setD(menuDto);
