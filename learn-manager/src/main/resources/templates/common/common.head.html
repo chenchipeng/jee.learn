@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
+<!-- 基础css -->
 <head th:fragment="commonHeader(title)">
-
     <title th:text="${title}"></title>
     
     <meta charset="utf-8">
@@ -21,6 +21,9 @@
     <link href="plugins/bootstrap-table/bootstrap-table.min.css" th:href="@{/plugins/bootstrap-table/bootstrap-table.min.css}" rel="stylesheet" />
     <link href="css/animate.3.5.2.min.css" th:href="@{/css/animate.3.5.2.min.css}" rel="stylesheet" />
     <link href="css/style.css" th:href="@{/css/style.css}" rel="stylesheet" />
+    
+    <!-- 树形列表css -->
+    <link href="plugins/bootstrap-table/extensions/treegrid/jquery.treegrid.min.css" th:href="@{/plugins/bootstrap-table/extensions/treegrid/jquery.treegrid.min.css}" rel="stylesheet" />
 </head>
 
 </html>

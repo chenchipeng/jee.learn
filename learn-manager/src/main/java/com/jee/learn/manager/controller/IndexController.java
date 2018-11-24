@@ -1,10 +1,10 @@
 package com.jee.learn.manager.controller;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.CompletableFuture;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -33,7 +33,6 @@ import com.jee.learn.manager.service.sys.SysUserService;
 import com.jee.learn.manager.support.servlet.captcha.CaptchaUtil;
 import com.jee.learn.manager.util.Constants;
 import com.jee.learn.manager.util.WebConstants;
-import com.jee.learn.manager.util.base.excrption.RestException;
 import com.jee.learn.manager.util.net.CookieUtils;
 import com.jee.learn.manager.util.net.ServletUtil;
 import com.jee.learn.manager.util.time.DateFormatUtil;
@@ -170,13 +169,8 @@ public class IndexController extends BaseController {
         }
 
         // 获取左侧菜单
-        MenuDto menuDto = null;
-        try {
-            menuDto = sysMenuService.getCurrentUserMenu(SysMenuService.TREE_LIST_MENU);
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new RestException(e);
-        }
-        if (menuDto != null) {
+        MenuDto menuDto = sysMenuService.getCurrentUserMenuDto();
+        if (menuDto != null && CollectionUtils.isNotEmpty(menuDto.getChildrenList())) {
             model.addAttribute("menu", menuDto);
         }
 
@@ -247,14 +241,9 @@ public class IndexController extends BaseController {
     @RequiresPermissions("user")
     @PostMapping(path = "${system.authc-path}/menu", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public CompletableFuture<ResponseDto<MenuDto>> menu() {
-        MenuDto menuDto = null;
-        try {
-            menuDto = sysMenuService.getCurrentUserMenu(SysMenuService.TREE_LIST_MENU);
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new RestException(e);
-        }
+        MenuDto menuDto = sysMenuService.getCurrentUserMenuDto();
         ResponseDto<MenuDto> result = new ResponseDto<>(WebConstants.SUCCESS_CODE);
-        if (menuDto != null) {
+        if (menuDto != null && CollectionUtils.isNotEmpty(menuDto.getChildrenList())) {
             result.setD(menuDto);
         }
         return CompletableFuture.completedFuture(result);

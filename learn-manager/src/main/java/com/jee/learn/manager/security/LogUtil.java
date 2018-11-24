@@ -24,7 +24,6 @@ import com.jee.learn.manager.support.cache.CacheConstants;
 import com.jee.learn.manager.support.cache.EhcacheService;
 import com.jee.learn.manager.util.Constants;
 import com.jee.learn.manager.util.base.ExceptionUtil;
-import com.jee.learn.manager.util.idgen.IdGenerate;
 import com.jee.learn.manager.util.net.IPUtil;
 import com.jee.learn.manager.util.time.ClockUtil;
 
@@ -79,7 +78,6 @@ public class LogUtil {
         log.setCreateBy(createrId);
         log.setType(ex == null ? Constants.LOG_TYPE_ACCESS : Constants.LOG_TYPE_EXCEPTION);
         log.setCreateDate(ClockUtil.currentDate());
-        log.setId(IdGenerate.fastUUID());
         // 异步保存日志
         new SaveLogThread(log, handler, ex).start();
     }

@@ -12,6 +12,7 @@ import com.jee.learn.manager.service.sys.SysUserService;
 import com.jee.learn.manager.support.dao.Condition;
 import com.jee.learn.manager.support.dao.Sort;
 import com.jee.learn.manager.support.dao.service.EntityServiceImpl;
+import com.jee.learn.manager.util.idgen.IdGenerate;
 import com.jee.learn.manager.util.time.ClockUtil;
 
 @Service
@@ -27,6 +28,22 @@ public class SysUserServiceImpl extends EntityServiceImpl<SysUser, String> imple
     protected Sort parseSort(String orderBy) {
         return super.parseSort(orderBy);
     }
+    
+    
+
+    @Override
+    public void saveOrUpdate(SysUser entity) {
+        if (entity == null) {
+            return;
+        }
+        // 处理SysUser主键非自增的情况
+        if (StringUtils.isBlank(entity.getId())) {
+            entity.setId(IdGenerate.fastUUID());
+            super.getEntityDao().save(entity);
+        } else {
+            super.getEntityDao().update(entity);
+        }
+    }
 
     @Override
     @Transactional(readOnly = false)
@@ -37,7 +54,7 @@ public class SysUserServiceImpl extends EntityServiceImpl<SysUser, String> imple
             user.setLoginIp(ShiroUtil.getSession().getHost());
             user.setLoginDate(ClockUtil.currentDate());
             user.setUpdateDate(user.getLoginDate());
-            super.saveOrUpdate(user);
+            saveOrUpdate(user);
         }
     }
 

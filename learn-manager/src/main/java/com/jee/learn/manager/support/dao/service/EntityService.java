@@ -6,7 +6,6 @@ import java.util.List;
 import com.jee.learn.manager.support.dao.EntityDao;
 import com.jee.learn.manager.support.dao.Page;
 
-
 /**
  * {@link EntityDao} 通用sevice接口
  * 
@@ -126,18 +125,20 @@ public interface EntityService<T, ID extends Serializable> {
     Page<T> findPage(T entity, int offset, int limit, String orderBy);
 
     /**
-     * 新增或更新
+     * 新增或更新, 默认主键自增
      * 
      * @param entity
      */
     void saveOrUpdate(T entity);
 
+
     /**
-     * 批量新增或更新
+     * 批量新增或更新, 默认主键自增
      * 
      * @param entities
      */
     void saveOrUpdate(Iterable<T> entities);
+
 
     /**
      * 逻辑删除

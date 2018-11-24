@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.jee.learn.manager.util.number.RandomUtil;
 import com.jee.learn.manager.util.time.ClockUtil;
 import com.jee.learn.manager.util.time.DateFormatUtil;
 
@@ -108,9 +109,7 @@ public class IdGenerate {
         orderNo += numIdSuffix;
 
         // 生成100到999的随机数
-        ThreadLocalRandom random = ThreadLocalRandom.current();
-        int r = random.nextInt(9999) % (8998) + 1000;
-
+        int r = RandomUtil.nextInt(100, 999);
         return String.valueOf(orderNo) + String.valueOf(r);
     }
 

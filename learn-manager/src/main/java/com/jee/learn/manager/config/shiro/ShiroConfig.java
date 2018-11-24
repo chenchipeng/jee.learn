@@ -34,6 +34,7 @@ import com.jee.learn.manager.security.shiro.CustomRealm;
 import com.jee.learn.manager.support.cache.CacheConstants;
 import com.jee.learn.manager.util.security.CryptoUtil;
 
+import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 import net.sf.ehcache.CacheManager;
 
 /**
@@ -250,6 +251,13 @@ public class ShiroConfig {
         registration.addUrlPatterns("/*");
         registration.setDispatcherTypes(DispatcherType.REQUEST, DispatcherType.ASYNC);
         return registration;
+    }
+
+    //////// 用于thymeleaf模板使用shiro标签 ////////
+
+    @Bean
+    public ShiroDialect shiroDialect() {
+        return new ShiroDialect();
     }
 
 }

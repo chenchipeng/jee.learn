@@ -17,7 +17,6 @@ import com.jee.learn.manager.support.dao.Sort.Direction;
 import com.jee.learn.manager.util.Constants;
 import com.jee.learn.manager.util.reflect.ReflectUtils;
 
-
 /**
  * {@link EntityDao} 通用sevice接口实现<br/>
  * 无法直接使用，必须通过具体的子类继承才行

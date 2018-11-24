@@ -27,6 +27,7 @@
         <shiro-spring.version>1.4.0</shiro-spring.version>
         <commons-text.version>1.5</commons-text.version>
         <guava.version>27.0-jre</guava.version>
+        <dozer.version>5.5.1</dozer.version>
     </properties>
 
     <dependencies>
@@ -117,6 +118,13 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
+        </dependency>
+
+        <!-- dozer -->
+        <dependency>
+            <groupId>net.sf.dozer</groupId>
+            <artifactId>dozer</artifactId>
+            <version>${dozer.version}</version>
         </dependency>
 
     </dependencies>

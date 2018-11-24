@@ -1,11 +1,8 @@
 package com.jee.learn.manager.service.sys.impl;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +20,8 @@ import com.jee.learn.manager.support.cache.EhcacheService;
 import com.jee.learn.manager.support.dao.Condition;
 import com.jee.learn.manager.support.dao.Sort;
 import com.jee.learn.manager.support.dao.service.EntityServiceImpl;
+import com.jee.learn.manager.util.idgen.IdGenerate;
+import com.jee.learn.manager.util.mapper.BeanMapper;
 
 @Service
 @Transactional(readOnly = true)
@@ -46,65 +45,48 @@ public class SysMenuServiceImpl extends EntityServiceImpl<SysMenu, String> imple
         return super.parseSort(orderBy);
     }
 
-    @TargetDataSource
-    @Override
-    public List<SysMenu> findListByUserId(String userId) {
-        return StringUtils.isBlank(userId) ? new ArrayList<>() : sysMenuRepository.findListByUserId(userId);
-    }
-
     @Transactional(readOnly = false)
     @Override
     public void saveOrUpdate(SysMenu entity) {
-        super.saveOrUpdate(entity);
+        if (entity == null) {
+            return;
+        }
+        // 由于使用了bootstrap table, 主键必须由数字组成. 有别于主键的自增长, 这里重写新增与更新的选择
+        if (StringUtils.isBlank(entity.getId())) {
+            entity.setId(IdGenerate.numid());
+            super.getEntityDao().save(entity);
+        } else {
+            super.getEntityDao().update(entity);
+        }
         ehcacheService.remove(CacheConstants.EHCACHE_USER,
                 CacheConstants.CACHE_KEY_USER_MENU + userUtil.getUser().getId());
     }
 
     @TargetDataSource
     @Override
-    public MenuDto getCurrentUserMenu(int dtoType) throws IllegalAccessException, InvocationTargetException {
-
-        List<SysMenu> menuList = userUtil.getMenuList();
-        if (CollectionUtils.isEmpty(menuList)) {
-            return null;
-        }
-
-        return listToTree(menuList, dtoType);
+    public List<SysMenu> findListByUserId(String userId) {
+        return StringUtils.isBlank(userId) ? new ArrayList<>() : sysMenuRepository.findListByUserId(userId);
     }
 
+    @TargetDataSource
     @Override
-    public MenuDto listToTree(List<SysMenu> menuList, int dtoType)
-            throws IllegalAccessException, InvocationTargetException {
-        if (CollectionUtils.isEmpty(menuList)) {
-            return null;
-        }
-        List<MenuDto> dtos = new ArrayList<>(menuList.size());
-        MenuDto dto = null;
-        for (SysMenu menu : menuList) {
-            dto = new MenuDto();
-            switch (dtoType) {
-            case SysMenuService.LEFT_MENU:
-                dto.setId(menu.getId());
-                dto.setHref(menu.getHref());
-                dto.setIcon(menu.getIcon());
-                dto.setName(menu.getName());
-                dto.setParentId(menu.getParentId());
-                dto.setTarget(menu.getTarget());
-                break;
-            case SysMenuService.TREE_LIST_MENU:
-                BeanUtils.copyProperties(dto, menu);
-                break;
-            default:
-                dto = null;
-                break;
-            }
-            if (dto != null) {
-                dtos.add(dto);
-            }
-        }
+    public List<SysMenu> getCurrentUserMenu() {
+        return userUtil.getMenuList();
+    }
 
-        List<MenuDto> childrenList = TreeUtil.listToTree(dtos);
-        return new MenuDto(childrenList);
+    @TargetDataSource
+    @Override
+    public MenuDto getCurrentUserMenuDto() {
+
+        List<SysMenu> menuList = getCurrentUserMenu();
+        List<MenuDto> dtos = new ArrayList<>(menuList.size());
+
+        for (SysMenu menu : menuList) {
+            MenuDto dto = BeanMapper.map(menu, MenuDto.class);
+            dtos.add(dto);
+        }
+        dtos = TreeUtil.listToTree(dtos);
+        return new MenuDto(dtos);
     }
 
 }

@@ -2,8 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
+<!-- 基础js -->
 <div th:fragment="commonFoot">
-<!-- 全局js -->
 <script src="js/jquery.2.1.4.min.js" th:src="@{/js/jquery.2.1.4.min.js}"></script>
 <script src="plugins/jquery-validate/jquery.validate.min.1.17.0.js" th:src="@{/plugins/jquery-validate/jquery.validate.min.1.17.0.js}"></script>
 <script src="plugins/jquery-validate/messages_zh.min.js" th:src="@{/plugins/jquery-validate/messages_zh.min.js}"></script>
@@ -16,27 +16,33 @@
 <script src="plugins/layer-v3.1.1/layer/layer.js" th:src="@{/plugins/layer-v3.1.1/layer/layer.js}"></script>
 </div>
 
+<!-- 自定义主框架 index js -->
 <div th:fragment="indexFoot">
-<!-- 自定义主框架js -->
 <script src="js/common.js" th:src="@{/js/common.js}"></script>
 <script src="js/main/index.js" th:src="@{/js/main/index.js}"></script>
 <script src="plugins/pace/pace.min.1.0.2.js" th:src="@{/plugins/pace/pace.min.1.0.2.js}"></script>
 </div>
 
-<div th:fragment="contentFoot">
 
+<!-- 右侧 iframe js -->
+<div th:fragment="contentFoot">
 <script src="plugins/bootstrap-table/bootstrap-table.min.js" th:src="@{/plugins/bootstrap-table/bootstrap-table.min.js}"></script>
 <script src="plugins/bootstrap-table/bootstrap-table-mobile.min.js" th:src="@{/plugins/bootstrap-table/bootstrap-table-mobile.min.js}"></script>
 <script src="plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js" th:src="@{/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js}"></script>
 
-<!-- 自定义右侧 iframe js -->
 <script src="js/content.js" th:src="@{/js/content.js}"></script>
 </div>
 
-<div th:fragment="fileUploadFoot">
 <!-- 文件上传 js -->
+<div th:fragment="fileUploadFoot">
 <script src="js/plugins/webuploader-0.1.5/js/webuploader.js" th:src="@{/plugins/webuploader-0.1.5/js/webuploader.js}"></script>
 <script src="js/plugins/webuploader-0.1.5/file.uploader.js" th:src="@{/plugins/webuploader-0.1.5/file.uploader.js}"></script>
+</div>
+
+<!-- 树形列表js -->
+<div th:fragment="treeListFoot">
+<script src="plugins/bootstrap-table/extensions/treegrid/bootstrap-table-treegrid.min.js" th:src="@{/plugins/bootstrap-table/extensions/treegrid/bootstrap-table-treegrid.min.js}"></script>
+<script src="plugins/bootstrap-table/extensions/treegrid/jquery.treegrid.min.js" th:src="@{/plugins/bootstrap-table/extensions/treegrid/jquery.treegrid.min.js}"></script>
 </div>
 
 </body>
