@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
-<head th:replace="common/common.head :: commonHeader('xxx')" />
+<head th:replace="common/common.head :: commonHeader('xxx', '2')" />
 
 <body class="gray-bg">
     <div class="wrapper wrapper-content">
@@ -12,11 +12,10 @@
                     </div>
                     <div class="ibox-content">
                         <div class="row">
-                            <div class="col-sm-12">
+                            <div id="selectParam" class="col-sm-12">
                                 <!-- 这里放查询条件输入框 --> </div>
                             <div class="col-sm-12">
-                                <table id="contentTable"></table>
-
+                            	<table id="contentTable"></table>
                                 <div id="toolbar">
                                     <div class="btn-group">
                                         <shiro:hasPermission name="sys:menu:add">
@@ -66,15 +65,18 @@
     <div th:replace="common/common.foot :: contentFoot"></div>
     <div th:replace="common/common.foot :: treeListFoot"></div>
 
-    <script type="text/javascript">
+    <script type="text/javascript" th:inline="javascript">
     
     $(function(){
-        InitMainTable ();
+        InitMainTable();
+      //初始化表格高度,以保证分页工具栏始终显示
+        initTableHeight();
+      
     });
     
     var $table;
     //初始化bootstrap-table的内容
-    function InitMainTable () {
+    function InitMainTable() {
         //记录页面bootstrap-table全局变量$table，方便应用
         var queryUrl = '/a/sys/menu/list/data?r=' + Math.random();
         $table = $('#contentTable').bootstrapTable({
@@ -91,6 +93,9 @@
             toolbar: "#toolbar",
             treeShowField: "name",
             parentIdField: "parentId",
+            stickyHeader: true,
+            stickyHeaderOffsetY:0,
+            
             columns: [{
                 checkbox: true,  
                 visible: true  
@@ -131,6 +136,25 @@
             }
         });
     };
+    
+    //初始化表格高度
+    function initTableHeight(){
+        //拿到父窗口的centerTabs高度(这是iframe子页面拿到父窗口元素的方法，需要根据自己项目所使用的框架自行修改元素的id)
+        var panelH = $("#content-main", parent.document).height();
+        if(panelH == null){
+        	panelH = $(window).height();
+        }
+        // 拿到查询条件区域高度
+        var selectParamH = $("#selectParam").height();
+        if(selectParamH == null){
+        	selectParamH = 0;
+        }
+        //拿到顶部工具栏高度
+        var toolBarH = $(".fixed-table-toolbar").height();
+        //计算表格container该设置的高度
+        var height = panelH - selectParamH - toolBarH - 91 - 50;
+        var container = $(".fixed-table-container").css({"height": height});
+    }
     
     // 格式化状态
     function statusFormatter(value, row, index) {
