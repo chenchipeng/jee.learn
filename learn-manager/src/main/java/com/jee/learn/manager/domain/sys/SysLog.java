@@ -1,17 +1,24 @@
 package com.jee.learn.manager.domain.sys;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * The persistent class for the sys_log database table.
  * 
  */
 @Entity
-@Table(name="sys_log")
-@NamedQuery(name="SysLog.findAll", query="SELECT s FROM SysLog s")
+@Table(name = "sys_log")
+@NamedQuery(name = "SysLog.findAll", query = "SELECT s FROM SysLog s")
 public class SysLog implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String id;
@@ -30,7 +37,6 @@ public class SysLog implements Serializable {
 	public SysLog() {
 	}
 
-
 	@Id
 	public String getId() {
 		return this.id;
@@ -40,8 +46,7 @@ public class SysLog implements Serializable {
 		this.id = id;
 	}
 
-
-	@Column(name="account_id")
+	@Column(name = "account_id")
 	public String getAccountId() {
 		return this.accountId;
 	}
@@ -50,8 +55,7 @@ public class SysLog implements Serializable {
 		this.accountId = accountId;
 	}
 
-
-	@Column(name="create_by")
+	@Column(name = "create_by")
 	public String getCreateBy() {
 		return this.createBy;
 	}
@@ -60,9 +64,8 @@ public class SysLog implements Serializable {
 		this.createBy = createBy;
 	}
 
-
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="create_date")
+	@Column(name = "create_date")
 	public Date getCreateDate() {
 		return this.createDate;
 	}
@@ -70,7 +73,6 @@ public class SysLog implements Serializable {
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
 	}
-
 
 	@Lob
 	public String getException() {
@@ -81,7 +83,6 @@ public class SysLog implements Serializable {
 		this.exception = exception;
 	}
 
-
 	public String getMethod() {
 		return this.method;
 	}
@@ -89,7 +90,6 @@ public class SysLog implements Serializable {
 	public void setMethod(String method) {
 		this.method = method;
 	}
-
 
 	@Lob
 	public String getParams() {
@@ -100,8 +100,7 @@ public class SysLog implements Serializable {
 		this.params = params;
 	}
 
-
-	@Column(name="remote_addr")
+	@Column(name = "remote_addr")
 	public String getRemoteAddr() {
 		return this.remoteAddr;
 	}
@@ -110,8 +109,7 @@ public class SysLog implements Serializable {
 		this.remoteAddr = remoteAddr;
 	}
 
-
-	@Column(name="request_uri")
+	@Column(name = "request_uri")
 	public String getRequestUri() {
 		return this.requestUri;
 	}
@@ -119,7 +117,6 @@ public class SysLog implements Serializable {
 	public void setRequestUri(String requestUri) {
 		this.requestUri = requestUri;
 	}
-
 
 	public String getTitle() {
 		return this.title;
@@ -129,7 +126,6 @@ public class SysLog implements Serializable {
 		this.title = title;
 	}
 
-
 	public String getType() {
 		return this.type;
 	}
@@ -138,8 +134,7 @@ public class SysLog implements Serializable {
 		this.type = type;
 	}
 
-
-	@Column(name="user_agent")
+	@Column(name = "user_agent")
 	public String getUserAgent() {
 		return this.userAgent;
 	}

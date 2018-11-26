@@ -169,7 +169,7 @@ public class IndexController extends BaseController {
         }
 
         // 获取左侧菜单
-        MenuDto menuDto = sysMenuService.getCurrentUserMenuDto();
+        MenuDto menuDto = sysMenuService.getCurrentUserMenuDtoTree();
         if (menuDto != null && CollectionUtils.isNotEmpty(menuDto.getChildrenList())) {
             model.addAttribute("menu", menuDto);
         }
@@ -241,7 +241,7 @@ public class IndexController extends BaseController {
     @RequiresPermissions("user")
     @PostMapping(path = "${system.authc-path}/menu", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public CompletableFuture<ResponseDto<MenuDto>> menu() {
-        MenuDto menuDto = sysMenuService.getCurrentUserMenuDto();
+        MenuDto menuDto = sysMenuService.getCurrentUserMenuDtoTree();
         ResponseDto<MenuDto> result = new ResponseDto<>(WebConstants.SUCCESS_CODE);
         if (menuDto != null && CollectionUtils.isNotEmpty(menuDto.getChildrenList())) {
             result.setD(menuDto);

@@ -21,13 +21,13 @@ public interface SysMenuService extends EntityService<SysMenu, String> {
      * 
      * @return
      */
-    List<SysMenu> getCurrentUserMenu();
+    List<MenuDto> getCurrentUserMenuDtoList();
 
     /**
      * 获取当前用户的菜单
      * 
      * @return
      */
-    MenuDto getCurrentUserMenuDto();
+    MenuDto getCurrentUserMenuDtoTree();
 
 }

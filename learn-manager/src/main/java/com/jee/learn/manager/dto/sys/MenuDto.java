@@ -8,52 +8,42 @@ import com.jee.learn.manager.domain.sys.SysMenu;
 
 public class MenuDto extends SysMenu {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    public MenuDto() {
-        super();
-    }
+	private String isShowDict;
+	private List<MenuDto> childrenList;
 
-    public MenuDto(List<MenuDto> childrenList) {
-        super();
-        this.childrenList = childrenList;
-    }
+	public MenuDto() {
+		super();
+	}
 
-    private List<MenuDto> childrenList;
+	public MenuDto(List<MenuDto> childrenList) {
+		super();
+		this.childrenList = childrenList;
+	}
 
-    public void setEntity(SysMenu entity) {
-        setId(entity.getId());
-        setCreateBy(entity.getCreateBy());
-        setCreateDate(entity.getCreateDate());
-        setDelFlag(entity.getDelFlag());
-        setHref(entity.getHref());
-        setIcon(entity.getIcon());
-        setIsShow(entity.getIsShow());
-        setName(entity.getName());
-        setParentId(entity.getParentId());
-        setParentIds(entity.getParentIds());
-        setPermission(entity.getPermission());
-        setRemarks(entity.getRemarks());
-        setSort(entity.getSort());
-        setTarget(entity.getCreateBy());
-        setUpdateBy(entity.getCreateBy());
-        setUpdateDate(entity.getCreateDate());
-    }
+	public String getIsShowDict() {
+		return isShowDict;
+	}
 
-    @JsonIgnore
-    public void addChildren(MenuDto module) {
-        if (this.childrenList == null) {
-            this.childrenList = new ArrayList<>();
-        }
-        this.childrenList.add(module);
-    }
+	public void setIsShowDict(String isShowDict) {
+		this.isShowDict = isShowDict;
+	}
 
-    public List<MenuDto> getChildrenList() {
-        return childrenList;
-    }
+	@JsonIgnore
+	public void addChildren(MenuDto module) {
+		if (this.childrenList == null) {
+			this.childrenList = new ArrayList<>();
+		}
+		this.childrenList.add(module);
+	}
 
-    public void setChildrenList(List<MenuDto> childrenList) {
-        this.childrenList = childrenList;
-    }
+	public List<MenuDto> getChildrenList() {
+		return childrenList;
+	}
+
+	public void setChildrenList(List<MenuDto> childrenList) {
+		this.childrenList = childrenList;
+	}
 
 }

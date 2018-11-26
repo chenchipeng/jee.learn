@@ -6,7 +6,6 @@
 		<class>com.jee.learn.manager.domain.gen.GenTableColumn</class>
 		<class>com.jee.learn.manager.domain.gen.GenTemplate</class>
 		<class>com.jee.learn.manager.domain.sys.SysArea</class>
-		<class>com.jee.learn.manager.domain.sys.SysLog</class>
 		<class>com.jee.learn.manager.domain.sys.SysMenu</class>
 		<class>com.jee.learn.manager.domain.sys.SysOffice</class>
 		<class>com.jee.learn.manager.domain.sys.SysRole</class>

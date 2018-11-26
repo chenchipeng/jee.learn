@@ -18,41 +18,50 @@ import com.jee.learn.manager.support.cache.EhcacheService;
 import com.jee.learn.manager.support.dao.Condition;
 import com.jee.learn.manager.support.dao.Sort;
 import com.jee.learn.manager.support.dao.service.EntityServiceImpl;
+import com.jee.learn.manager.util.idgen.IdGenerate;
 
 @Service
 @Transactional(readOnly = true)
 public class SysRoleServiceImpl extends EntityServiceImpl<SysRole, String> implements SysRoleService {
 
-    @Autowired
-    private UserUtil userUtil;
-    @Autowired
-    private EhcacheService ehcacheService;
+	@Autowired
+	private UserUtil userUtil;
+	@Autowired
+	private EhcacheService ehcacheService;
 
-    @Autowired
-    private SysRoleRepository sysRoleRepository;
+	@Autowired
+	private SysRoleRepository sysRoleRepository;
 
-    @Override
-    protected Condition parseQueryParams(SysRole entity) {
-        return super.parseQueryParams(entity);
-    }
+	@Override
+	protected Condition parseQueryParams(SysRole entity) {
+		return super.parseQueryParams(entity);
+	}
 
-    @Override
-    protected Sort parseSort(String orderBy) {
-        return super.parseSort(orderBy);
-    }
+	@Override
+	protected Sort parseSort(String orderBy) {
+		return super.parseSort(orderBy);
+	}
 
-    @TargetDataSource
-    @Override
-    public List<SysRole> findListByUserId(String userId) {
-        return StringUtils.isBlank(userId) ? new ArrayList<>() : sysRoleRepository.findListByUserId(userId);
-    }
+	@TargetDataSource
+	@Override
+	public List<SysRole> findListByUserId(String userId) {
+		return StringUtils.isBlank(userId) ? new ArrayList<>() : sysRoleRepository.findListByUserId(userId);
+	}
 
-    @Transactional(readOnly = false)
-    @Override
-    public void saveOrUpdate(SysRole entity) {
-        super.saveOrUpdate(entity);
-        ehcacheService.remove(CacheConstants.EHCACHE_USER,
-                CacheConstants.CACHE_KEY_USER_ROLE + userUtil.getUser().getId());
-    }
+	@Transactional(readOnly = false)
+	@Override
+	public void saveOrUpdate(SysRole entity) {
+		if (entity == null) {
+			return;
+		}
+		// 处理SysLog主键非自增的情况
+		if (StringUtils.isBlank(entity.getId())) {
+			entity.setId(IdGenerate.fastUUID());
+			super.getEntityDao().save(entity);
+		} else {
+			super.getEntityDao().update(entity);
+		}
+		ehcacheService.remove(CacheConstants.EHCACHE_USER, CacheConstants.CACHE_KEY_USER_ROLE + userUtil.getUser().getId());
+	}
 
 }

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
-<head th:replace="common/common.head :: commonHeader('xxx', '2')" />
+<head th:replace="common/common.head :: commonHeader('系统菜单列表', '2')" />
 
 <body class="gray-bg">
     <div class="wrapper wrapper-content">
@@ -8,7 +8,7 @@
             <div class="col-sm-12">
                 <div class="ibox">
                     <div class="ibox-title">
-                        <h5>xxx</h5>
+                        <h5>系统菜单列表</h5>
                     </div>
                     <div class="ibox-content">
                         <div class="row">
@@ -18,38 +18,38 @@
                                 <!--/* 自定义表格工具栏 */-->
                                 <div id="toolbar">
                                     <div class="btn-group">
-                                        <button shiro:hasPermission="sys:menu:add" class="btn btn-default">
+                                        <button shiro:hasPermission="sys:menu:add" class="btn btn-default" title="新增">
                                             <i class="glyphicon glyphicon-plus"></i>
                                         </button>
-                                        <button shiro:hasPermission="sys:menu:add" class="btn btn-default">
+                                        <button shiro:hasPermission="sys:menu:edit" class="btn btn-default" title="修改">
                                             <i class="glyphicon glyphicon-edit"></i>
                                         </button>
-                                        <button shiro:hasPermission="sys:menu:add" class="btn btn-default">
+                                        <button shiro:hasPermission="sys:menu:del" class="btn btn-default" title="删除">
                                             <i class="glyphicon glyphicon-trash"></i>
                                         </button>
-                                        <button shiro:hasPermission="sys:menu:add" class="btn btn-default">
+                                        <button shiro:hasPermission="sys:menu:import" class="btn btn-default" title="导入">
                                             <i class="glyphicon glyphicon-import"></i>
                                         </button>
-                                        <button shiro:hasPermission="sys:menu:add" class="btn btn-default">
+                                        <button shiro:hasPermission="sys:menu:export" class="btn btn-default" title="导出">
                                             <i class="glyphicon glyphicon-export"></i>
                                         </button>
-                                        <button shiro:hasPermission="sys:menu:add" class="btn btn-default">
+                                        <button class="btn btn-default" title="查询">
                                             <i class="glyphicon glyphicon-search"></i>
                                         </button>
-                                        <button shiro:hasPermission="sys:menu:add" class="btn btn-default">
+                                        <button class="btn btn-default" title="重置">
                                             <i class="glyphicon glyphicon-repeat"></i>
                                         </button>
                                     </div>
                                 </div>
                                 <!--/* 每行的记录操作 */-->
                                 <div id="rowOperation" class="hidden">
-                                    <span shiro:hasPermission="sys:menu:add">
-                                        <button class='btn btn-warning btn-sm edit'>
+                                    <span shiro:hasPermission="sys:menu:edit">
+                                        <button class='btn btn-warning btn-xs edit' title="修改">
                                             <i class='glyphicon glyphicon-edit'></i>
                                         </button>
                                     </span>
-                                    <span shiro:hasPermission="sys:menu:add">
-                                        <button class='btn btn-danger btn-sm del'>
+                                    <span shiro:hasPermission="sys:menu:del">
+                                        <button class='btn btn-danger btn-xs del' title="删除">
                                             <i class='glyphicon glyphicon-trash'></i>
                                         </button>
                                     </span>
@@ -59,10 +59,10 @@
                                     <thead>
                                         <tr>
                                             <th data-checkbox="true" data-visible="true"></th>
-                                            <th data-field="name">名称</th>
+                                            <th data-field="name" data-formatter="aFormatter">名称</th>
                                             <th data-field="href">链接</th>
                                             <th data-field="sort">排序</th>
-                                            <th data-field="isShow" data-formatter="statusFormatter">是否可见</th>
+                                            <th data-field="isShowDict">是否可见</th>
                                             <th data-field="permission">权限</th>
                                             <th data-formatter="operateFormatter" data-events="operateEvents">操作</th>
                                         </tr>
@@ -83,9 +83,15 @@
     <script type="text/javascript" th:inline="javascript">
     
     $(function(){
+    	<!--/*  初始化表格(获取数据的URL, 展开按钮所在列, 上级id所在字段), 此方法必须重写  */--> 
     	initTreeTable("/a/sys/menu/list/data", "name", "parentId");
     });
-    
+    <!--/*  为view请求创建超链接, 此方法必须重写  */--> 
+   	function aFormatter(value, row, index) {
+   		let uri = "/a/sys/menu/view";
+   		return "<a href='" + uri + "'>" + value + "</a>";
+   	}
+   
     </script>
 </body>
 </html>

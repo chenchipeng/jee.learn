@@ -24,7 +24,7 @@ public class SysMenuServiceTest {
 
     @Test
     public void getCurrentUserMenuTest() {
-        MenuDto dto = sysMenuService.getCurrentUserMenuDto();
+        MenuDto dto = sysMenuService.getCurrentUserMenuDtoTree();
         log.debug("{}", JsonMapper.toJson(dto));
     }
 

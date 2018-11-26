@@ -56,8 +56,8 @@ function initTableHeight() {
 	return height;
 }
 
-// TODO 格式化状态 如何动态的从字典获取
-function statusFormatter(value, row, index) {
+// 例子: 单元格数据格式化, 对应属性data-formatter
+function exampleFormatter(value, row, index) {
 	if (value === '1') {
 		return '是';
 	} else {

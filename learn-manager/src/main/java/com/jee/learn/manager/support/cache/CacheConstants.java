@@ -18,6 +18,7 @@ public class CacheConstants {
     public static final String CACHE_KEY_SEPARATOR = ":";
     public static final String CACHE_KEY_APIUSER = "apiuser";
     public static final String CACHE_KEY_TOKEN = "token";
+    public static final String CACHE_KEY_DICT = "dict";
     public static final String CACHE_KEY_USER_MENU = "user:menu:";
     public static final String CACHE_KEY_USER_ROLE = "user:role:";
 
