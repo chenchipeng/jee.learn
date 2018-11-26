@@ -15,44 +15,44 @@
                             <div id="selectParam" class="col-sm-12">
                                 <!-- 这里放查询条件输入框 --> </div>
                             <div class="col-sm-12">
-                            	<table id="contentTable"></table>
                                 <div id="toolbar">
                                     <div class="btn-group">
-                                        <shiro:hasPermission name="sys:menu:add">
-                                            <button class="btn btn-default"> <i class="glyphicon glyphicon-plus"></i>
-                                            </button>
-                                        </shiro:hasPermission>
-                                        <shiro:hasPermission name="sys:menu:add">
-                                            <button class="btn btn-default"> <i class="glyphicon glyphicon-edit"></i>
-                                            </button>
-                                        </shiro:hasPermission>
-                                        <shiro:hasPermission name="sys:menu:add">
-                                            <button class="btn btn-default">
-                                                <i class="glyphicon glyphicon-trash"></i>
-                                            </button>
-                                        </shiro:hasPermission>
-                                        <shiro:hasPermission name="sys:menu:add">
-                                            <button class="btn btn-default">
-                                                <i class="glyphicon glyphicon-import"></i>
-                                            </button>
-                                        </shiro:hasPermission>
-                                        <shiro:hasPermission name="sys:menu:add">
-                                            <button class="btn btn-default">
-                                                <i class="glyphicon glyphicon-export"></i>
-                                            </button>
-                                        </shiro:hasPermission>
-                                        <shiro:hasPermission name="sys:menu:add">
-                                            <button class="btn btn-default">
-                                                <i class="glyphicon glyphicon-search"></i>
-                                            </button>
-                                        </shiro:hasPermission>
-                                        <shiro:hasPermission name="sys:menu:add">
-                                            <button class="btn btn-default">
-                                                <i class="glyphicon glyphicon-repeat"></i>
-                                            </button>
-                                        </shiro:hasPermission>
+                                        <button shiro:hasPermission="sys:menu:add" class="btn btn-default">
+                                            <i class="glyphicon glyphicon-plus"></i>
+                                        </button>
+                                        <button shiro:hasPermission="sys:menu:add" class="btn btn-default">
+                                            <i class="glyphicon glyphicon-edit"></i>
+                                        </button>
+                                        <button shiro:hasPermission="sys:menu:add" class="btn btn-default">
+                                            <i class="glyphicon glyphicon-trash"></i>
+                                        </button>
+                                        <button shiro:hasPermission="sys:menu:add" class="btn btn-default">
+                                            <i class="glyphicon glyphicon-import"></i>
+                                        </button>
+                                        <button shiro:hasPermission="sys:menu:add" class="btn btn-default">
+                                            <i class="glyphicon glyphicon-export"></i>
+                                        </button>
+                                        <button shiro:hasPermission="sys:menu:add" class="btn btn-default">
+                                            <i class="glyphicon glyphicon-search"></i>
+                                        </button>
+                                        <button shiro:hasPermission="sys:menu:add" class="btn btn-default">
+                                            <i class="glyphicon glyphicon-repeat"></i>
+                                        </button>
                                     </div>
                                 </div>
+                                <div id="rowOperation" class="hidden">
+                                    <span shiro:hasPermission="sys:menu:add">
+                                        <button class='btn btn-warning btn-sm edit'>
+                                            <i class='glyphicon glyphicon-edit'></i>
+                                        </button>
+                                    </span>
+                                    <span shiro:hasPermission="sys:menu:add">
+                                        <button class='btn btn-danger btn-sm del'>
+                                            <i class='glyphicon glyphicon-trash'></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            	<table id="contentTable"></table>
                             </div>
                         </div>
                     </div>
@@ -69,13 +69,10 @@
     
     $(function(){
         InitMainTable();
-      //初始化表格高度,以保证分页工具栏始终显示
-        initTableHeight();
-      
     });
     
-    var $table;
     //初始化bootstrap-table的内容
+    var $table;
     function InitMainTable() {
         //记录页面bootstrap-table全局变量$table，方便应用
         var queryUrl = '/a/sys/menu/list/data?r=' + Math.random();
@@ -93,8 +90,7 @@
             toolbar: "#toolbar",
             treeShowField: "name",
             parentIdField: "parentId",
-            stickyHeader: true,
-            stickyHeaderOffsetY:0,
+            height: initTableHeight(),
             
             columns: [{
                 checkbox: true,  
@@ -137,23 +133,23 @@
         });
     };
     
-    //初始化表格高度
+    //初始化表格高度,以保证分页工具栏始终显示
     function initTableHeight(){
         //拿到父窗口的centerTabs高度(这是iframe子页面拿到父窗口元素的方法，需要根据自己项目所使用的框架自行修改元素的id)
-        var panelH = $("#content-main", parent.document).height();
+        let panelH = $("#content-main", parent.document).height();
         if(panelH == null){
         	panelH = $(window).height();
         }
         // 拿到查询条件区域高度
-        var selectParamH = $("#selectParam").height();
+        let selectParamH = $("#selectParam").height();
         if(selectParamH == null){
         	selectParamH = 0;
         }
         //拿到顶部工具栏高度
-        var toolBarH = $(".fixed-table-toolbar").height();
+        let toolBarH = $(".fixed-table-toolbar").height();
         //计算表格container该设置的高度
-        var height = panelH - selectParamH - toolBarH - 91 - 50;
-        var container = $(".fixed-table-container").css({"height": height});
+        let height = panelH - selectParamH - toolBarH - 91 - 50;
+		return height;
     }
     
     // 格式化状态
@@ -169,18 +165,20 @@
  
     // 按钮添加
     function operateFormatter (value, row, index) {
-        return ["&nbsp;<button class='btn btn-warning btn-sm edit'><i class='glyphicon glyphicon-edit'></i></button>&nbsp;", 
-        "&nbsp;<button class='btn btn-danger btn-sm del'><i class='glyphicon glyphicon-edit'></i></button>&nbsp;"].join("");
+    	let operAry =new Array();
+        $("#rowOperation").children().each(function(){
+        	operAry.push($(this).html() + "&nbsp;");
+        });
+        return operAry.join("");
     }
  
     // 按钮事件
     window.operateEvents = {
-            'click .edit': function (e, value, row, index) {
-                alert(row.id);            
-         },
-            'click .del': function (e, value, row, index) {
-                alert(row.id);            
-         }
+		'click .edit': function (e, value, row, index) {
+			alert(row.id);            
+		},'click .del': function (e, value, row, index) {
+			alert(row.id);            
+		}
     };
     
     </script>
