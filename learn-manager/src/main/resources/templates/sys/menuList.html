@@ -15,6 +15,7 @@
                             <div id="selectParam" class="col-sm-12">
                                 <!-- 这里放查询条件输入框 --> </div>
                             <div class="col-sm-12">
+                                <!--/* 自定义表格工具栏 */-->
                                 <div id="toolbar">
                                     <div class="btn-group">
                                         <button shiro:hasPermission="sys:menu:add" class="btn btn-default">
@@ -40,6 +41,7 @@
                                         </button>
                                     </div>
                                 </div>
+                                <!--/* 每行的记录操作 */-->
                                 <div id="rowOperation" class="hidden">
                                     <span shiro:hasPermission="sys:menu:add">
                                         <button class='btn btn-warning btn-sm edit'>
@@ -52,7 +54,20 @@
                                         </button>
                                     </span>
                                 </div>
-                            	<table id="contentTable"></table>
+                                <!--/* 表头 */-->
+                            	<table id="contentTable">
+                                    <thead>
+                                        <tr>
+                                            <th data-checkbox="true" data-visible="true"></th>
+                                            <th data-field="name">名称</th>
+                                            <th data-field="href">链接</th>
+                                            <th data-field="sort">排序</th>
+                                            <th data-field="isShow" data-formatter="statusFormatter">是否可见</th>
+                                            <th data-field="permission">权限</th>
+                                            <th data-formatter="operateFormatter" data-events="operateEvents">操作</th>
+                                        </tr>
+                                    </thead>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -68,118 +83,8 @@
     <script type="text/javascript" th:inline="javascript">
     
     $(function(){
-        InitMainTable();
+    	initTreeTable("/a/sys/menu/list/data", "name", "parentId");
     });
-    
-    //初始化bootstrap-table的内容
-    var $table;
-    function InitMainTable() {
-        //记录页面bootstrap-table全局变量$table，方便应用
-        var queryUrl = '/a/sys/menu/list/data?r=' + Math.random();
-        $table = $('#contentTable').bootstrapTable({
-            url: queryUrl,  
-            method: 'POST', 
-            striped: true,
-            cache: false,
-            pagination: false,
-            sidePagination: "server",
-            idField: "id",
-            showRefresh: true,
-            showColumns: true,
-            minimumCountColumns: 2,
-            toolbar: "#toolbar",
-            treeShowField: "name",
-            parentIdField: "parentId",
-            height: initTableHeight(),
-            
-            columns: [{
-                checkbox: true,  
-                visible: true  
-            }, {
-                field: "name",
-                title: "名称"
-            }, {
-                field: "href",
-                title: "链接"
-            }, {
-                field: "sort",
-                title: "排序"
-            }, {
-                field: "isShow",
-                title: "是否可见",
-                formatter: "statusFormatter"
-            }, {
-                field: "permission",
-                title: "权限"
-            }, {
-                title: "操作",
-                formatter: "operateFormatter",
-                events: "operateEvents"
-            }],
-            onLoadSuccess: function () {
-                $table.treegrid({
-                    initialState: 'collapsed',//收缩
-                    treeColumn: 1,//指明第几列数据改为树形
-                    expanderExpandedClass: 'glyphicon glyphicon-triangle-bottom',
-                    expanderCollapsedClass: 'glyphicon glyphicon-triangle-right',
-                    onChange: function() {
-                        $table.bootstrapTable('resetWidth');
-                    }
-                });
-            },
-            onLoadError: function () {
-                layer.msg("数据加载失败！");
-            }
-        });
-    };
-    
-    //初始化表格高度,以保证分页工具栏始终显示
-    function initTableHeight(){
-        //拿到父窗口的centerTabs高度(这是iframe子页面拿到父窗口元素的方法，需要根据自己项目所使用的框架自行修改元素的id)
-        let panelH = $("#content-main", parent.document).height();
-        if(panelH == null){
-        	panelH = $(window).height();
-        }
-        // 拿到查询条件区域高度
-        let selectParamH = $("#selectParam").height();
-        if(selectParamH == null){
-        	selectParamH = 0;
-        }
-        //拿到顶部工具栏高度
-        let toolBarH = $(".fixed-table-toolbar").height();
-        //计算表格container该设置的高度
-        let height = panelH - selectParamH - toolBarH - 91 - 50;
-		return height;
-    }
-    
-    // 格式化状态
-    function statusFormatter(value, row, index) {
-    	if (value === '1') {
-    		return '<span>是</span>';
-    	} else {
-    		return '<span>否</span>';
-    	}
-    }
- 
-    
- 
-    // 按钮添加
-    function operateFormatter (value, row, index) {
-    	let operAry =new Array();
-        $("#rowOperation").children().each(function(){
-        	operAry.push($(this).html() + "&nbsp;");
-        });
-        return operAry.join("");
-    }
- 
-    // 按钮事件
-    window.operateEvents = {
-		'click .edit': function (e, value, row, index) {
-			alert(row.id);            
-		},'click .del': function (e, value, row, index) {
-			alert(row.id);            
-		}
-    };
     
     </script>
 </body>
