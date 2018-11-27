@@ -95,7 +95,7 @@ public class SysMenuServiceImpl extends EntityServiceImpl<SysMenu, String> imple
     @TargetDataSource
     @Override
     public MenuDto findOne(String id) {
-        SysMenu entity = findOne(id);
+        SysMenu entity = super.findOne(id);
         if (entity == null) {
             return null;
         }

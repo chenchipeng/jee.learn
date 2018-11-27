@@ -6,7 +6,6 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -74,7 +73,6 @@ public class SysLog implements Serializable {
 		this.createDate = createDate;
 	}
 
-	@Lob
 	public String getException() {
 		return this.exception;
 	}
@@ -91,7 +89,6 @@ public class SysLog implements Serializable {
 		this.method = method;
 	}
 
-	@Lob
 	public String getParams() {
 		return this.params;
 	}

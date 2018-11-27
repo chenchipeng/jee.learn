@@ -43,6 +43,8 @@ public class MenuController extends BaseController {
     @RequiresPermissions("sys:menu:view")
     @GetMapping(path = "/view")
     public CompletableFuture<String> view(MenuDto entity, Model model) {
+    	model.addAttribute("menu", entity);
+    	model.addAttribute("title", "系统菜单信息");
         return CompletableFuture.completedFuture("sys/menuView");
     }
 

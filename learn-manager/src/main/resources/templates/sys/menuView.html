@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="common/common.head :: commonHeader('empty', '0')" />
+<head th:replace="common/common.head :: commonHeader('${title}', '0')" />
 
 <body class="gray-bg">
     <div class="wrapper wrapper-content">
@@ -8,9 +8,51 @@
             <div class="col-sm-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <h5>empty</h5>
+                        <h5 th:text="${title}">empty</h5>
                     </div>
                     <div class="ibox-content">
+                   		<div class="row">
+                            <div class="col-sm-3">
+                                <span>名称&nbsp;:&nbsp;<strong th:text="${menu.name == null}? '-' : ${menu.name}">名称</strong></span>
+                            </div>
+                            <div class="col-sm-3">
+                                <span>排序&nbsp;:&nbsp;<strong th:text="${menu.sort == null}? '-' : ${menu.sort}">排序</strong></span>
+                            </div>
+                            <div class="col-sm-3">
+                                <span>链接&nbsp;:&nbsp;<strong th:text="${menu.href == null}? '-' : ${menu.href}">链接</strong></span>
+                            </div>
+                            <div class="col-sm-3">
+                                <span>目标&nbsp;:&nbsp;<strong th:text="${menu.target == null}? '-' : ${menu.target}">目标</strong></span>
+                            </div>
+                        </div>
+						<div class="row">
+                            <div class="col-sm-3">
+                                <span>图标&nbsp;:&nbsp;<strong th:text="${menu.name == null}? '-' : ${menu.name}">图标</strong></span>
+                            </div>
+                            <div class="col-sm-3">
+                                <span>是否显示&nbsp;:&nbsp;<strong th:text="${menu.sort == null}? '-' : ${menu.sort}">是否显示</strong></span>
+                            </div>
+                            <div class="col-sm-3">
+                                <span>权限标识&nbsp;:&nbsp;<strong th:text="${menu.href == null}? '-' : ${menu.href}">权限标识</strong></span>
+                            </div>
+                            <div class="col-sm-3">
+                                <span>备注&nbsp;:&nbsp;<strong th:text="${menu.target == null}? '-' : ${menu.target}">备注</strong></span>
+                            </div>
+                        </div>
+						<div class="row">   
+                            <div class="col-sm-3">
+                                <span>创建者&nbsp;:&nbsp;<strong th:text="${menu.name == null}? '-' : ${menu.name}">创建者</strong></span>
+                            </div>
+                            <div class="col-sm-3">
+                                <span>创建时间&nbsp;:&nbsp;<strong th:text="${menu.sort == null}? '-' : ${menu.sort}">创建时间</strong></span>
+                            </div>
+                            <div class="col-sm-3">
+                                <span>更新者&nbsp;:&nbsp;<strong th:text="${menu.href == null}? '-' : ${menu.href}">更新者</strong></span>
+                            </div>
+                            <div class="col-sm-3">
+                                <span>更新时间&nbsp;:&nbsp;<strong th:text="${menu.target == null}? '-' : ${menu.target}">更新时间</strong></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
