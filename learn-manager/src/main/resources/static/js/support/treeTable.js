@@ -73,13 +73,3 @@ function operateFormatter(value, row, index) {
 	});
 	return operAry.join("");
 }
-
-// 按钮事件
-window.operateEvents = {
-	'click .edit' : function(e, value, row, index) {
-		alert(row.id);
-	},
-	'click .del' : function(e, value, row, index) {
-		alert(row.id);
-	}
-};

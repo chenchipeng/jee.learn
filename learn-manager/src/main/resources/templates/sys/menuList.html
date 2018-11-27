@@ -59,7 +59,7 @@
                                     <thead>
                                         <tr>
                                             <th data-checkbox="true" data-visible="true"></th>
-                                            <th data-field="name" data-formatter="aFormatter">名称</th>
+                                            <th data-field="name" data-formatter="aFormatter" data-events="operateEvents">名称</th>
                                             <th data-field="href">链接</th>
                                             <th data-field="sort">排序</th>
                                             <th data-field="isShowDict">是否可见</th>
@@ -86,11 +86,29 @@
     	<!--/*  初始化表格(获取数据的URL, 展开按钮所在列, 上级id所在字段), 此方法必须重写  */--> 
     	initTreeTable("/a/sys/menu/list/data", "name", "parentId");
     });
-    <!--/*  为view请求创建超链接, 此方法必须重写  */--> 
+    
+    <!--/*  为view请求创建超链接, 此方法必须重写, 没有具体实现时直接返回value  */--> 
    	function aFormatter(value, row, index) {
-   		let uri = "/a/sys/menu/view";
-   		return "<a href='" + uri + "'>" + value + "</a>";
+   		return "<a href='javascript:void(0);' class='view'>" + value + "</a>";
    	}
+   	
+ 	<!--/*  行内按钮点击事件, 此方法必须重写 */--> 
+   	window.operateEvents = {
+   		'click .view' : function(e, value, row, index) {
+       		let url = "/a/sys/menu/view?id=" + row.id + "&r=" + Math.random();
+       		showView(url, "信息查看", "50%", "50%");
+   		},
+   		'click .edit' : function(e, value, row, index) {
+   			alert(row.id);
+   		},
+   		'click .del' : function(e, value, row, index) {
+   			alert(row.id);
+   		}
+   	};
+   	
+   	//-------------------------------------------------------------
+   	
+   	
    
     </script>
 </body>

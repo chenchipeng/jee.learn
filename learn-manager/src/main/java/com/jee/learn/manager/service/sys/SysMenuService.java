@@ -30,4 +30,11 @@ public interface SysMenuService extends EntityService<SysMenu, String> {
      */
     MenuDto getCurrentUserMenuDtoTree();
 
+    /**
+     * 根据id查找一条记录
+     * 
+     * @return
+     */
+    MenuDto findOne(String id);
+
 }
