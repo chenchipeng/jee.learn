@@ -99,7 +99,9 @@ public class SysMenuServiceImpl extends EntityServiceImpl<SysMenu, String> imple
         if (entity == null) {
             return null;
         }
-        return BeanMapper.map(entity, MenuDto.class);
+        MenuDto dto = BeanMapper.map(entity, MenuDto.class);
+        dto.setIsShowDict(dictUtil.getLabel("yes_no", entity.getIsShow()));
+        return dto;
     }
 
 }
