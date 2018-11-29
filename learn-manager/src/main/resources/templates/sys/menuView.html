@@ -39,13 +39,13 @@
                                 </tr>
                                 <tr>
                                     <td class="text-right active">创建者&nbsp;:&nbsp;</td>
-                                    <td th:text="${menu.createBy == null}? '' : ${menu.createBy}">创建者</td>
+                                    <td th:text="${menu.creater == null}? '' : ${menu.creater}">创建者</td>
                                     <td class="text-right active">创建时间&nbsp;:&nbsp;</td>
                                     <td th:text="${menu.createDate == null}? '' : ${#dates.format(menu.createDate,'yyyy-MM-dd HH:mm:ss')}">创建时间</td>
                                 </tr>
                                 <tr>
                                     <td class="text-right active">更新者&nbsp;:&nbsp;</td>
-                                    <td th:text="${menu.updateBy == null}? '' : ${menu.updateBy}">更新者</td>
+                                    <td th:text="${menu.updater == null}? '' : ${menu.updater}">更新者</td>
                                     <td class="text-right active">更新时间&nbsp;:&nbsp;</td>
                                     <td th:text="${menu.updateDate == null}? '' : ${#dates.format(menu.updateDate,'yyyy-MM-dd HH:mm:ss')}">更新时间</td>
                                 </tr>

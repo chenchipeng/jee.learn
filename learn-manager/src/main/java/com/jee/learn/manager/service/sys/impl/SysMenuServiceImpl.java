@@ -10,12 +10,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.jee.learn.manager.config.datasource.dynamic.TargetDataSource;
 import com.jee.learn.manager.domain.sys.SysMenu;
+import com.jee.learn.manager.domain.sys.SysUser;
 import com.jee.learn.manager.dto.sys.MenuDto;
 import com.jee.learn.manager.dto.util.TreeUtil;
 import com.jee.learn.manager.repository.sys.SysMenuRepository;
 import com.jee.learn.manager.security.DictUtil;
 import com.jee.learn.manager.security.UserUtil;
 import com.jee.learn.manager.service.sys.SysMenuService;
+import com.jee.learn.manager.service.sys.SysUserService;
 import com.jee.learn.manager.support.cache.CacheConstants;
 import com.jee.learn.manager.support.cache.EhcacheService;
 import com.jee.learn.manager.support.dao.Condition;
@@ -37,6 +39,8 @@ public class SysMenuServiceImpl extends EntityServiceImpl<SysMenu, String> imple
     private DictUtil dictUtil;
     @Autowired
     private EhcacheService ehcacheService;
+    @Autowired
+    private SysUserService sysUserService;
 
     @Override
     protected Condition parseQueryParams(SysMenu entity) {
@@ -100,6 +104,12 @@ public class SysMenuServiceImpl extends EntityServiceImpl<SysMenu, String> imple
             return null;
         }
         MenuDto dto = BeanMapper.map(entity, MenuDto.class);
+        
+        SysUser obj = sysUserService.findOne(entity.getCreateBy());
+        dto.setCreater(obj==null?null:obj.getName());
+        obj = sysUserService.findOne(entity.getUpdateBy());
+        dto.setUpdater(obj==null?null:obj.getName());
+        
         dto.setIsShowDict(dictUtil.getLabel("yes_no", entity.getIsShow()));
         return dto;
     }
