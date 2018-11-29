@@ -41,17 +41,32 @@ function WinMove() {
 	}).disableSelection();
 };
 
+// 页面加载后动作...
+$(document).ready(function() { 
+});
+
 // layer iframe 弹出层
 function showView(url, title, width, height) {
 
 	layer.open({
 		type : 2,
 		title : title,
-		shadeClose : false,
+		shadeClose : true,
 		shade : 0.5,
 		area : [ width, height ],
 		content : url, // iframe的url
 		id : 'layer_iframe',
-		maxmin : true
+		maxmin : true,
+		btn : ['关闭'],
+		yes : function(index, layero){
+			layer.close(index);
+		}
 	});
 }
+
+// layer 关闭弹出窗
+function closeLayer(){
+	let index = parent.layer.getFrameIndex(window.name);
+	setTimeout(function(){parent.layer.close(index)}, 500);
+}
+
