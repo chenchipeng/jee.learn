@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/common.head :: commonHeader('empty', '0')" />
+
+<body class="gray-bg">
+	<div class="wrapper wrapper-content">
+		<div class="row animated fadeInRight">
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h5>title</h5>
+					</div>
+					<div class="ibox-content">
+						<form role="form" id="contentForm">
+							<div class="row">
+								<div class="col-sm-4">
+									<div class="form-group">
+										<label>名称</label><input type="text" placeholder="请输入" class="form-control">
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="form-group">
+										<label>排序</label><input type="text" placeholder="请输入" class="form-control">
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="form-group">
+										<label>链接</label><input type="text" placeholder="请输入" class="form-control">
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="form-group">
+										<label>目标</label><input type="text" placeholder="请输入" class="form-control">
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div th:replace="common/common.foot :: commonFoot"></div>
+	<div th:replace="common/common.foot :: contentFoot"></div>
+
+</body>
+</html>

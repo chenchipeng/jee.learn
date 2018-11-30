@@ -3,6 +3,7 @@ package com.jee.learn.manager.controller.sys;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -40,15 +41,6 @@ public class MenuController extends BaseController {
     }
 
     @Async
-    @RequiresPermissions("sys:menu:view")
-    @GetMapping(path = "/view")
-    public CompletableFuture<String> view(MenuDto entity, Model model) {
-    	model.addAttribute("menu", entity);
-    	model.addAttribute("title", "系统菜单信息");
-        return CompletableFuture.completedFuture("sys/menuView");
-    }
-
-    @Async
     @RequiresPermissions("sys:menu:list")
     @GetMapping(path = { "", "/list" })
     public CompletableFuture<String> list() {
@@ -62,6 +54,23 @@ public class MenuController extends BaseController {
     public CompletableFuture<Object> listData() {
         List<MenuDto> menus = menuService.getCurrentUserMenuDtoList();
         return CompletableFuture.completedFuture(menus);
+    }
+
+    @Async
+    @RequiresPermissions("sys:menu:view")
+    @GetMapping(path = "/view")
+    public CompletableFuture<String> view(MenuDto entity, Model model) {
+        model.addAttribute("menu", entity);
+        model.addAttribute("title", "系统菜单");
+        return CompletableFuture.completedFuture("sys/menuView");
+    }
+
+    @Async
+    @RequiresPermissions(value = { "sys:menu:add", "sys:menu:edit" }, logical = Logical.OR)
+    @GetMapping(path = "/form")
+    public CompletableFuture<String> form(MenuDto entity, Model model) {
+        view(entity, model);
+        return CompletableFuture.completedFuture("sys/menuForm");
     }
 
 }

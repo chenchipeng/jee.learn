@@ -45,6 +45,12 @@ function WinMove() {
 $(document).ready(function() { 
 });
 
+//layer 关闭弹出窗
+function closeLayer(){
+	let index = parent.layer.getFrameIndex(window.name);
+	setTimeout(function(){parent.layer.close(index)}, 500);
+}
+
 // layer iframe 弹出层
 function showView(url, title, width, height) {
 
@@ -64,9 +70,22 @@ function showView(url, title, width, height) {
 	});
 }
 
-// layer 关闭弹出窗
-function closeLayer(){
-	let index = parent.layer.getFrameIndex(window.name);
-	setTimeout(function(){parent.layer.close(index)}, 500);
+//layer iframe 弹出层
+function showForm(url, title, width, height) {
+
+	layer.open({
+		type : 2,
+		title : title,
+		shadeClose : true,
+		shade : 0.5,
+		area : [ width, height ],
+		content : url, // iframe的url
+		id : 'layer_iframe',
+		maxmin : true,
+		btn : ['关闭'],
+		yes : function(index, layero){
+			layer.close(index);
+		}
+	});
 }
 
