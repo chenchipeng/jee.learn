@@ -82,8 +82,13 @@ function showForm(url, title, width, height) {
 		content : url, // iframe的url
 		id : 'layer_iframe',
 		maxmin : true,
-		btn : ['关闭'],
+		btn : ['保存', '关闭'],
 		yes : function(index, layero){
+			var body = layer.getChildFrame('body', index);
+			let contentForm = body.find("#contentForm");
+			layer.close(index);
+		},
+		btn2: function(index, layero){
 			layer.close(index);
 		}
 	});

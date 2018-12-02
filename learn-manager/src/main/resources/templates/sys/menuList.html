@@ -100,7 +100,7 @@
    		},
    		'click .edit' : function(e, value, row, index) {
    			let url = "/a/sys/menu/form?id=" + row.id + "&r=" + Math.random();
-       		showView(url, "信息编辑", "50%", "50%");
+   			showForm(url, "信息编辑", "50%", "50%");
    		},
    		'click .del' : function(e, value, row, index) {
    			alert(row.id);
