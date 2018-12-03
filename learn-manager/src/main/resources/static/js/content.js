@@ -39,16 +39,18 @@ function WinMove() {
 		forcePlaceholderSize : true,
 		opacity : 0.8,
 	}).disableSelection();
-};
+}
 
 // 页面加载后动作...
-$(document).ready(function() { 
+$(document).ready(function() {
 });
 
-//layer 关闭弹出窗
-function closeLayer(){
+// layer 关闭弹出窗
+function closeLayer() {
 	let index = parent.layer.getFrameIndex(window.name);
-	setTimeout(function(){parent.layer.close(index)}, 500);
+	setTimeout(function() {
+		parent.layer.close(index)
+	}, 500);
 }
 
 // layer iframe 弹出层
@@ -63,15 +65,15 @@ function showView(url, title, width, height) {
 		content : url, // iframe的url
 		id : 'layer_iframe',
 		maxmin : true,
-		btn : ['关闭'],
-		yes : function(index, layero){
+		btn : [ '关闭' ],
+		yes : function(index, layero) {
 			layer.close(index);
 		}
 	});
 }
 
-//layer iframe 弹出层
-function showForm(url, title, width, height) {
+// layer iframe 弹出层
+function showForm(url, title, width, height, target) {
 
 	layer.open({
 		type : 2,
@@ -82,15 +84,28 @@ function showForm(url, title, width, height) {
 		content : url, // iframe的url
 		id : 'layer_iframe',
 		maxmin : true,
-		btn : ['保存', '关闭'],
-		yes : function(index, layero){
-			var body = layer.getChildFrame('body', index);
-			let contentForm = body.find("#contentForm");
-			layer.close(index);
+		btn : [ '保存', '关闭' ],
+		yes : function(index, layero) {
+
+			let body = top.layer.getChildFrame('body', index);
+			let contentForm = body.find('#contentForm');
+			let iframeWin = layero.find('iframe')[0];
+
+			let top_iframe;
+			if (target) {
+				top_iframe = target;// 如果指定了iframe，则在改frame中跳转
+			} else {
+				top_iframe = 'J_iframe';// 主窗体
+			}
+			contentForm.attr("target", top_iframe);// 表单提交成功后，从服务器返回的url在当前tab中展示
+
+			if (iframeWin.contentWindow.doSubmit()) {
+				top.layer.close(index);
+			}
+			
 		},
-		btn2: function(index, layero){
+		btn2 : function(index, layero) {
 			layer.close(index);
 		}
 	});
 }
-

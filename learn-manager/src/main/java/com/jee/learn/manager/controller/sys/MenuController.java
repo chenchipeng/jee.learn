@@ -72,5 +72,12 @@ public class MenuController extends BaseController {
         view(entity, model);
         return CompletableFuture.completedFuture("sys/menuForm");
     }
+    
+    @Async
+    @RequiresPermissions(value = { "sys:menu:add", "sys:menu:edit" }, logical = Logical.OR)
+    @PostMapping(path = "/save")
+    public CompletableFuture<String> save(MenuDto entity, Model model) {
+        return CompletableFuture.completedFuture(REDIRECT + systemConfig.getAuthcPath() + "/sys/menu/list");
+    }
 
 }

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="common/common.head :: commonHeader('empty', '0')" />
+<head th:replace="common/common.head :: commonHeader('${title}', '0')" />
 
 <body class="gray-bg">
 	<div class="wrapper wrapper-content">
@@ -8,14 +8,14 @@
 			<div class="col-sm-12">
 				<div class="ibox float-e-margins">
 					<div class="ibox-title">
-						<h5>title</h5>
+						<h5 th:text="${title}">title</h5>
 					</div>
 					<div class="ibox-content">
-						<form role="form" id="contentForm">
+						<form role="form" id="contentForm" method="post" action="#" th:action="${authcPath+'/sys/menu/save'}">
 							<div class="row">
 								<div class="col-sm-4">
 									<div class="form-group">
-										<label>名称</label><input type="text" placeholder="请输入" class="form-control">
+										<label>名称</label><input type="text" placeholder="请输入" class="form-control required">
 									</div>
 								</div>
 								<div class="col-sm-4">
@@ -43,6 +43,27 @@
 
 	<div th:replace="common/common.foot :: commonFoot"></div>
 	<div th:replace="common/common.foot :: contentFoot"></div>
+    
+    <script type="text/javascript" th:inline="javascript">
+    var validateForm;
+	$(function(){
+		validateForm=$("#contentForm").validate({
+			submitHandler: function(form){
+				layer.load(0, {shade: false});
+				form.submit();
+			}
+		});
+	});
+	
+	//回调函数，在编辑和保存动作时，供showForm调用提交表单
+	function doSubmit(){
+		if(validateForm.form()){
+            $("#contentForm").submit();
+            return true;
+		}
+		return false;
+	}
+    </script>
 
 </body>
 </html>

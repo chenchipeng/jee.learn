@@ -32,7 +32,7 @@
                         </a>
                         <ul class="nav nav-second-level"></ul>
                     </li>
-                    <!-- 菜单分类
+                    <!--/* 菜单分类
                     <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
                         <span class="ng-scope">分类</span>
                     </li>
@@ -49,7 +49,7 @@
                             </li>
                         </ul>
                     </li>
-                    -->
+                    */-->
                     
                     <li th:each="m2 : ${menu.childrenList[0].childrenList}">
                         <a href="#">
@@ -108,7 +108,7 @@
             
             <!-- 右侧主窗体 -->
             <div class="row J_mainContent" id="content-main">
-                <iframe id="J_iframe" width="100%" height="100%" src="ie.html" th:src="${authcPath+'/welcome'}" style="border:none" data-id="index_v1.html" seamless></iframe>
+                <iframe id="J_iframe" name="J_iframe" width="100%" height="100%" src="ie.html" th:src="${authcPath+'/welcome'}" style="border:none" data-id="index_v1.html" seamless></iframe>
             </div>
         </div>
         <!--右侧部分结束-->
