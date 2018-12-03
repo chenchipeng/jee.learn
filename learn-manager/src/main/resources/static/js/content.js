@@ -87,7 +87,7 @@ function showForm(url, title, width, height, target) {
 		btn : [ '保存', '关闭' ],
 		yes : function(index, layero) {
 
-			let body = top.layer.getChildFrame('body', index);
+			let body = layer.getChildFrame('body', index);
 			let contentForm = body.find('#contentForm');
 			let iframeWin = layero.find('iframe')[0];
 
@@ -100,9 +100,8 @@ function showForm(url, title, width, height, target) {
 			contentForm.attr("target", top_iframe);// 表单提交成功后，从服务器返回的url在当前tab中展示
 
 			if (iframeWin.contentWindow.doSubmit()) {
-				top.layer.close(index);
+				layer.close(index);
 			}
-			
 		},
 		btn2 : function(index, layero) {
 			layer.close(index);
