@@ -78,6 +78,7 @@ public class MenuController extends BaseController {
     @RequiresPermissions(value = { "sys:menu:add", "sys:menu:edit" }, logical = Logical.OR)
     @PostMapping(path = "/save")
     public CompletableFuture<String> save(MenuDto entity, Model model) {
+    	logger.info("=========================");
         logger.info("{}",JsonMapper.toJson(entity));
         return CompletableFuture.completedFuture(REDIRECT + systemConfig.getAuthcPath() + "/sys/menu/list");
     }

@@ -8,32 +8,36 @@
 			<div class="col-sm-12">
 				<div class="ibox-content">
                     <form role="form" class="form-horizontal m-t" id="contentForm" method="post" action="#" th:action="${authcPath+'/sys/menu/save'}">
+                        <input id="id" name="id" type="hidden" th:value="${menu.id}">
                         <table class="table table-bordered table-condensed">
                             <tbody>
                                 <tr>
                                     <td class="text-right active"><font color="red">*</font>名称&nbsp;:&nbsp;</td>
                                     <td class="form-group">
-                                        <input id="name" name="name" type="text" placeholder="" class="form-control required">
+                                        <input id="name" name="name" type="text" th:value="${menu.name}" placeholder="" class="form-control required">
                                     </td>
                                     <td class="text-right active"><font color="red">*</font>排序&nbsp;:&nbsp;</td>
                                     <td class="form-group">
-                                        <input id="sort" name="sort" type="text" placeholder="" class="form-control required digits">
+                                        <input id="sort" name="sort" type="text" th:value="${menu.sort}" placeholder="" class="form-control required digits">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="text-right active">链接&nbsp;:&nbsp;</td>
                                     <td class="form-group">
-                                        <input id="href" name="href" type="text" placeholder="" class="form-control">
+                                        <input id="href" name="href" type="text" th:value="${menu.href}" placeholder="" class="form-control">
                                     </td>
                                     <td class="text-right active">目标&nbsp;:&nbsp;</td>
                                     <td class="form-group">
-                                        <input id="target" name="target" type="text" placeholder="" class="form-control">
+                                        <input id="target" name="target" type="text" th:value="${menu.target}" placeholder="" class="form-control">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="text-right active">图标&nbsp;:&nbsp;</td>
                                     <td class="form-group">
-                                        <span id="iconView">&nbsp;&nbsp;无&nbsp;&nbsp;</span>
+                                    
+                                    // TODO 这里需要注入已存在的值
+                                    
+                                        <span id="iconView" th:text="'&nbsp;&nbsp;<i class='+${menu.icon}+'>&nbsp;&nbsp'">&nbsp;&nbsp;无&nbsp;&nbsp;</span>
                                         <span id="iconSelect" class="btn btn-xs btn-info">选择</span>
                                         <span id="iconClear" class="btn btn-xs btn-warning">清空</span>
                                         <input id="icon" name="icon" type="hidden">
@@ -48,11 +52,11 @@
                                 <tr>
                                     <td class="text-right active width-15">权限标识&nbsp;:&nbsp;</td>
                                     <td class="form-group">
-                                        <input id="permission" name="permission" type="text" placeholder="" class="form-control">
+                                        <input id="permission" name="permission" type="text" th:value="${menu.permission}" placeholder="" class="form-control">
                                     </td>
                                     <td class="text-right active width-15">备注&nbsp;:&nbsp;</td>
                                     <td class="form-group">
-                                        <input id="remarks" name="remarks" type="text" placeholder="" class="form-control">
+                                        <input id="remarks" name="remarks" type="text" th:value="${menu.remarks}" placeholder="" class="form-control">
                                     </td>
                                 </tr>
                             </tbody>
