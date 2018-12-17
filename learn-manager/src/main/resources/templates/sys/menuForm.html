@@ -6,110 +6,106 @@
 	<div class="wrapper wrapper-content animated fadeInRight">
 		<div class="row">
 			<div class="col-sm-12">
-				<div class="ibox float-e-margins">
-					<div class="ibox-title">
-						<h5 th:text="${title}">title</h5>
-					</div>
-					<div class="ibox-content">
-						<form role="form" class="form-horizontal m-t" id="contentForm" method="post" action="#" th:action="${authcPath+'/sys/menu/save'}">
-							
-							
-							<!-- TODO 还是用表格吧  -->
-							<!--
-							<div class="row">
-								<div class="col-sm-6">
-									<div class="form-group">
-										<label for="name" class="col-sm-3 control-label"><font class="text-danger">*</font>名称：</label>
-										<div class="col-sm-8">
-											<input id="name" name="name" type="text" placeholder="请输入" class="form-control required">
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-6">
-									<div class="form-group">
-										<label id="sort" class="col-sm-3 control-label">排序：</label>
-										<div class="col-sm-8">
-											<input id="sort" name="sort" type="text" placeholder="请输入" class="form-control">
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-6">
-									<div class="form-group">
-										<label for="href" class="col-sm-3 control-label">链接：</label>
-										<div class="col-sm-8">
-											<input id="href" name="href" type="text" placeholder="请输入" class="form-control">
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-6">
-									<div class="form-group">
-										<label for="target" class="col-sm-3 control-label">目标：</label>
-										<div class="col-sm-8">
-											<input id="target" name="target" type="text" placeholder="请输入" class="form-control">
-										</div>
-									</div>
-								</div>
-							</div>
-							 -->
-							
-							
-							
-							
-							
-							
-							
-							
-						</form>
-					</div>
-				</div>
+				<div class="ibox-content">
+                    <form role="form" class="form-horizontal m-t" id="contentForm" method="post" action="#" th:action="${authcPath+'/sys/menu/save'}">
+                        <table class="table table-bordered table-condensed">
+                            <tbody>
+                                <tr>
+                                    <td class="text-right active"><font color="red">*</font>名称&nbsp;:&nbsp;</td>
+                                    <td class="form-group">
+                                        <input id="name" name="name" type="text" placeholder="" class="form-control required">
+                                    </td>
+                                    <td class="text-right active"><font color="red">*</font>排序&nbsp;:&nbsp;</td>
+                                    <td class="form-group">
+                                        <input id="sort" name="sort" type="text" placeholder="" class="form-control required digits">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-right active">链接&nbsp;:&nbsp;</td>
+                                    <td class="form-group">
+                                        <input id="href" name="href" type="text" placeholder="" class="form-control">
+                                    </td>
+                                    <td class="text-right active">目标&nbsp;:&nbsp;</td>
+                                    <td class="form-group">
+                                        <input id="target" name="target" type="text" placeholder="" class="form-control">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-right active">图标&nbsp;:&nbsp;</td>
+                                    <td class="form-group">
+                                        <span id="iconView">&nbsp;&nbsp;无&nbsp;&nbsp;</span>
+                                        <span id="iconSelect" class="btn btn-xs btn-info">选择</span>
+                                        <span id="iconClear" class="btn btn-xs btn-warning">清空</span>
+                                        <input id="icon" name="icon" type="hidden">
+                                    </td>
+                                    <td class="text-right active">是否显示&nbsp;:&nbsp;</td>
+                                    <td class="form-group">
+                                        <select class="chosen-select" id="isShow" name="isShow">
+                                            <option value=''>请选择</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-right active width-15">权限标识&nbsp;:&nbsp;</td>
+                                    <td class="form-group">
+                                        <input id="permission" name="permission" type="text" placeholder="" class="form-control">
+                                    </td>
+                                    <td class="text-right active width-15">备注&nbsp;:&nbsp;</td>
+                                    <td class="form-group">
+                                        <input id="remarks" name="remarks" type="text" placeholder="" class="form-control">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
 			</div>
 		</div>
 	</div>
-
+    
 	<div th:replace="common/common.foot :: commonFoot"></div>
 	<div th:replace="common/common.foot :: contentFoot"></div>
     
     <script type="text/javascript" th:inline="javascript">
+    <!--/* 提供给回调函数使用  */--> 
     var validateForm;
 	$(function(){
 		validateForm=$("#contentForm").validate({
+			debug: false,
 			submitHandler: function(form){
 				layer.load(0, {shade: false});
 				form.submit();
 			}
 		});
+		
+		<!--/* 获取'是否显示'下拉框内容  */-->
+		getDictList([[${authcPath}]] + "/sys/dict/type?r=" + Math.random(), "yes_no", "isShow");
 	});
 	
-	//回调函数，在编辑和保存动作时，供showForm调用提交表单
+	<!--/* 回调函数，在编辑和保存动作时，供showForm调用提交表单  */-->
 	function doSubmit(){
 		if(validateForm.form()){
+			
+			<!--/* 下拉框校验  */-->
+			if($("#isShow option:selected").val()==''){
+				layer.msg("请选择是否显示");
+				return false;
+			}
+			
             $("#contentForm").submit();
             return true;
 		}
 		return false;
 	}
 	
-	
-	//以下为修改jQuery Validation插件兼容Bootstrap的方法，没有直接写在插件中是为了便于插件升级
-	$.validator.setDefaults({
-	    highlight: function (element) {
-	        $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
-	    },
-	    success: function (element) {
-	    	$(element).closest('.form-group').removeClass('has-error').addClass('has-success');
-	    },
-	    errorElement: "span",
-	    errorPlacement: function (error, element) {
-	        if (element.is(":radio") || element.is(":checkbox")) {
-	            error.appendTo(element.parent().parent().parent());
-	        } else {
-	            error.appendTo(element.parent());
-	        }
-	    },
-	    errorClass: "help-block m-b-none",
-	    validClass: "help-block m-b-none"
-	});
-	
+	<!--/* 弹出icon选择框, 属于钩子方法, 必须写在html上  */-->
+	$("#iconSelect").on("click", function(){
+		let url = [[${authcPath}]] + "/icon/select?r=" + Math.random();
+		iconSelecter(url, "图标库", "50%", "50%", "icon", "iconView");
+    });
+	$("#iconClear").on("click", function(){
+    	$("#iconView").html("&nbsp;&nbsp;无&nbsp;&nbsp;");
+    });
 	
     </script>
 

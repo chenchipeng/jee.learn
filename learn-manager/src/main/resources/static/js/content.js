@@ -43,6 +43,38 @@ function WinMove() {
 
 // 页面加载后动作...
 $(document).ready(function() {
+	// 下拉框基础设置
+	$(".chosen-select").chosen({
+		no_results_text : "没有找到结果！",// 搜索无结果时显示的提示
+		search_contains : true, // 关键字模糊搜索，设置为false，则只从开头开始匹配
+		allow_single_deselect : true, // 是否允许取消选择
+		inherit_select_classes : true, // 继承普通select的class
+		disable_search_threshold : 5
+	});
+	$(".chosen-select").css("max-width", "200px");
+	$(".chosen-select").css("min-width", "70%");
+});
+
+// 以下为修改jQuery Validation插件兼容Bootstrap的方法，没有直接写在插件中是为了便于插件升级
+$.validator.setDefaults({
+	highlight : function(element) {
+		$(element).closest('.form-group').removeClass('has-success').addClass(
+				'has-error');
+	},
+	success : function(element) {
+		$(element).closest('.form-group').removeClass('has-error').addClass(
+				'has-success');
+	},
+	errorElement : "span",
+	errorPlacement : function(error, element) {
+		if (element.is(":radio") || element.is(":checkbox")) {
+			error.appendTo(element.parent().parent().parent());
+		} else {
+			error.appendTo(element.parent());
+		}
+	},
+	errorClass : "help-block m-b-none",
+	validClass : "help-block m-b-none"
 });
 
 // layer 关闭弹出窗
@@ -105,6 +137,76 @@ function showForm(url, title, width, height, target) {
 		},
 		btn2 : function(index, layero) {
 			layer.close(index);
+		}
+	});
+}
+
+// 从图表库中选择图标, iconId=图标值, iconViewId=显示图标的容器
+function iconSelecter(url, title, width, height, iconId, iconViewId) {
+
+	top.layer.open({
+		type : 2,
+		title : title,
+		shadeClose : true,
+		shade : 0.5,
+		area : [ width, height ],
+		content : url, // iframe的url
+		id : 'layer_iframe_icon',
+		maxmin : true,
+		btn : [ '保存', '关闭' ],
+		yes : function(index, layero) {
+
+			let body = top.layer.getChildFrame('body', index);
+			let element = body.find('#icon');
+
+			let hml = "&nbsp;&nbsp;<i class='" + element.val()
+					+ "'>&nbsp;&nbsp;";
+			$("#" + iconId).val(element.val());
+			$("#" + iconViewId).html(hml);
+			top.layer.close(index);
+		},
+		btn2 : function(index, layero) {
+			top.layer.close(index);
+		}
+	});
+}
+
+// 根据类型获取字典列表
+function getDictList(url, type, selectId) {
+	$.ajax({
+		url : url,
+		type : 'post',
+		contentType : 'application/json;charset=UTF-8',
+		data : JSON.stringify({
+			"h" : {
+				"t" : "oQXWv0mE9Q0vTDNqKl2uFXMMuspI"
+			},
+			"d" : {
+				"a" : 1,
+				"t" : type
+			}
+		}),
+		dataType : 'json',
+		success : function(data) {
+			if (data.c == "200") {
+				let hml = "";
+				for (var i = 0; i < data.d.l.length; i++) {
+					hml += "<option value='" + data.d.l[i].value + "'>"
+							+ data.d.l[i].label + "</option>";
+				}
+				$("#" + selectId).append(hml);
+				$("#" + selectId).trigger("chosen:updated");
+				$("#" + selectId + "_chosen .chosen-search-input").attr("name",
+						selectId + "-input");
+			} else {
+				console.info(data);
+			}
+		},
+		error : function(request, status, error) {
+			// 当返回的数据无法转换成json时, 强制刷新页面
+			if (request.statusText == "parsererror") {
+				location.reload();
+			}
 		}
 	});
 }

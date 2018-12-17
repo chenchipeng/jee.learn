@@ -6,52 +6,47 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-sm-12">
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <h5 th:text="${title}">title</h5>
-                    </div>
-                    <div class="ibox-content">
-                        <table class="table table-bordered table-condensed">
-                            <tbody>
-                                <tr>
-                                    <td class="text-right active">名称&nbsp;:&nbsp;</td>
-                                    <td th:text="${menu.name == null}? '' : ${menu.name}">名称</td>
-                                    <td class="text-right active">排序&nbsp;:&nbsp;</td>
-                                    <td th:text="${menu.sort == null}? '' : ${menu.sort}">排序</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-right active">链接&nbsp;:&nbsp;</td>
-                                    <td th:text="${menu.href == null}? '' : ${menu.href}">链接</td>
-                                    <td class="text-right active">目标&nbsp;:&nbsp;</td>
-                                    <td th:text="${menu.target == null}? '' : ${menu.target}">目标</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-right active">图标&nbsp;:&nbsp;</td>
-                                    <td th:text="${menu.icon == null}? '' : ${menu.icon}">图标</td>
-                                    <td class="text-right active">是否显示&nbsp;:&nbsp;</td>
-                                    <td th:text="${menu.isShowDict == null}? '' : ${menu.isShowDict}">是否显示</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-right active width-15">权限标识&nbsp;:&nbsp;</td>
-                                    <td class="width-35" th:text="${menu.permission == null}? '' : ${menu.permission}">权限标识</td>
-                                    <td class="text-right active width-15">备注&nbsp;:&nbsp;</td>
-                                    <td class="width-35" th:text="${menu.remarks == null}? '' : ${menu.remarks}">备注</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-right active">创建者&nbsp;:&nbsp;</td>
-                                    <td th:text="${menu.creater == null}? '' : ${menu.creater}">创建者</td>
-                                    <td class="text-right active">创建时间&nbsp;:&nbsp;</td>
-                                    <td th:text="${menu.createDate == null}? '' : ${#dates.format(menu.createDate,'yyyy-MM-dd HH:mm:ss')}">创建时间</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-right active">更新者&nbsp;:&nbsp;</td>
-                                    <td th:text="${menu.updater == null}? '' : ${menu.updater}">更新者</td>
-                                    <td class="text-right active">更新时间&nbsp;:&nbsp;</td>
-                                    <td th:text="${menu.updateDate == null}? '' : ${#dates.format(menu.updateDate,'yyyy-MM-dd HH:mm:ss')}">更新时间</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="ibox-content">
+                    <table class="table table-bordered table-condensed">
+                        <tbody>
+                            <tr>
+                                <td class="text-right active">名称&nbsp;:&nbsp;</td>
+                                <td th:text="${menu.name == null}? '' : ${menu.name}">名称</td>
+                                <td class="text-right active">排序&nbsp;:&nbsp;</td>
+                                <td th:text="${menu.sort == null}? '' : ${menu.sort}">排序</td>
+                            </tr>
+                            <tr>
+                                <td class="text-right active">链接&nbsp;:&nbsp;</td>
+                                <td th:text="${menu.href == null}? '' : ${menu.href}">链接</td>
+                                <td class="text-right active">目标&nbsp;:&nbsp;</td>
+                                <td th:text="${menu.target == null}? '' : ${menu.target}">目标</td>
+                            </tr>
+                            <tr>
+                                <td class="text-right active">图标&nbsp;:&nbsp;</td>
+                                <td th:text="${menu.icon == null}? '' : ${menu.icon}">图标</td>
+                                <td class="text-right active">是否显示&nbsp;:&nbsp;</td>
+                                <td th:text="${menu.isShowDict == null}? '' : ${menu.isShowDict}">是否显示</td>
+                            </tr>
+                            <tr>
+                                <td class="text-right active width-15">权限标识&nbsp;:&nbsp;</td>
+                                <td class="width-35" th:text="${menu.permission == null}? '' : ${menu.permission}">权限标识</td>
+                                <td class="text-right active width-15">备注&nbsp;:&nbsp;</td>
+                                <td class="width-35" th:text="${menu.remarks == null}? '' : ${menu.remarks}">备注</td>
+                            </tr>
+                            <tr>
+                                <td class="text-right active">创建者&nbsp;:&nbsp;</td>
+                                <td th:text="${menu.creater == null}? '' : ${menu.creater}">创建者</td>
+                                <td class="text-right active">创建时间&nbsp;:&nbsp;</td>
+                                <td th:text="${menu.createDate == null}? '' : ${#dates.format(menu.createDate,'yyyy-MM-dd HH:mm:ss')}">创建时间</td>
+                            </tr>
+                            <tr>
+                                <td class="text-right active">更新者&nbsp;:&nbsp;</td>
+                                <td th:text="${menu.updater == null}? '' : ${menu.updater}">更新者</td>
+                                <td class="text-right active">更新时间&nbsp;:&nbsp;</td>
+                                <td th:text="${menu.updateDate == null}? '' : ${#dates.format(menu.updateDate,'yyyy-MM-dd HH:mm:ss')}">更新时间</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

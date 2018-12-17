@@ -25,7 +25,7 @@ import com.jee.learn.manager.config.shiro.security.CustomPrincipal;
 import com.jee.learn.manager.config.shiro.security.CustomToken;
 import com.jee.learn.manager.config.shiro.session.CustomSessionDAO;
 import com.jee.learn.manager.domain.sys.SysUser;
-import com.jee.learn.manager.dto.ResponseDto;
+import com.jee.learn.manager.dto.base.ResponseDto;
 import com.jee.learn.manager.dto.sys.MenuDto;
 import com.jee.learn.manager.security.shiro.ShiroUtil;
 import com.jee.learn.manager.service.sys.SysMenuService;

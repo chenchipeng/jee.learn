@@ -17,8 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jee.learn.manager.config.shiro.security.CustomPrincipal;
 import com.jee.learn.manager.domain.sys.SysUser;
-import com.jee.learn.manager.dto.FileUploadDto;
-import com.jee.learn.manager.dto.ResponseDto;
+import com.jee.learn.manager.dto.base.ResponseDto;
 import com.jee.learn.manager.security.UserUtil;
 import com.jee.learn.manager.security.shiro.ShiroUtil;
 import com.jee.learn.manager.service.FileUploadService;
@@ -101,8 +100,7 @@ public class ProfileController extends FileUploadController {
     @ResponseBody
     @RequiresPermissions("user")
     @PostMapping(path = "${system.authc-path}/profile/pic", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public CompletableFuture<ResponseDto<FileUploadDto>> profilePic(HttpServletRequest request,
-            @RequestBody String path) {
+    public CompletableFuture<ResponseDto<Object>> profilePic(HttpServletRequest request, @RequestBody String path) {
 
         // 参数校验
         if (StringUtils.isBlank(path)) {
@@ -124,7 +122,7 @@ public class ProfileController extends FileUploadController {
                 fileUploadService.deleteFile(diskPath);
             }
         } catch (Exception e) {
-           throw new RestException(e);
+            throw new RestException(e);
         }
 
         return CompletableFuture.completedFuture(new ResponseDto<>(WebConstants.SUCCESS_CODE));

@@ -1,19 +1,19 @@
-package com.jee.learn.manager.dto;
+package com.jee.learn.manager.dto.base;
 
 import java.io.Serializable;
 
-public class RequestDto<T> implements Serializable {
+public class RequestParam<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    protected HeaderDto h;// 通用属性
+    protected HParam h;// 通用属性
     protected T d;// 具体的数据结构
 
-    public HeaderDto getH() {
+    public HParam getH() {
         return h;
     }
 
-    public void setH(HeaderDto h) {
+    public void setH(HParam h) {
         this.h = h;
     }
 

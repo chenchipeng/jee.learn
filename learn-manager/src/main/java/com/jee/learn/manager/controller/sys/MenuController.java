@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.jee.learn.manager.controller.BaseController;
 import com.jee.learn.manager.dto.sys.MenuDto;
 import com.jee.learn.manager.service.sys.SysMenuService;
+import com.jee.learn.manager.util.mapper.JsonMapper;
 
 @Controller
 @RequestMapping("${system.authc-path}/sys/menu")
@@ -77,6 +78,7 @@ public class MenuController extends BaseController {
     @RequiresPermissions(value = { "sys:menu:add", "sys:menu:edit" }, logical = Logical.OR)
     @PostMapping(path = "/save")
     public CompletableFuture<String> save(MenuDto entity, Model model) {
+        logger.info("{}",JsonMapper.toJson(entity));
         return CompletableFuture.completedFuture(REDIRECT + systemConfig.getAuthcPath() + "/sys/menu/list");
     }
 

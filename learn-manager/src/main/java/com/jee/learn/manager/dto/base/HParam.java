@@ -1,6 +1,6 @@
-package com.jee.learn.manager.dto;
+package com.jee.learn.manager.dto.base;
 
-public class HeaderDto {
+public class HParam {
 
     private String t;// token
 

@@ -1,4 +1,4 @@
-package com.jee.learn.manager.dto;
+package com.jee.learn.manager.dto.base;
 
 import java.io.Serializable;
 

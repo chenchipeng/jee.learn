@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.jee.learn.manager.dto.FileUploadDto;
-import com.jee.learn.manager.dto.RequestDto;
-import com.jee.learn.manager.dto.ResponseDto;
+import com.jee.learn.manager.dto.base.RequestParam;
+import com.jee.learn.manager.dto.base.ResponseDto;
 import com.jee.learn.manager.service.FileUploadService;
 import com.jee.learn.manager.util.WebConstants;
 import com.jee.learn.manager.util.base.excrption.RestException;
@@ -153,7 +153,7 @@ public abstract class FileUploadController extends BaseController {
     @RequiresPermissions("user")
     @PostMapping(path = "${system.authc-path}/fileDelete", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public CompletableFuture<ResponseDto<FileUploadDto>> fileDelete(HttpServletRequest request,
-            @RequestBody RequestDto<FileUploadDto> params) {
+            @RequestBody RequestParam<FileUploadDto> params) {
         logger.debug("进入文件删除接口 fileDelete");
         // 参数校验
         if (params == null || params.getD() == null || StringUtils.isBlank(params.getD().getPath())) {
