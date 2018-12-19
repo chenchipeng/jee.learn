@@ -34,17 +34,14 @@
                                 <tr>
                                     <td class="text-right active">图标&nbsp;:&nbsp;</td>
                                     <td class="form-group">
-                                    
-                                    // TODO 这里需要注入已存在的值
-                                    
-                                        <span id="iconView" th:text="'&nbsp;&nbsp;<i class='+${menu.icon}+'>&nbsp;&nbsp'">&nbsp;&nbsp;无&nbsp;&nbsp;</span>
+                                        <span id="iconView">&nbsp;&nbsp;<i th:class="${menu.icon}" th:text="${menu.icon eq null? '无':''}">无</i>&nbsp;&nbsp;</span>
                                         <span id="iconSelect" class="btn btn-xs btn-info">选择</span>
                                         <span id="iconClear" class="btn btn-xs btn-warning">清空</span>
                                         <input id="icon" name="icon" type="hidden">
                                     </td>
                                     <td class="text-right active">是否显示&nbsp;:&nbsp;</td>
                                     <td class="form-group">
-                                        <select class="chosen-select" id="isShow" name="isShow">
+                                        <select class="chosen-select" id="isShow" name="isShow" th:data-selected="${menu.isShow}">
                                             <option value=''>请选择</option>
                                         </select>
                                     </td>

@@ -163,6 +163,7 @@ function iconSelecter(url, title, width, height, iconId, iconViewId) {
 					+ "'>&nbsp;&nbsp;";
 			$("#" + iconId).val(element.val());
 			$("#" + iconViewId).html(hml);
+
 			top.layer.close(index);
 		},
 		btn2 : function(index, layero) {
@@ -171,7 +172,7 @@ function iconSelecter(url, title, width, height, iconId, iconViewId) {
 	});
 }
 
-// 根据类型获取字典列表
+// 根据类型获取字典列表, 用于下拉选择框
 function getDictList(url, type, selectId) {
 	$.ajax({
 		url : url,
@@ -190,10 +191,21 @@ function getDictList(url, type, selectId) {
 		success : function(data) {
 			if (data.c == "200") {
 				let hml = "";
+				let v = $("#" + selectId).attr("data-selected");
+				let selected = "";
+
 				for (var i = 0; i < data.d.l.length; i++) {
-					hml += "<option value='" + data.d.l[i].value + "'>"
-							+ data.d.l[i].label + "</option>";
+
+					if (data.d.l[i].value == v) {
+						selected = "selected='selected'";
+					}
+					hml += "<option " + selected + " value='"
+							+ data.d.l[i].value + "'>" + data.d.l[i].label
+							+ "</option>";
+					
+					selected = "";
 				}
+
 				$("#" + selectId).append(hml);
 				$("#" + selectId).trigger("chosen:updated");
 				$("#" + selectId + "_chosen .chosen-search-input").attr("name",
