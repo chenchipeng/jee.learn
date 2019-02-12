@@ -1,6 +1,10 @@
 package com.jee.learn.manager.util.time;
 
 import java.text.ParseException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import org.apache.commons.lang3.time.DurationFormatUtils;
@@ -19,9 +23,12 @@ import com.jee.learn.manager.util.base.annotation.NotNull;
  * 
  * 3. 打印时间间隔，如"01:10:10"，以及用户友好的版本，比如"刚刚"，"10分钟前"
  * 
+ * 扩展1. 20190212 ccp 补充时间戳函数
+ * 
  * @see FastDateFormat#parse(String)
  * @see FastDateFormat#format(java.util.Date)
  * @see FastDateFormat#format(long)
+ * 
  */
 public class DateFormatUtil {
 
@@ -225,4 +232,53 @@ public class DateFormatUtil {
             return String.format("%tF", timeStampMillis);
         }
     }
+
+    //////// 时间戳 ////////
+
+    /**
+     * 获取当前时间的时间戳(10位)
+     * 
+     * @return seconds
+     */
+    public static long getTimestamp() {
+        Instant ins = Instant.now();
+        return ins.getEpochSecond();
+    }
+
+    /**
+     * 获取指定日期的时间戳(10位)
+     * 
+     * @param date
+     * @return seconds
+     */
+    public static long getTimestamp(Date date) {
+        Instant ins = date.toInstant();
+        return ins.getEpochSecond();
+    }
+
+    /**
+     * 时间戳(10位)转日期
+     * 
+     * @param seconds
+     * @return
+     */
+    public static Date parseTimestamp(long seconds) {
+        Instant ins = Instant.ofEpochSecond(seconds);
+        return Date.from(ins);
+    }
+
+    /**
+     * yyyy-MM-dd HH:mm:ss 格式字符串转日期
+     * 
+     * @param date
+     * @return
+     * @see DateFormatUtil#PATTERN_DEFAULT_ON_SECOND
+     */
+    public static Date parseY_M_D_H_M_S(String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PATTERN_DEFAULT_ON_SECOND);
+        LocalDateTime localDateTime = LocalDateTime.parse(date, formatter);
+        Instant ins = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
+        return Date.from(ins);
+    }
+
 }

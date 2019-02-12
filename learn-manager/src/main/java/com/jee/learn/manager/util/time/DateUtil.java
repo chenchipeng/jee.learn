@@ -8,7 +8,6 @@ import org.apache.commons.lang3.time.DateUtils;
 
 import com.jee.learn.manager.util.base.annotation.NotNull;
 
-
 /**
  * 日期工具类.
  * 
@@ -417,4 +416,5 @@ public class DateUtil {
 
         return MONTH_LENGTH[month];
     }
+
 }
