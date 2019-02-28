@@ -1,6 +1,8 @@
 package com.jee.learn.test.thymeleaf;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,8 +35,26 @@ public class ThymeleafUtilTest {
 
     @Test
     public void writeToFileTest() {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", "蔬菜列表");
+        map.put("array", new String[] { "土豆", "番茄", "白菜", "芹菜" });
+
         try {
-            thymeleafUtil.writeToFile("example", thymeleafUtil.buildContext(), "result.html");
+            thymeleafUtil.writeToFile("example", map, "result.html");
+        } catch (IOException e) {
+            log.info("", e);
+        }
+    }
+
+    @Test
+    public void genTest() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", "蔬菜列表");
+        map.put("array", new String[] { "土豆", "番茄", "白菜", "芹菜" });
+
+        try {
+            thymeleafUtil.writeToFile("gen/demo", map, "result.java");
         } catch (IOException e) {
             log.info("", e);
         }
