@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jee.learn.interfaces.dto.ResponseDto;
+import com.jee.learn.interfaces.support.web.base.RestException;
 import com.jee.learn.interfaces.util.WebConstants;
-import com.jee.learn.interfaces.util.exception.IntfcException;
 
 @RestController
 public class BaseController {
@@ -22,8 +22,8 @@ public class BaseController {
      * @param e
      * @return
      */
-    @ExceptionHandler({ IntfcException.class })
-    public ResponseDto<Object> intfcExceptionHandler(IntfcException e) {
+    @ExceptionHandler({ RestException.class })
+    public ResponseDto<Object> intfcExceptionHandler(RestException e) {
 
         ResponseDto<Object> rd = new ResponseDto<Object>();
         rd.setC(e.getCode());
@@ -47,8 +47,8 @@ public class BaseController {
         rd.setE(WebConstants.BUSINESS_ERROR_MESSAGE);
 
         Throwable throwable = e.getCause();
-        if (throwable instanceof IntfcException) {
-            IntfcException intfc = (IntfcException) throwable;
+        if (throwable instanceof RestException) {
+            RestException intfc = (RestException) throwable;
             rd.setC(intfc.getCode());
             rd.setE(intfc.getMsg());
         }

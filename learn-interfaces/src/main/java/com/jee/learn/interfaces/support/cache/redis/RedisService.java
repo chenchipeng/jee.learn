@@ -1,4 +1,4 @@
-package com.jee.learn.interfaces.util.cache;
+package com.jee.learn.interfaces.support.cache.redis;
 
 import java.util.List;
 import java.util.Set;
@@ -12,19 +12,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 /**
  * RedisTemplate 工具类<br/>
  * 参考:https://www.cnblogs.com/skyessay/p/6485187.html<br/>
  * 关于Autowired与Resource的使用请参考https://blog.csdn.net/weixin_40423597/article/details/80643990
  * 
- * @author 1002360
+ * @author ccp
  * @version 1.0<br/>
  *          修改记录:<br/>
  *          1.2018年6月22日 下午11:22:39 1002360 新建
  */
-@Service
+@Component
 public class RedisService {
 
     @Autowired
@@ -49,8 +49,7 @@ public class RedisService {
      * @param hashKey
      * @param key
      * @param values
-     * @param expire
-     *            过期时间(单位:秒),传入 -1 时表示不设置过期时间
+     * @param expire 过期时间(单位:秒),传入 -1 时表示不设置过期时间
      */
     public void put(String hashKey, String key, String values, long expire) {
         try {
@@ -63,6 +62,14 @@ public class RedisService {
         }
     }
 
+    /**
+     * 添加
+     * 
+     * @param hashKey
+     * @param key
+     * @param values
+     * @param expire 过期时间(单位:秒),传入 -1 时表示不设置过期时间
+     */
     public void putObj(String hashKey, String key, Object values, long expire) {
         try {
             hashOperationsObj.put(hashKey, key, values);
@@ -74,6 +81,13 @@ public class RedisService {
         }
     }
 
+    /**
+     * 添加
+     * 
+     * @param key
+     * @param values
+     * @param expire 过期时间(单位:秒),传入 -1 时表示不设置过期时间
+     */
     public void setKeyValue(String key, Object values, long expire) {
         try {
             valueOperationsObj.set(key, values);
@@ -115,10 +129,23 @@ public class RedisService {
         return hashOperations.get(hashKey, key);
     }
 
+    /**
+     * 查询
+     * 
+     * @param hashKey
+     * @param key
+     * @return
+     */
     public Object getObj(String hashKey, String key) {
         return hashOperationsObj.get(hashKey, key);
     }
 
+    /**
+     * 查询
+     * 
+     * @param key
+     * @return
+     */
     public Object getKeyValue(String key) {
         return valueOperationsObj.get(key);
     }
@@ -144,8 +171,7 @@ public class RedisService {
     /**
      * 判断key是否存在redis中
      *
-     * @param key
-     *            传入key的名称
+     * @param key 传入key的名称
      * @return
      */
     public boolean isKeyExists(String hashKey, String key) {
@@ -184,8 +210,7 @@ public class RedisService {
      * 
      * @param hashKey
      * @param expire
-     * @param timeUnit
-     *            单位
+     * @param timeUnit 单位
      */
     public void flushExpire(String hashKey, long expire, TimeUnit timeUnit) {
         if (expire != -1) {
@@ -209,8 +234,7 @@ public class RedisService {
      * 
      * @param key
      * @param value
-     * @param expire
-     *            过期时间(单位:秒),传入 -1 时表示不设置过期时间
+     * @param expire 过期时间(单位:秒),传入 -1 时表示不设置过期时间
      */
     public void putStringValue(String key, String value, long expire) {
         try {
@@ -229,8 +253,7 @@ public class RedisService {
      * 
      * @param hashKey
      * @param expire
-     * @param timeUnit
-     *            单位
+     * @param timeUnit 单位
      */
     public void flushStrExpire(String key, long expire, TimeUnit timeUnit) {
         if (expire != -1) {

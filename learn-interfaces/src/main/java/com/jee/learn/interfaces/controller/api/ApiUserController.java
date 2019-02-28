@@ -15,10 +15,10 @@ import com.jee.learn.interfaces.dto.RequestDto;
 import com.jee.learn.interfaces.dto.ResponseDto;
 import com.jee.learn.interfaces.dto.api.ApiUserDto;
 import com.jee.learn.interfaces.service.api.ApiUserService;
-import com.jee.learn.interfaces.util.CacheConstants;
-import com.jee.learn.interfaces.util.cache.EhcacheService;
-import com.jee.learn.interfaces.util.codec.Md5Utils;
+import com.jee.learn.interfaces.support.cache.CacheConstants;
+import com.jee.learn.interfaces.support.cache.ehcache.EhcacheService;
 import com.jee.learn.interfaces.util.mapper.JsonMapper;
+import com.jee.learn.interfaces.util.security.MD5Util;
 
 @RestController
 public class ApiUserController extends BaseController {
@@ -34,7 +34,7 @@ public class ApiUserController extends BaseController {
         ResponseDto<ApiUserDto> rd = new ResponseDto<ApiUserDto>();
 
         // 尝试从缓存中读取数据
-        String cacheKey = Md5Utils.getMD5(JsonMapper.toJson(params));
+        String cacheKey = MD5Util.md5(JsonMapper.toJson(params));
         String data = String.valueOf(ehcacheService.get(CacheConstants.EHCACHE_DEFAULT, cacheKey));
         if (StringUtils.isNotBlank(data) && !CacheConstants.NULL_STRING.equals(data)) {
             logger.debug("======读取ehcache缓存======");

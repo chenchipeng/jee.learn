@@ -1,4 +1,4 @@
-package com.jee.learn.interfaces.config;
+package com.jee.learn.interfaces.support.cache.redis;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

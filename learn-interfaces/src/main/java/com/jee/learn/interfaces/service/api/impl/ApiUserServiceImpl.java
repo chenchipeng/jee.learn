@@ -17,8 +17,8 @@ import com.jee.learn.interfaces.dto.api.ApiUserDto;
 import com.jee.learn.interfaces.repository.api.ApiUserRepository;
 import com.jee.learn.interfaces.service.BaseServiceImpl;
 import com.jee.learn.interfaces.service.api.ApiUserService;
+import com.jee.learn.interfaces.support.web.base.RestException;
 import com.jee.learn.interfaces.util.WebConstants;
-import com.jee.learn.interfaces.util.exception.IntfcException;
 import com.jee.learn.interfaces.util.jpa.Criteria;
 import com.jee.learn.interfaces.util.jpa.Restrictions;
 
@@ -36,7 +36,7 @@ public class ApiUserServiceImpl extends BaseServiceImpl<ApiUser> implements ApiU
 
         ApiUser apiUser = apiUserRepository.findOneById(requestDto.getD().getId());
         if (apiUser == null) {
-            throw new IntfcException(WebConstants.RECORD_NOT_FOUND_CODE, WebConstants.RECORD_NOT_FOUND_MESSAGE);
+            throw new RestException(WebConstants.RECORD_NOT_FOUND_CODE, WebConstants.RECORD_NOT_FOUND_MESSAGE);
         }
 
         d.setId(apiUser.getId());
@@ -54,7 +54,7 @@ public class ApiUserServiceImpl extends BaseServiceImpl<ApiUser> implements ApiU
         String id = requestDto.getD().getId();
         ApiUser apiUser = apiUserRepository.findOneById(id);
         if (apiUser == null) {
-            throw new IntfcException(WebConstants.RECORD_NOT_FOUND_CODE, WebConstants.RECORD_NOT_FOUND_MESSAGE);
+            throw new RestException(WebConstants.RECORD_NOT_FOUND_CODE, WebConstants.RECORD_NOT_FOUND_MESSAGE);
         }
         apiUser.setRemarks(String.valueOf(System.currentTimeMillis()));
         apiUser = apiUserRepository.save(apiUser);

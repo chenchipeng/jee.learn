@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2013-Now http://jeesite.com All rights reserved.
  */
-package com.jee.learn.interfaces.util.codec;
+package com.jee.learn.interfaces.util.security;
 
 import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
@@ -33,7 +33,6 @@ public class IdGenerate {
     public static long randomLong() {
         return Math.abs(random.nextLong());
     }
-
 
     /**
      * 18位数字类型编号
