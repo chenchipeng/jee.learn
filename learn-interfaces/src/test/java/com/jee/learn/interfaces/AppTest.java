@@ -1,4 +1,4 @@
-package com.jee.learn.test.interfaces;
+package com.jee.learn.interfaces;
 
 import org.junit.Test;
 import org.slf4j.Logger;

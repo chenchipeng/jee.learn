@@ -1,4 +1,4 @@
-package com.jee.learn.test.interfaces.support.redis;
+package com.jee.learn.interfaces.support.cache.redis;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
