@@ -11,8 +11,9 @@ import javax.persistence.criteria.Root;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 
-/**
- * example <code> 
+/** 
+ * example
+ * <code> 
     //https://blog.csdn.net/stupid_qb/article/details/79911164
     public void getTObjectJson() {  
         Criteria<ApiUser> criteria = new Criteria<>();  
@@ -35,8 +36,6 @@ import org.springframework.data.jpa.domain.Specification;
 
 /**
  * 定义一个查询条件容器
- * 
- * @author https://github.com/344399160/JPAManager
  * 
  * @param <T>
  */

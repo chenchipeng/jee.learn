@@ -61,8 +61,7 @@ public class JpaTest {
     }
 
     /**
-     * 在这里竟然无法进行切入？因为有 {@link Transactional},所以dao层不受切换控制，因此该测试无法切换，在
-     * Controller中测试时可以切换
+     * 在这里竟然无法进行切入？因为有 {@link Transactional},所以dao层不受切换控制，因此该测试无法切换，在 Controller中测试时可以切换
      */
     @Test
     @Transactional(readOnly = false)
