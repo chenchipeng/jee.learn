@@ -20,9 +20,10 @@ import com.jee.learn.interfaces.support.web.dto.ResponseDto;
  * @author yjf
  * @version 1.0
  *
- *          2018年9月15日 下午5:37:09
+ *          2018年9月15日 下午5:37:09<br/>
+ *          2019年3月1日 上午11:15:11
  */
-public abstract class AbstractController<R, D extends DParam> extends BaseController {
+public abstract class AbstractInnerController<R, D extends DParam> extends AbstractBaseController {
 
     protected static final String WECHAT_ACCESS_TOKEN = "4d092ee240779ae8a34678593390422f"; // 请求token校验
 

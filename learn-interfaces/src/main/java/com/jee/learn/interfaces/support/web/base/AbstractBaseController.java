@@ -21,8 +21,16 @@ import com.jee.learn.interfaces.support.web.WebConstants;
 import com.jee.learn.interfaces.support.web.dto.HDto;
 import com.jee.learn.interfaces.util.validate.ValidateUtil;
 
+/**
+ * 公共基础controller
+ * 
+ * @author ccp
+ * @version 1.0<br/>
+ *          修改记录:<br/>
+ *          1.2019年3月1日 上午11:15:11 ccp 新建
+ */
 @RestController
-public class BaseController {
+public class AbstractBaseController {
 
     protected static final String REDIRECT = "redirect:";
     protected static final String HTML_SUFFIX = ".html";

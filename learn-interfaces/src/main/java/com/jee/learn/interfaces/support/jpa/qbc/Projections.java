@@ -1,8 +1,10 @@
-package com.jee.learn.interfaces.support.jpa;
+package com.jee.learn.interfaces.support.jpa.qbc;
 
-/*
+/**
  * 计算用类
- * */
+ * 
+ * @author https://github.com/344399160/JPAManager
+ */
 public class Projections {
 
     public static Projection Max(String col) {

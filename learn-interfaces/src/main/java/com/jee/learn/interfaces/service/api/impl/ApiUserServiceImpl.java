@@ -17,8 +17,8 @@ import com.jee.learn.interfaces.dto.api.ApiUserDto;
 import com.jee.learn.interfaces.repository.api.ApiUserRepository;
 import com.jee.learn.interfaces.service.BaseServiceImpl;
 import com.jee.learn.interfaces.service.api.ApiUserService;
-import com.jee.learn.interfaces.support.jpa.Criteria;
-import com.jee.learn.interfaces.support.jpa.Restrictions;
+import com.jee.learn.interfaces.support.jpa.qbc.Criteria;
+import com.jee.learn.interfaces.support.jpa.qbc.Restrictions;
 import com.jee.learn.interfaces.support.web.WebConstants;
 import com.jee.learn.interfaces.support.web.base.RestException;
 
@@ -70,6 +70,8 @@ public class ApiUserServiceImpl extends BaseServiceImpl<ApiUser> implements ApiU
 
         Criteria<ApiUser> criteria = new Criteria<>();
         criteria.add(Restrictions.eq("loginName", requestDto.getD().getLoginName()));
+        
+        
         List<ApiUser> list = apiUserRepository.findAll(criteria);
 
         List<ApiUserDto> dtos = new ArrayList<>(list.size());

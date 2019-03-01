@@ -1,7 +1,9 @@
-package com.jee.learn.interfaces.support.jpa;
+package com.jee.learn.interfaces.support.jpa.qbc;
 
 /**
  * 函数条件构造器
+ * 
+ * @author https://github.com/344399160/JPAManager
  */
 public class Projection {
     // 函数作用字段

@@ -23,9 +23,10 @@ import com.jee.learn.interfaces.util.security.MD5Util;
  * @author yjf
  * @version 1.0
  *
- *          2018年11月19日 上午10:51:31
+ *          2018年11月19日 上午10:51:31<br/>
+ *          2019年3月1日 上午11:15:11
  */
-public abstract class AbstractFacadeController<R, D extends DParam> extends BaseController {
+public abstract class AbstractFacadeController<R, D extends DParam> extends AbstractBaseController {
 
     private static final char AMP = '&';
     private static final char EQ = '=';

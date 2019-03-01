@@ -1,20 +1,22 @@
-package com.jee.learn.interfaces.support.jpa;
+package com.jee.learn.interfaces.support.jpa.qbc;
 
 import java.util.Collection;
 
-import com.jee.learn.interfaces.support.jpa.Criterion.MatchMode;
-import com.jee.learn.interfaces.support.jpa.Criterion.Operator;
+import com.jee.learn.interfaces.support.jpa.qbc.Criterion.MatchMode;
+import com.jee.learn.interfaces.support.jpa.qbc.Criterion.Operator;
 
 /**
  * 条件构造器 用于创建条件表达式
+ * 
+ * @author https://github.com/344399160/JPAManager
  */
+
 public class Restrictions {
 
     /**
      * 不为空
      * 
-     * @param fieldName
-     *            : 匹配字段
+     * @param fieldName : 匹配字段
      * @return
      */
     public static SimpleExpression isNotEmpty(String fieldName) {
@@ -24,8 +26,7 @@ public class Restrictions {
     /**
      * 为空
      * 
-     * @param fieldName
-     *            : 匹配字段
+     * @param fieldName : 匹配字段
      * @return
      */
     public static SimpleExpression isEmpty(String fieldName) {
@@ -35,8 +36,7 @@ public class Restrictions {
     /**
      * 为空
      * 
-     * @param fieldName
-     *            : 匹配字段
+     * @param fieldName : 匹配字段
      * @return
      */
     public static SimpleExpression isNull(String fieldName) {
@@ -46,8 +46,7 @@ public class Restrictions {
     /**
      * 不为空
      * 
-     * @param fieldName
-     *            : 匹配字段
+     * @param fieldName : 匹配字段
      * @return
      */
     public static SimpleExpression isNotNull(String fieldName) {
@@ -57,10 +56,8 @@ public class Restrictions {
     /**
      * 等于
      * 
-     * @param fieldName
-     *            : 匹配字段
-     * @param value
-     *            : 匹配值
+     * @param fieldName : 匹配字段
+     * @param value : 匹配值
      * @return
      */
     public static SimpleExpression eq(String fieldName, Object value) {
@@ -72,10 +69,8 @@ public class Restrictions {
     /**
      * 等于 （函数条件查询）
      * 
-     * @param projection
-     *            : Projection查询条件(Projections.MAX\SUM\AVG...)
-     * @param value
-     *            : 匹配值
+     * @param projection : Projection查询条件(Projections.MAX\SUM\AVG...)
+     * @param value : 匹配值
      * @return
      */
     public static ProjectionExpression eq(Projection projection, Object value) {
@@ -87,10 +82,8 @@ public class Restrictions {
     /**
      * 不等于
      * 
-     * @param fieldName
-     *            : 匹配字段
-     * @param value
-     *            : 匹配值
+     * @param fieldName : 匹配字段
+     * @param value : 匹配值
      * @return
      */
     public static SimpleExpression ne(String fieldName, Object value) {
@@ -102,10 +95,8 @@ public class Restrictions {
     /**
      * 不等于（函数条件查询）
      * 
-     * @param projection
-     *            : Projection查询条件(Projections.MAX\SUM\AVG...)
-     * @param value
-     *            : 匹配值
+     * @param projection : Projection查询条件(Projections.MAX\SUM\AVG...)
+     * @param value : 匹配值
      * @return
      */
     public static ProjectionExpression ne(Projection projection, Object value) {
@@ -117,10 +108,8 @@ public class Restrictions {
     /**
      * 模糊匹配
      * 
-     * @param fieldName
-     *            : 匹配字段
-     * @param value
-     *            : 匹配值
+     * @param fieldName : 匹配字段
+     * @param value : 匹配值
      * @return
      */
     public static SimpleExpression like(String fieldName, String value) {
@@ -132,10 +121,8 @@ public class Restrictions {
     /**
      * 模糊匹配 （函数条件查询）
      * 
-     * @param projection
-     *            : Projection查询条件(Projections.MAX\SUM\AVG...)
-     * @param value
-     *            : 匹配值
+     * @param projection : Projection查询条件(Projections.MAX\SUM\AVG...)
+     * @param value : 匹配值
      * @return
      */
     public static ProjectionExpression like(Projection projection, String value) {
@@ -147,12 +134,9 @@ public class Restrictions {
     /**
      * 自定义模式模糊匹配
      * 
-     * @param fieldName
-     *            : 匹配字段
-     * @param value
-     *            : 匹配值
-     * @param matchMode
-     *            : 匹配方式(MatchMode.START\END\ANYWHERE)
+     * @param fieldName : 匹配字段
+     * @param value : 匹配值
+     * @param matchMode : 匹配方式(MatchMode.START\END\ANYWHERE)
      * @return
      */
     public static SimpleExpression like(String fieldName, String value, MatchMode matchMode) {
@@ -164,12 +148,9 @@ public class Restrictions {
     /**
      * 自定义模式模糊匹配（函数条件查询）
      * 
-     * @param projection
-     *            : Projection查询条件(Projections.MAX\SUM\AVG...)
-     * @param value
-     *            : 匹配值
-     * @param matchMode
-     *            : 匹配方式(MatchMode.START\END\ANYWHERE)
+     * @param projection : Projection查询条件(Projections.MAX\SUM\AVG...)
+     * @param value : 匹配值
+     * @param matchMode : 匹配方式(MatchMode.START\END\ANYWHERE)
      * @return
      */
     public static ProjectionExpression like(Projection projection, String value, MatchMode matchMode) {
@@ -181,10 +162,8 @@ public class Restrictions {
     /**
      * 大于
      * 
-     * @param fieldName
-     *            : 匹配字段
-     * @param value
-     *            : 匹配值
+     * @param fieldName : 匹配字段
+     * @param value : 匹配值
      * @return
      */
     public static SimpleExpression gt(String fieldName, Object value) {
@@ -196,10 +175,8 @@ public class Restrictions {
     /**
      * 大于（函数条件查询）
      * 
-     * @param projection
-     *            : Projection查询条件(Projections.MAX\SUM\AVG...)
-     * @param value
-     *            : 匹配值
+     * @param projection : Projection查询条件(Projections.MAX\SUM\AVG...)
+     * @param value : 匹配值
      * @return
      */
     public static ProjectionExpression gt(Projection projection, Object value) {
@@ -211,10 +188,8 @@ public class Restrictions {
     /**
      * 小于
      * 
-     * @param fieldName
-     *            : 匹配字段
-     * @param value
-     *            : 匹配值
+     * @param fieldName : 匹配字段
+     * @param value : 匹配值
      * @return
      */
     public static SimpleExpression lt(String fieldName, Object value) {
@@ -226,10 +201,8 @@ public class Restrictions {
     /**
      * 小于（函数条件查询）
      * 
-     * @param projection
-     *            : Projection查询条件(Projections.MAX\SUM\AVG...)
-     * @param value
-     *            : 匹配值
+     * @param projection : Projection查询条件(Projections.MAX\SUM\AVG...)
+     * @param value : 匹配值
      * @return
      */
     public static ProjectionExpression lt(Projection projection, Object value) {
@@ -241,10 +214,8 @@ public class Restrictions {
     /**
      * 小于等于
      * 
-     * @param fieldName
-     *            : 匹配字段
-     * @param value
-     *            : 匹配值
+     * @param fieldName : 匹配字段
+     * @param value : 匹配值
      * @return
      */
     public static SimpleExpression lte(String fieldName, Object value) {
@@ -256,10 +227,8 @@ public class Restrictions {
     /**
      * 小于等于（函数条件查询）
      * 
-     * @param projection
-     *            : Projection查询条件(Projections.MAX\SUM\AVG...)
-     * @param value
-     *            : 匹配值
+     * @param projection : Projection查询条件(Projections.MAX\SUM\AVG...)
+     * @param value : 匹配值
      * @return
      */
     public static ProjectionExpression lte(Projection projection, Object value) {
@@ -271,10 +240,8 @@ public class Restrictions {
     /**
      * 大于等于
      * 
-     * @param fieldName
-     *            : 匹配字段
-     * @param value
-     *            : 匹配值
+     * @param fieldName : 匹配字段
+     * @param value : 匹配值
      * @return
      */
     public static SimpleExpression gte(String fieldName, Object value) {
@@ -286,10 +253,8 @@ public class Restrictions {
     /**
      * 大于等于
      * 
-     * @param projection
-     *            : Projection查询条件(Projections.MAX\SUM\AVG...)
-     * @param value
-     *            : 匹配值
+     * @param projection : Projection查询条件(Projections.MAX\SUM\AVG...)
+     * @param value : 匹配值
      * @return
      */
     public static ProjectionExpression gte(Projection projection, Object value) {
@@ -311,8 +276,7 @@ public class Restrictions {
     /**
      * 区间
      * 
-     * @param column
-     *            : 匹配字段
+     * @param column : 匹配字段
      * @param1 val1 左区间
      * @param2 val2 右区间
      * @return
@@ -324,10 +288,8 @@ public class Restrictions {
     /**
      * 包含于
      * 
-     * @param fieldName
-     *            : 匹配字段
-     * @param value
-     *            : 匹配值
+     * @param fieldName : 匹配字段
+     * @param value : 匹配值
      * @return
      */
     @SuppressWarnings("rawtypes")
@@ -344,10 +306,8 @@ public class Restrictions {
     /**
      * 包含于
      * 
-     * @param fieldName
-     *            : 匹配字段
-     * @param value
-     *            : 匹配值
+     * @param fieldName : 匹配字段
+     * @param value : 匹配值
      * @return
      */
     @SuppressWarnings("rawtypes")

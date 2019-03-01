@@ -1,4 +1,4 @@
-package com.jee.learn.interfaces.support.jpa;
+package com.jee.learn.interfaces.support.jpa.qbc;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -11,6 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * 简单条件表达式
+ * 
+ * @author https://github.com/344399160/JPAManager
  */
 public class SimpleExpression implements Criterion {
     private String fieldName; // 属性名

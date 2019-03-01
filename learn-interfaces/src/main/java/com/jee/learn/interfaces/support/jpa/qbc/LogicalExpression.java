@@ -1,4 +1,4 @@
-package com.jee.learn.interfaces.support.jpa;
+package com.jee.learn.interfaces.support.jpa.qbc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 /**
  * 逻辑条件表达式 用于复杂条件时使用，如但属性多对应值的OR查询等
  * 
+ * @author https://github.com/344399160/JPAManager
  */
 public class LogicalExpression implements Criterion {
     private Criterion[] criterion; // 逻辑表达式中包含的表达式
