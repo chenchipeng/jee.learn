@@ -17,7 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.jee.learn.interfaces.support.cache.redis.RedisService;
-import com.jee.learn.interfaces.support.web.WebConstant;
+import com.jee.learn.interfaces.support.web.WebConstants;
+import com.jee.learn.interfaces.support.web.dto.HDto;
 import com.jee.learn.interfaces.util.validate.ValidateUtil;
 
 @RestController
@@ -45,8 +46,8 @@ public class BaseController {
     public HDto httpMessageNotReadableExceptionHandler(HttpMessageNotReadableException ex) {
         logger.warn("", ex);
         HDto ri = new HDto();
-        ri.setC(WebConstant.BUSINESS_ERROR_CODE);
-        ri.setE(WebConstant.BUSINESS_ERROR_MESSAGE);
+        ri.setC(WebConstants.BUSINESS_ERROR_CODE);
+        ri.setE(WebConstants.BUSINESS_ERROR_MESSAGE);
         return ri;
     }
 
@@ -61,8 +62,8 @@ public class BaseController {
     public HDto mismatchedInputExceptionHandler(MismatchedInputException ex) {
         logger.warn("", ex);
         HDto ri = new HDto();
-        ri.setC(WebConstant.BUSINESS_ERROR_CODE);
-        ri.setE(WebConstant.BUSINESS_ERROR_MESSAGE);
+        ri.setC(WebConstants.BUSINESS_ERROR_CODE);
+        ri.setE(WebConstants.BUSINESS_ERROR_MESSAGE);
         return ri;
     }
 
@@ -77,8 +78,8 @@ public class BaseController {
     public HDto clientAbortExceptionHandler(ClientAbortException ex) {
         logger.warn("", ex);
         HDto ri = new HDto();
-        ri.setC(WebConstant.BUSINESS_ERROR_CODE);
-        ri.setE(WebConstant.BUSINESS_ERROR_MESSAGE);
+        ri.setC(WebConstants.BUSINESS_ERROR_CODE);
+        ri.setE(WebConstants.BUSINESS_ERROR_MESSAGE);
         return ri;
     }
 
@@ -93,8 +94,8 @@ public class BaseController {
     public HDto exceptionHandler(Exception ex) {
         logger.warn("", ex);
         HDto ri = new HDto();
-        ri.setC(WebConstant.BUSINESS_ERROR_CODE);
-        ri.setE(WebConstant.BUSINESS_ERROR_MESSAGE);
+        ri.setC(WebConstants.BUSINESS_ERROR_CODE);
+        ri.setE(WebConstants.BUSINESS_ERROR_MESSAGE);
         return ri;
     }
 
@@ -107,8 +108,8 @@ public class BaseController {
     @ExceptionHandler({ CompletionException.class })
     public HDto completionExceptionHandler(CompletionException ex) {
         HDto ri = new HDto();
-        ri.setC(WebConstant.BUSINESS_ERROR_CODE);
-        ri.setE(WebConstant.BUSINESS_ERROR_MESSAGE);
+        ri.setC(WebConstants.BUSINESS_ERROR_CODE);
+        ri.setE(WebConstants.BUSINESS_ERROR_MESSAGE);
 
         Throwable throwable = ex.getCause();
         if (throwable instanceof RestException) {
@@ -116,8 +117,8 @@ public class BaseController {
             ri.setC(aex.getCode());
             ri.setE(aex.getMsg());
         } else if (throwable instanceof IOException) {
-            ri.setC(WebConstant.BUSINESS_ERROR_CODE);
-            ri.setE(WebConstant.BUSINESS_ERROR_MESSAGE);
+            ri.setC(WebConstants.BUSINESS_ERROR_CODE);
+            ri.setE(WebConstants.BUSINESS_ERROR_MESSAGE);
         }
 
         logger.warn("{}", ex.getMessage(), ex);

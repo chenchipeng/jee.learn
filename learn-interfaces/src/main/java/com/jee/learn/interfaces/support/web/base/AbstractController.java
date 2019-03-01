@@ -8,7 +8,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 
 import com.jee.learn.interfaces.support.cache.CacheConstants;
-import com.jee.learn.interfaces.support.web.WebConstant;
+import com.jee.learn.interfaces.support.web.WebConstants;
+import com.jee.learn.interfaces.support.web.dto.DParam;
+import com.jee.learn.interfaces.support.web.dto.HParam;
+import com.jee.learn.interfaces.support.web.dto.RequestParams;
+import com.jee.learn.interfaces.support.web.dto.ResponseDto;
 
 /**
  * 接口处理模板方法类
@@ -50,13 +54,13 @@ public abstract class AbstractController<R, D extends DParam> extends BaseContro
 
         // 参数校验
         ResponseDto<R> dto = checkRequestParams(params);
-        if (!WebConstant.SUCCESS_CODE.equals(dto.getC())) {
+        if (!WebConstants.SUCCESS_CODE.equals(dto.getC())) {
             return CompletableFuture.completedFuture(dto);
         }
 
         // 校验用户
         dto = checkToken(params);
-        if (!WebConstant.SUCCESS_CODE.equals(dto.getC())) {
+        if (!WebConstants.SUCCESS_CODE.equals(dto.getC())) {
             return CompletableFuture.completedFuture(dto);
         }
 
@@ -92,9 +96,9 @@ public abstract class AbstractController<R, D extends DParam> extends BaseContro
      */
     protected ResponseDto<R> checkRequestParams(RequestParams<D> params) {
         if (params.getH() == null || params.getD() == null || StringUtils.isBlank(params.getH().getT())) {
-            return new ResponseDto<>(WebConstant.PARAMETER_ERROR_CODE, WebConstant.PARAMETER_ERROR_MESSAGE);
+            return new ResponseDto<>(WebConstants.PARAMETER_ERROR_CODE, WebConstants.PARAMETER_ERROR_MESSAGE);
         }
-        return new ResponseDto<>(WebConstant.SUCCESS_CODE);
+        return new ResponseDto<>(WebConstants.SUCCESS_CODE);
     }
 
     /**
@@ -105,13 +109,13 @@ public abstract class AbstractController<R, D extends DParam> extends BaseContro
      */
     protected ResponseDto<R> checkToken(RequestParams<D> params) {
         if (StringUtils.isBlank(params.getH().getT())) {
-            return new ResponseDto<>(WebConstant.PARAMETER_ERROR_CODE, WebConstant.PARAMETER_ERROR_MESSAGE);
+            return new ResponseDto<>(WebConstants.PARAMETER_ERROR_CODE, WebConstants.PARAMETER_ERROR_MESSAGE);
         }
 
         if (getCurrentUser(params) == null) {
-            return new ResponseDto<>(WebConstant.RELOGIN_CODE, WebConstant.RELOGIN_MESSAGE);
+            return new ResponseDto<>(WebConstants.RELOGIN_CODE, WebConstants.RELOGIN_MESSAGE);
         }
-        return new ResponseDto<>(WebConstant.SUCCESS_CODE);
+        return new ResponseDto<>(WebConstants.SUCCESS_CODE);
     }
 
     /**

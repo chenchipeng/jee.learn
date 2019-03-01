@@ -1,8 +1,8 @@
 package com.jee.learn.interfaces.support.web;
 
-public class WebConstant {
+public class WebConstants {
 
-    private WebConstant() {
+    private WebConstants() {
         throw new IllegalStateException("Utility class");
     }
 

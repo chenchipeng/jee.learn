@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jee.learn.interfaces.dto.ResponseDto;
+import com.jee.learn.interfaces.support.web.WebConstants;
 import com.jee.learn.interfaces.support.web.base.RestException;
-import com.jee.learn.interfaces.util.WebConstants;
 
 @RestController
 public class BaseController {

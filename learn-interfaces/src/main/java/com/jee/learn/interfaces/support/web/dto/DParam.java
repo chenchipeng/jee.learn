@@ -1,4 +1,4 @@
-package com.jee.learn.interfaces.support.web.base;
+package com.jee.learn.interfaces.support.web.dto;
 
 import javax.validation.constraints.Digits;
 

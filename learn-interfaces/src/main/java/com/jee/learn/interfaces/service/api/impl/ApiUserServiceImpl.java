@@ -17,10 +17,10 @@ import com.jee.learn.interfaces.dto.api.ApiUserDto;
 import com.jee.learn.interfaces.repository.api.ApiUserRepository;
 import com.jee.learn.interfaces.service.BaseServiceImpl;
 import com.jee.learn.interfaces.service.api.ApiUserService;
+import com.jee.learn.interfaces.support.jpa.Criteria;
+import com.jee.learn.interfaces.support.jpa.Restrictions;
+import com.jee.learn.interfaces.support.web.WebConstants;
 import com.jee.learn.interfaces.support.web.base.RestException;
-import com.jee.learn.interfaces.util.WebConstants;
-import com.jee.learn.interfaces.util.jpa.Criteria;
-import com.jee.learn.interfaces.util.jpa.Restrictions;
 
 @Service
 @Transactional(readOnly = true)

@@ -10,7 +10,10 @@ import java.util.concurrent.CompletableFuture;
 import org.apache.commons.lang3.StringUtils;
 
 import com.jee.learn.interfaces.support.cache.CacheConstants;
-import com.jee.learn.interfaces.support.web.WebConstant;
+import com.jee.learn.interfaces.support.web.WebConstants;
+import com.jee.learn.interfaces.support.web.dto.DParam;
+import com.jee.learn.interfaces.support.web.dto.RequestParams;
+import com.jee.learn.interfaces.support.web.dto.ResponseDto;
 import com.jee.learn.interfaces.util.mapper.BeanMapper;
 import com.jee.learn.interfaces.util.security.MD5Util;
 
@@ -53,13 +56,13 @@ public abstract class AbstractFacadeController<R, D extends DParam> extends Base
 
         // 参数校验
         ResponseDto<R> response = checkRequestParams(params);
-        if (!WebConstant.SUCCESS_CODE.equals(response.getC())) {
+        if (!WebConstants.SUCCESS_CODE.equals(response.getC())) {
             return CompletableFuture.completedFuture(response);
         }
 
         // 校验签名
         response = checkSignature(params);
-        if (!WebConstant.SUCCESS_CODE.equals(response.getC())) {
+        if (!WebConstants.SUCCESS_CODE.equals(response.getC())) {
             return CompletableFuture.completedFuture(response);
         }
 
@@ -89,9 +92,9 @@ public abstract class AbstractFacadeController<R, D extends DParam> extends Base
      */
     protected ResponseDto<R> checkRequestParams(RequestParams<D> params) {
         if (params.getH() == null || params.getD() == null || StringUtils.isBlank(params.getH().getT())) {
-            return new ResponseDto<>(WebConstant.PARAMETER_ERROR_CODE, WebConstant.PARAMETER_ERROR_MESSAGE);
+            return new ResponseDto<>(WebConstants.PARAMETER_ERROR_CODE, WebConstants.PARAMETER_ERROR_MESSAGE);
         }
-        return new ResponseDto<>(WebConstant.SUCCESS_CODE);
+        return new ResponseDto<>(WebConstants.SUCCESS_CODE);
     }
 
     /**
@@ -103,20 +106,20 @@ public abstract class AbstractFacadeController<R, D extends DParam> extends Base
     protected ResponseDto<R> checkSignature(RequestParams<D> params) {
         // 检验appkey合法性
         if (!params.getH().getK().equals(APPKEY)) {
-            return new ResponseDto<>(WebConstant.APP_IDENTITY_ERROR_CODE, WebConstant.APP_IDENTITY_ERROR_MESSAGE);
+            return new ResponseDto<>(WebConstants.APP_IDENTITY_ERROR_CODE, WebConstants.APP_IDENTITY_ERROR_MESSAGE);
         }
 
         // 检验时戳
         if (System.currentTimeMillis() - Long.valueOf(params.getH().getI()) > INTERVEL_TIME) {
-            return new ResponseDto<>(WebConstant.APP_SIGN_TIMEOUT_CODE, WebConstant.APP_SIGN_TIMEOUT_MESSAGE);
+            return new ResponseDto<>(WebConstants.APP_SIGN_TIMEOUT_CODE, WebConstants.APP_SIGN_TIMEOUT_MESSAGE);
         }
 
         // 检验签名
         if (!params.getH().getS().equals(generateSignature(params))) {
-            return new ResponseDto<>(WebConstant.APP_SIGN_INVALID_CODE, WebConstant.APP_SIGN_INVALID_MESSAGE);
+            return new ResponseDto<>(WebConstants.APP_SIGN_INVALID_CODE, WebConstants.APP_SIGN_INVALID_MESSAGE);
         }
 
-        return new ResponseDto<>(WebConstant.SUCCESS_CODE);
+        return new ResponseDto<>(WebConstants.SUCCESS_CODE);
     }
 
     /**
