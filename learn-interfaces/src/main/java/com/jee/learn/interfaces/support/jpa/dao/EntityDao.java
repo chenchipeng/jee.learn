@@ -24,6 +24,7 @@ import javax.persistence.EntityManager;
  * @version 1.0<br/>
  *          修改记录: 下面填写修改的内容以及修改的日期<br/>
  *          1.2013-9-6 下午5:23:04 yjf new
+ *          2.2019年3月1日 下午5:40:07 ccp 增加批量更新
  */
 public interface EntityDao {
 
@@ -145,7 +146,14 @@ public interface EntityDao {
      * 
      * @param entity
      */
-    <T> void update(T entity);
+    <T> T update(T entity);
+    
+    /**
+     * 更新迭代器中所有实例对象记录
+     * 
+     * @param entities
+     */
+    <T> Iterable<T> update(Iterable<T> entities);
 
     /**
      * 根据类型与主键值，删除记录
@@ -236,4 +244,5 @@ public interface EntityDao {
      * 强制缓存与数据库同步
      */
     void flush();
+    
 }

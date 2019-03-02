@@ -4,9 +4,9 @@ import com.jee.learn.interfaces.domain.ApiUser;
 import com.jee.learn.interfaces.dto.RequestDto;
 import com.jee.learn.interfaces.dto.ResponseDto;
 import com.jee.learn.interfaces.dto.api.ApiUserDto;
-import com.jee.learn.interfaces.service.BaseService;
+import com.jee.learn.interfaces.support.jpa.dao.service.EntityService;
 
-public interface ApiUserService extends BaseService<ApiUser> {
+public interface ApiUserService extends EntityService<ApiUser,String> {
 
     ResponseDto<ApiUserDto> get(RequestDto<ApiUserDto> requestDto);
 
@@ -15,7 +15,5 @@ public interface ApiUserService extends BaseService<ApiUser> {
     ResponseDto<ApiUserDto> findList(RequestDto<ApiUserDto> requestDto);
 
     ApiUser get(String id);
-
-    ApiUser saveOrUpdate(ApiUser apiUser);
 
 }

@@ -11,11 +11,11 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.jee.learn.interfaces.LearnInterfaceApplication;
 import com.jee.learn.interfaces.domain.ApiUser;
-import com.jee.learn.interfaces.repository.EntityDao;
 import com.jee.learn.interfaces.repository.api.ApiUserRepository;
 import com.jee.learn.interfaces.service.api.ApiUserService;
+import com.jee.learn.interfaces.support.jpa.dao.EntityDao;
+import com.jee.learn.interfaces.support.jpa.dao.Page;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = LearnInterfaceApplication.class)
@@ -89,6 +89,25 @@ public class JpaTest {
         u.setRemarks(String.valueOf(System.currentTimeMillis()));
         apiUserService.saveOrUpdate(u);
         logger.debug("service 拦截 {} - {}", u.getLoginName(), u.getRemarks());
+    }
+
+    @Test
+    public void findPageTest() {
+        ApiUser u = new ApiUser();
+        u.setIsEnable("1");
+
+        Page<ApiUser> page = apiUserService.findPage(u, 2, 3, "id");
+        System.out.println(page.toString());
+
+//        page = new Page<>();
+//        page.setPageNum(3);
+//        page.setPageSize(3);
+//        page = apiUserService.findPage(u, page, "id");
+//        logger.info("{}", page.toString());
+
+        for (ApiUser item : page.getContent()) {
+            System.out.println(item.getId());
+        }
     }
 
 }

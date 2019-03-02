@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -38,6 +39,7 @@ import com.jee.learn.interfaces.util.reflect.ReflectUtils;
  * @version 1.0<br/>
  *          修改记录: 下面填写修改的内容以及修改的日期<br/>
  *          1.2013-9-6 下午5:27:48 yjf new
+ *          2.2019年3月1日 下午5:40:07 ccp 增加批量更新
  */
 
 @Repository
@@ -85,8 +87,13 @@ public class EntityDaoImpl implements EntityDao {
     @Override
     public <T> T findOne(Class<T> entityClass, Condition condition) {
         List<T> result = find(entityClass, condition);
-
-        return result != null && !result.isEmpty() ? result.get(0) : null;
+        if (result != null && !result.isEmpty()) {
+            if (result.size() == 1) {
+                return result.get(0);
+            }
+            throw new NonUniqueResultException("query did not return a unique result: " + result.size());
+        }
+        return null;
     }
 
     @Override
@@ -117,8 +124,16 @@ public class EntityDaoImpl implements EntityDao {
     }
 
     @Override
-    public <T> void update(T entity) {
-        entity = entityManager.merge(entity);
+    public <T> T update(T entity) {
+        return entityManager.merge(entity);
+    }
+    
+    @Override
+    public <T> Iterable<T> update(Iterable<T> entities) {
+        for (T entity : entities) {
+            entity = update(entity);
+        }
+        return entities;
     }
 
     @Override

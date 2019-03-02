@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 结合Bootstrap Table简单封装分页对象
+ * 简单封装分页对象
  * 
  * @author ccp
  * @version 1.0<br/>
@@ -16,10 +16,11 @@ public class Page<T> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     protected int pageSize = 10;
-    protected int pageNum = 0;
-    protected int total = 0;
+    protected int pageNum = 1;
+    protected int totalPages = 1;
+    protected long totalElements = 0;
+    protected List<T> content;
     protected int offset = 0;
-    protected List<T> rows;
 
     public Page() {
         super();
@@ -46,12 +47,28 @@ public class Page<T> implements Serializable {
         this.pageNum = pageNum;
     }
 
-    public int getTotal() {
-        return total;
+    public int getTotalPages() {
+        return totalPages;
     }
 
-    public void setTotal(int total) {
-        this.total = total;
+    public void setTotalPages(int totalPages) {
+        this.totalPages = totalPages;
+    }
+
+    public long getTotalElements() {
+        return totalElements;
+    }
+
+    public void setTotalElements(long totalElements) {
+        this.totalElements = totalElements;
+    }
+
+    public List<T> getContent() {
+        return content;
+    }
+
+    public void setContent(List<T> content) {
+        this.content = content;
     }
 
     public int getOffset() {
@@ -62,12 +79,13 @@ public class Page<T> implements Serializable {
         this.offset = offset;
     }
 
-    public List<T> getRows() {
-        return rows;
-    }
-
-    public void setRows(List<T> rows) {
-        this.rows = rows;
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Page [pageSize=").append(pageSize).append(", pageNum=").append(pageNum).append(", totalPages=")
+                .append(totalPages).append(", totalElements=").append(totalElements).append(", content=")
+                .append(content).append(", offset=").append(offset).append("]");
+        return builder.toString();
     }
 
 }

@@ -15,8 +15,11 @@ import com.jee.learn.interfaces.dto.RequestDto;
 import com.jee.learn.interfaces.dto.ResponseDto;
 import com.jee.learn.interfaces.dto.api.ApiUserDto;
 import com.jee.learn.interfaces.repository.api.ApiUserRepository;
-import com.jee.learn.interfaces.service.BaseServiceImpl;
 import com.jee.learn.interfaces.service.api.ApiUserService;
+import com.jee.learn.interfaces.support.jpa.dao.Condition;
+import com.jee.learn.interfaces.support.jpa.dao.Condition.Operator;
+import com.jee.learn.interfaces.support.jpa.dao.Sort;
+import com.jee.learn.interfaces.support.jpa.dao.service.EntityServiceImpl;
 import com.jee.learn.interfaces.support.jpa.qbc.Criteria;
 import com.jee.learn.interfaces.support.jpa.qbc.Restrictions;
 import com.jee.learn.interfaces.support.web.WebConstants;
@@ -24,10 +27,26 @@ import com.jee.learn.interfaces.support.web.base.RestException;
 
 @Service
 @Transactional(readOnly = true)
-public class ApiUserServiceImpl extends BaseServiceImpl<ApiUser> implements ApiUserService {
+public class ApiUserServiceImpl extends EntityServiceImpl<ApiUser, String> implements ApiUserService {
 
     @Autowired
     private ApiUserRepository apiUserRepository;
+    
+    
+
+    @Override
+    protected Condition parseQueryParams(ApiUser entity) {
+        Condition condition =  super.parseQueryParams(entity);
+        if(StringUtils.isNotBlank(entity.getIsEnable())) {
+            condition.add("isEnable", Operator.EQ, entity.getIsEnable());
+        }
+        return condition;
+    }
+
+    @Override
+    protected Sort parseSort(String orderBy) {
+        return super.parseSort(orderBy);
+    }
 
     @Override
     public ResponseDto<ApiUserDto> get(RequestDto<ApiUserDto> requestDto) {
@@ -70,8 +89,7 @@ public class ApiUserServiceImpl extends BaseServiceImpl<ApiUser> implements ApiU
 
         Criteria<ApiUser> criteria = new Criteria<>();
         criteria.add(Restrictions.eq("loginName", requestDto.getD().getLoginName()));
-        
-        
+
         List<ApiUser> list = apiUserRepository.findAll(criteria);
 
         List<ApiUserDto> dtos = new ArrayList<>(list.size());
@@ -96,15 +114,6 @@ public class ApiUserServiceImpl extends BaseServiceImpl<ApiUser> implements ApiU
         }
         ApiUser u = findOne(id);
         return u;
-    }
-
-    @Transactional(readOnly = false)
-    @Override
-    public ApiUser saveOrUpdate(ApiUser apiUser) {
-        if (apiUser != null) {
-            apiUser = apiUserRepository.save(apiUser);
-        }
-        return apiUser;
     }
 
 }

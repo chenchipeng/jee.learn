@@ -10,7 +10,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.jee.learn.interfaces.LearnInterfaceApplication;
 import com.jee.learn.interfaces.domain.ApiUser;
-import com.jee.learn.interfaces.service.api.ApiUserService;
+import com.jee.learn.interfaces.support.jpa.dao.Condition.Operator;
 import com.jee.learn.interfaces.util.mapper.JsonMapper;
 
 /**
@@ -29,16 +29,25 @@ public class EntityDaoTest {
 
     @Autowired
     private EntityDao entityDao;
-    
-    @Autowired
-    private ApiUserService apiUserService;
 
     @Test
     public void findOneTest() {
-//        ApiUser u = entityDao.findOne(ApiUser.class, "id", "1");
-        
-        ApiUser u = apiUserService.findOne("1");
-        logger.info("{}", JsonMapper.toJson(u));
+        ApiUser u = null;
+        try {
+
+            Condition condition = new Condition("id", Operator.EQ, "1");
+            u = entityDao.findOne(ApiUser.class, condition);
+            logger.info("{}", JsonMapper.toJson(u));
+
+            u = entityDao.findOne(ApiUser.class, "1");
+            logger.info("{}", JsonMapper.toJson(u));
+
+            u = entityDao.findOne(ApiUser.class, "id", "1");
+            logger.info("{}", JsonMapper.toJson(u));
+
+        } catch (Exception e) {
+            logger.info("", e);
+        }
     }
 
 }

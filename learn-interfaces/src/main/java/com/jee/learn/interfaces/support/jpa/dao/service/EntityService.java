@@ -7,7 +7,8 @@ import com.jee.learn.interfaces.support.jpa.dao.EntityDao;
 import com.jee.learn.interfaces.support.jpa.dao.Page;
 
 /**
- * {@link EntityDao} 通用sevice接口
+ * {@link EntityDao} 通用sevice接口<br/>
+ * 无法直接使用，必须通过具体的子类继承才行
  * 
  * @author ccp
  * @version 1.0<br/>
@@ -131,14 +132,12 @@ public interface EntityService<T, ID extends Serializable> {
      */
     void saveOrUpdate(T entity);
 
-
     /**
      * 批量新增或更新, 默认主键自增
      * 
      * @param entities
      */
     void saveOrUpdate(Iterable<T> entities);
-
 
     /**
      * 逻辑删除

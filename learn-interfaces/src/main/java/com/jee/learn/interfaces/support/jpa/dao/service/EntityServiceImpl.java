@@ -75,12 +75,13 @@ public abstract class EntityServiceImpl<T, ID extends Serializable> implements E
 
     @Override
     public Page<T> findPage(T entity, Page<T> page) {
-        return findPage(entity, page.getPageSize() * page.getPageNum(), page.getPageSize(), StringUtils.EMPTY);
+        return findPage(entity, page, StringUtils.EMPTY);
     }
 
     @Override
     public Page<T> findPage(T entity, Page<T> page, String orderBy) {
-        return findPage(entity, page.getPageSize() * page.getPageNum(), page.getPageSize(), orderBy);
+        page.setPageNum(page.getPageNum() < 1 ? 1 : page.getPageNum());
+        return findPage(entity, page.getPageSize() * (page.getPageNum() - 1), page.getPageSize(), orderBy);
     }
 
     @Override
@@ -91,16 +92,18 @@ public abstract class EntityServiceImpl<T, ID extends Serializable> implements E
     @Override
     public Page<T> findPage(T entity, int offset, int limit, String orderBy) {
 
-        Long count = entityDao.count(getEntityType());
-        List<T> list = entityDao.find(getEntityType(), parseQueryParams(entity), parseSort(orderBy), offset, limit);
+        Condition condition = parseQueryParams(entity);
+        Long count = entityDao.count(getEntityType(), condition);
+        List<T> list = entityDao.find(getEntityType(), condition, parseSort(orderBy), offset, limit);
 
         Page<T> page = new Page<>();
-        page.setRows(list);
-        page.setTotal(count.intValue());
+        page.setContent(list);
+        page.setTotalElements(count);
         page.setPageSize(limit);
         page.setOffset(offset);
         if (limit != 0) {
-            page.setPageNum(offset / limit + 1);
+            page.setPageNum((offset / limit) + (offset % limit == 0 ? 0 : 1) + 1);
+            page.setTotalPages((int) (count / limit) + (count % limit == 0 ? 0 : 1));
         }
         return page;
     }
