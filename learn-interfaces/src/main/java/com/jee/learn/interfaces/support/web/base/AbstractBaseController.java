@@ -6,7 +6,6 @@ import java.util.concurrent.CompletionException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.catalina.connector.ClientAbortException;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +18,7 @@ import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.jee.learn.interfaces.support.cache.redis.RedisService;
 import com.jee.learn.interfaces.support.web.WebConstants;
 import com.jee.learn.interfaces.support.web.dto.HDto;
+import com.jee.learn.interfaces.util.net.IPUtil;
 import com.jee.learn.interfaces.util.validate.ValidateUtil;
 
 /**
@@ -135,31 +135,6 @@ public class AbstractBaseController {
 
     /** 获取客户端请求IP */
     public String getIp(HttpServletRequest request) {
-        String ip = request.getHeader("X-Forwarded-For");
-        if (StringUtils.isNotEmpty(ip) && !"unKnown".equalsIgnoreCase(ip)) {
-            // 多次反向代理后会有多个ip值，第一个ip才是真实ip
-            int index = ip.indexOf(",");
-            if (index != -1) {
-                return ip.substring(0, index);
-            } else {
-                return ip;
-            }
-        }
-        ip = request.getHeader("X-Real-IP");
-        if (StringUtils.isNotEmpty(ip) && !"unKnown".equalsIgnoreCase(ip)) {
-            return ip;
-        }
-
-        ip = request.getHeader("PROXY_FORWARDED_FOR");
-        if (StringUtils.isNotEmpty(ip) && !"unKnown".equalsIgnoreCase(ip)) {
-            // 多次反向代理后会有多个ip值，第一个ip才是真实ip
-            int index = ip.indexOf(",");
-            if (index != -1) {
-                return ip.substring(0, index);
-            } else {
-                return ip;
-            }
-        }
-        return request.getRemoteAddr();
+        return IPUtil.getIp(request);
     }
 }
