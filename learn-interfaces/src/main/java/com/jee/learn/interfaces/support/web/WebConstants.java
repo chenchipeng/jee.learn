@@ -27,11 +27,11 @@ public class WebConstants {
     public static final String INVALID_TOKEN_CODE = "10002";
     public static final String INVALID_TOKEN_MESSAGE = "无效TOKEN";
 
-    public static final String APP_IDENTITY_ERROR_CODE = "10003";
+    public static final String APP_IDENTITY_ERROR_CODE = "20001";
     public static final String APP_IDENTITY_ERROR_MESSAGE = "APPKEY错误";
-    public static final String APP_SIGN_TIMEOUT_CODE = "10004";
+    public static final String APP_SIGN_TIMEOUT_CODE = "20002";
     public static final String APP_SIGN_TIMEOUT_MESSAGE = "签名已过期";
-    public static final String APP_SIGN_INVALID_CODE = "10005";
+    public static final String APP_SIGN_INVALID_CODE = "20003";
     public static final String APP_SIGN_INVALID_MESSAGE = "签名无效";
 
 }
