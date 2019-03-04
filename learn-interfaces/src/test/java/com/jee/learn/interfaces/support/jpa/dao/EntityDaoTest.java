@@ -25,29 +25,32 @@ import com.jee.learn.interfaces.util.mapper.JsonMapper;
 @SpringBootTest(classes = LearnInterfaceApplication.class)
 public class EntityDaoTest {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private EntityDao entityDao;
+	@Autowired
+	private EntityDao entityDao;
 
-    @Test
-    public void findOneTest() {
-        ApiUser u = null;
-        try {
+	/**
+	 * {@link EntityDao} 解耦测试, 允许独立注入使用
+	 */
+	@Test
+	public void findOneTest() {
+		ApiUser u = null;
+		try {
 
-            Condition condition = new Condition("id", Operator.EQ, "1");
-            u = entityDao.findOne(ApiUser.class, condition);
-            logger.info("{}", JsonMapper.toJson(u));
+			Condition condition = new Condition("id", Operator.EQ, "1");
+			u = entityDao.findOne(ApiUser.class, condition);
+			logger.info("{}", JsonMapper.toJson(u));
 
-            u = entityDao.findOne(ApiUser.class, "1");
-            logger.info("{}", JsonMapper.toJson(u));
+			u = entityDao.findOne(ApiUser.class, "1");
+			logger.info("{}", JsonMapper.toJson(u));
 
-            u = entityDao.findOne(ApiUser.class, "id", "1");
-            logger.info("{}", JsonMapper.toJson(u));
+			u = entityDao.findOne(ApiUser.class, "id", "1");
+			logger.info("{}", JsonMapper.toJson(u));
 
-        } catch (Exception e) {
-            logger.info("", e);
-        }
-    }
+		} catch (Exception e) {
+			logger.info("", e);
+		}
+	}
 
 }
