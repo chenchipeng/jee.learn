@@ -19,5 +19,10 @@ public class GeneratorServiceTest {
 	public void selectDataTablesTest() {
 		generatorService.selectDataTables();
 	}
+	
+	@Test
+	public void selectTableColumnTest() {
+		generatorService.selectTableColumn("gen_table:业务表");
+	}
 
 }

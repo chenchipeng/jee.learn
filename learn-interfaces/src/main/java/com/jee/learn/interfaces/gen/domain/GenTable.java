@@ -28,15 +28,15 @@ public class GenTable implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Integer id; // 编号
+    private String id; // 编号
     private String name; // 名称
     private String comments; // 描述
     private String className; // 实体类名称
     private String parentTable; // 关联父表
     private String parentTableFk; // 关联父表外键
-    private Integer createBy; // 创建者
+    private String createBy; // 创建者
     private Date createDate; // 创建时间
-    private Integer updateBy; // 更新者
+    private String updateBy; // 更新者
     private Date updateDate; // 更新时间
     private String remarks; // 备注信息
     private Integer delFlag; // 删除标记（0：正常；1：删除）
@@ -46,11 +46,11 @@ public class GenTable implements java.io.Serializable {
     }
 
     @Id
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -98,11 +98,11 @@ public class GenTable implements java.io.Serializable {
     }
 
     @Column(name = "create_by")
-    public Integer getCreateBy() {
+    public String getCreateBy() {
         return createBy;
     }
 
-    public void setCreateBy(Integer createBy) {
+    public void setCreateBy(String createBy) {
         this.createBy = createBy;
     }
 
@@ -117,11 +117,11 @@ public class GenTable implements java.io.Serializable {
     }
 
     @Column(name = "update_by")
-    public Integer getUpdateBy() {
+    public String getUpdateBy() {
         return updateBy;
     }
 
-    public void setUpdateBy(Integer updateBy) {
+    public void setUpdateBy(String updateBy) {
         this.updateBy = updateBy;
     }
 
