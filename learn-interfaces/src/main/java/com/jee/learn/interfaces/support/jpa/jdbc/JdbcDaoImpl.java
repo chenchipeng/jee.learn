@@ -264,8 +264,7 @@ public class JdbcDaoImpl implements JdbcDao {
 
     /**
      * 创建数据解析器<br/>
-     * {@link RowMapperSupport} 与 {@link RowMapperCustom}
-     * 类似。前者需要显式指定构造方法的参数，后者则通过泛型指定，功能上基本一致
+     * {@link RowMapperSupport} 与 {@link RowMapperCustom} 类似。前者需要显式指定构造方法的参数，后者则通过泛型指定，功能上基本一致
      * 
      * @return
      */

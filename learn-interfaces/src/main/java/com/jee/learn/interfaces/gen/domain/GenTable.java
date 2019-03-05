@@ -1,0 +1,155 @@
+package com.jee.learn.interfaces.gen.domain;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
+/**
+ * 业务表Entity
+ * 
+ * @author ccp
+ * @version 2019-03-05
+ */
+@Entity
+@Table(name = "gen_table")
+@NamedQuery(name = "GenTable.findAll", query = "SELECT a FROM GenTable a WHERE a.delFlag = 0 ")
+@DynamicInsert
+@DynamicUpdate
+public class GenTable implements java.io.Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    private Integer id; // 编号
+    private String name; // 名称
+    private String comments; // 描述
+    private String className; // 实体类名称
+    private String parentTable; // 关联父表
+    private String parentTableFk; // 关联父表外键
+    private Integer createBy; // 创建者
+    private Date createDate; // 创建时间
+    private Integer updateBy; // 更新者
+    private Date updateDate; // 更新时间
+    private String remarks; // 备注信息
+    private Integer delFlag; // 删除标记（0：正常；1：删除）
+
+    public GenTable() {
+        super();
+    }
+
+    @Id
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+
+    @Column(name = "class_name")
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    @Column(name = "parent_table")
+    public String getParentTable() {
+        return parentTable;
+    }
+
+    public void setParentTable(String parentTable) {
+        this.parentTable = parentTable;
+    }
+
+    @Column(name = "parent_table_fk")
+    public String getParentTableFk() {
+        return parentTableFk;
+    }
+
+    public void setParentTableFk(String parentTableFk) {
+        this.parentTableFk = parentTableFk;
+    }
+
+    @Column(name = "create_by")
+    public Integer getCreateBy() {
+        return createBy;
+    }
+
+    public void setCreateBy(Integer createBy) {
+        this.createBy = createBy;
+    }
+
+    @Column(name = "create_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    @Column(name = "update_by")
+    public Integer getUpdateBy() {
+        return updateBy;
+    }
+
+    public void setUpdateBy(Integer updateBy) {
+        this.updateBy = updateBy;
+    }
+
+    @Column(name = "update_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    @Column(name = "del_flag")
+    public Integer getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
+    }
+
+}
