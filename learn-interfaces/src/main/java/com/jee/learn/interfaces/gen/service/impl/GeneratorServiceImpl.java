@@ -17,7 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.jee.learn.interfaces.config.datasource.dynamic.DynamicDataSource;
-import com.jee.learn.interfaces.gen.domain.GenTable;
+import com.jee.learn.interfaces.gen.dto.GenTableColumnDto;
+import com.jee.learn.interfaces.gen.dto.GenTableDto;
 import com.jee.learn.interfaces.gen.service.GeneratorService;
 
 /**
@@ -51,14 +52,14 @@ public class GeneratorServiceImpl implements GeneratorService {
     private DynamicDataSource dynamicDataSource;
 
     @Override
-    public List<String> selectDataTables() {
+    public List<GenTableDto> selectDataTables() {
         Statement stmt = null;
         ResultSet rs = null;
-        List<String> tList = new ArrayList<>();
+        List<GenTableDto> tList = new ArrayList<GenTableDto>();
         try {
             Connection conn = dynamicDataSource.getConnection();
             DatabaseMetaData dbmd = conn.getMetaData();
-            logger.debug("数据库产品名={} 所连接的数据库={}", dbmd.getDatabaseProductName(), conn.getCatalog());
+            logger.debug("数据库产品名->{} 所连接的数据库->{}", dbmd.getDatabaseProductName(), conn.getCatalog());
 
             // 创建一个Statement语句对象
             stmt = conn.createStatement();
@@ -66,10 +67,9 @@ public class GeneratorServiceImpl implements GeneratorService {
             rs = stmt.executeQuery(tableSelecter(dbmd.getDatabaseProductName()));
             // 获取结果
             while (rs.next()) {
-                logger.debug("表名={} 注释={}", rs.getString(1), rs.getString(2));
-                tList.add(rs.getString(1) + SEMICOLON + rs.getString(2));
+                logger.debug("表名->{} 注释->{}", rs.getString(1), rs.getString(2));
+                tList.add(new GenTableDto(rs.getString(1), rs.getString(2)));
             }
-
         } catch (SQLException e) {
             logger.info("获取当前所连接数据库中的所有表异常", e);
             return tList;
@@ -78,42 +78,11 @@ public class GeneratorServiceImpl implements GeneratorService {
         }
         return tList;
     }
-    
-    
-    
-    public List<GenTable> selectDataTables2() {
-        Statement stmt = null;
-        ResultSet rs = null;
-        List<GenTable> tList = new ArrayList<>();
-        try {
-            Connection conn = dynamicDataSource.getConnection();
-            DatabaseMetaData dbmd = conn.getMetaData();
-            logger.debug("数据库产品名={} 所连接的数据库={}", dbmd.getDatabaseProductName(), conn.getCatalog());
-
-            // 创建一个Statement语句对象
-            stmt = conn.createStatement();
-            // 执行sql语句
-            rs = stmt.executeQuery(tableSelecter(dbmd.getDatabaseProductName()));
-            // 获取结果
-            while (rs.next()) {
-                logger.debug("表名={} 注释={}", rs.getString(1), rs.getString(2));
-                tList.add(rs.getString(1) + SEMICOLON + rs.getString(2));
-            }
-
-        } catch (SQLException e) {
-            logger.info("获取当前所连接数据库中的所有表异常", e);
-            return tList;
-        } finally {
-            close(stmt, rs);
-        }
-        return tList;
-    }
-    
-    
-    
 
     @Override
     public void selectTableColumn(String tableKey) {
+        List<GenTableColumnDto> cList = new ArrayList<GenTableColumnDto>();
+        GenTableColumnDto c = null;
 
         try {
             Map<String, String> map = analizeTableKey(tableKey);
@@ -126,12 +95,32 @@ public class GeneratorServiceImpl implements GeneratorService {
 
             ResultSet rs = dbmd.getColumns(null, null, map.get(TABLE_NAME), "%");
             while (rs.next()) {
-                String columnName = rs.getString("COLUMN_NAME");// 列名
-                String dataTypeName = rs.getString("TYPE_NAME");// java.sql.Types类型名称
-                int columnSize = rs.getInt("COLUMN_SIZE");// 列大小
-                String comment = rs.getString("REMARKS");// 注释
-
-                logger.info("{} {} {} {}", columnName, dataTypeName, columnSize, comment);
+                
+//                private String name; // 名称
+//                private String comments; // 描述
+//                private String jdbcType; // 列的数据类型的字节长度
+//                private String javaType; // JAVA类型
+//                private String javaField; // JAVA字段名
+//                private Integer isPk; // 是否主键
+//                private Integer isNull; // 是否可为空
+//                private Integer isInc;// 是否自增
+                
+                
+//                c=new GenTableColumnDto();
+//                c.setName(rs.getString("COLUMN_NAME"));
+//                c.setComments(comments);
+//                c.setJdbcType(String.valueOf(rs.getInt("COLUMN_SIZE")));
+//                c.setJavaType(javaType);
+//                c.setJavaField(javaField);
+//                c.setIsPk(isPk);
+//                c.setIsNull(isNull);
+//                c.setIsInc(isInc);
+                
+                
+                
+                logger.info("列名->{} 类型名称->{} 列大小->{} 注释->{} 自增->{} 为空->{}", rs.getString("COLUMN_NAME"),
+                        rs.getString("TYPE_NAME"), rs.getInt("COLUMN_SIZE"), rs.getString("REMARKS"),
+                        rs.getString("IS_AUTOINCREMENT"), rs.getString("IS_NULLABLE"));
             }
         } catch (SQLException | IllegalArgumentException e) {
             logger.info("获取指定表的所有列异常", e);

@@ -16,4 +16,7 @@ public class GenConstants {
 
     /** 超管的id */
     public static final String SUPER_ADMIN_ID = "1";
+
+    public static final String YES = "YES";
+    public static final String NO = "NO";
 }

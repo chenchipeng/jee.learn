@@ -3,6 +3,8 @@ package com.jee.learn.interfaces.gen.service;
 import java.util.List;
 import java.util.Map;
 
+import com.jee.learn.interfaces.gen.dto.GenTableDto;
+
 /**
  * 数据库源数据service
  * 
@@ -18,7 +20,7 @@ public interface GeneratorService {
      * 
      * @return
      */
-    List<String> selectDataTables();
+    List<GenTableDto> selectDataTables();
 
     /**
      * 获取指定表的所有列
@@ -34,5 +36,7 @@ public interface GeneratorService {
      * @return
      */
     Map<String, String> analizeTableKey(String tableKey);
+
+
 
 }
