@@ -11,7 +11,7 @@ package com.jee.learn.interfaces.support.cache;
 public class CacheConstants {
 
     private CacheConstants() {
-        throw new IllegalStateException("Constants class");
+        throw new IllegalStateException("Utility class");
     }
 
     public static final String CACHE_KEY_SEPARATOR = ":";

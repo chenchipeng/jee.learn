@@ -11,7 +11,7 @@ package com.jee.learn.interfaces.util;
 public class Constants {
 
     private Constants() {
-        throw new IllegalStateException("Constants class");
+        throw new IllegalStateException("Utility class");
     }
 
 }

@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -12,6 +13,7 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.GenericGenerator;
 
 /**
  * 业务表Entity
@@ -45,7 +47,16 @@ public class GenTable implements java.io.Serializable {
         super();
     }
 
+    public GenTable(String name, String comments, String className) {
+        super();
+        this.name = name;
+        this.comments = comments;
+        this.className = className;
+    }
+
     @Id
+    @GenericGenerator(name = "genTableGenerator", strategy = "uuid")
+    @GeneratedValue(generator = "genTableGenerator")
     public String getId() {
         return id;
     }
