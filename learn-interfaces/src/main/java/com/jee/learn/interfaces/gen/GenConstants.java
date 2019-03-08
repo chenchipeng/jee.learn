@@ -19,4 +19,7 @@ public class GenConstants {
 
     public static final String YES = "YES";
     public static final String NO = "NO";
+
+    public static final int Y = 1;
+    public static final int N = 0;
 }

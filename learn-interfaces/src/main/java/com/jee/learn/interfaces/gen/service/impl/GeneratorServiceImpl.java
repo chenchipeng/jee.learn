@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.jee.learn.interfaces.config.datasource.dynamic.DynamicDataSource;
+import com.jee.learn.interfaces.gen.GenConstants;
 import com.jee.learn.interfaces.gen.dto.GenTableColumnDto;
 import com.jee.learn.interfaces.gen.dto.GenTableDto;
 import com.jee.learn.interfaces.gen.service.GeneratorService;
@@ -95,29 +96,26 @@ public class GeneratorServiceImpl implements GeneratorService {
 
             ResultSet rs = dbmd.getColumns(null, null, map.get(TABLE_NAME), "%");
             while (rs.next()) {
-                
-//                private String name; // 名称
-//                private String comments; // 描述
-//                private String jdbcType; // 列的数据类型的字节长度
-//                private String javaType; // JAVA类型
-//                private String javaField; // JAVA字段名
-//                private Integer isPk; // 是否主键
-//                private Integer isNull; // 是否可为空
-//                private Integer isInc;// 是否自增
-                
-                
-//                c=new GenTableColumnDto();
-//                c.setName(rs.getString("COLUMN_NAME"));
-//                c.setComments(comments);
-//                c.setJdbcType(String.valueOf(rs.getInt("COLUMN_SIZE")));
-//                c.setJavaType(javaType);
-//                c.setJavaField(javaField);
-//                c.setIsPk(isPk);
-//                c.setIsNull(isNull);
-//                c.setIsInc(isInc);
-                
-                
-                
+
+                // private String name; // 名称
+                // private String comments; // 描述
+                // private String jdbcType; // 列的数据类型的字节长度
+                // private String javaType; // JAVA类型
+                // private String javaField; // JAVA字段名
+                // private Integer isPk; // 是否主键
+                // private Integer isNull; // 是否可为空
+                // private Integer isInc;// 是否自增
+
+                c = new GenTableColumnDto();
+                c.setName(rs.getString("COLUMN_NAME"));
+                c.setComments(rs.getString("REMARKS"));
+                c.setJdbcType(buildJdbcType(rs.getString("TYPE_NAME"), String.valueOf(rs.getInt("COLUMN_SIZE"))));
+                // c.setJavaType(javaType);
+                // c.setJavaField(javaField);
+                // c.setIsPk(isPk);
+                 c.setIsNull(GenConstants.YES.equals(rs.getString("IS_NULLABLE"))?GenConstants.Y:GenConstants.N);
+                 c.setIsInc(GenConstants.YES.equals(rs.getString("IS_AUTOINCREMENT"))?GenConstants.Y:GenConstants.N);
+
                 logger.info("列名->{} 类型名称->{} 列大小->{} 注释->{} 自增->{} 为空->{}", rs.getString("COLUMN_NAME"),
                         rs.getString("TYPE_NAME"), rs.getInt("COLUMN_SIZE"), rs.getString("REMARKS"),
                         rs.getString("IS_AUTOINCREMENT"), rs.getString("IS_NULLABLE"));
@@ -178,6 +176,19 @@ public class GeneratorServiceImpl implements GeneratorService {
         } catch (Exception e) {
             logger.info("关闭数据连接异常", e);
         }
+    }
+
+    /**
+     * 构造 jdbcType
+     * 
+     * @param typeName
+     * @param columnSize
+     * @return
+     */
+    private String buildJdbcType(String typeName, String columnSize) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(typeName).append("(").append(columnSize).append(")");
+        return sb.toString();
     }
 
 }
