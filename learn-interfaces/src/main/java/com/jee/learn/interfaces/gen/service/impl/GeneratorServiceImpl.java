@@ -21,6 +21,7 @@ import com.jee.learn.interfaces.gen.GenConstants;
 import com.jee.learn.interfaces.gen.dto.GenTableColumnDto;
 import com.jee.learn.interfaces.gen.dto.GenTableDto;
 import com.jee.learn.interfaces.gen.service.GeneratorService;
+import com.jee.learn.interfaces.util.text.CamelUtil;
 
 /**
  * 数据库源数据service
@@ -81,7 +82,7 @@ public class GeneratorServiceImpl implements GeneratorService {
     }
 
     @Override
-    public void selectTableColumn(String tableKey) {
+    public List<GenTableColumnDto> selectTableColumn(String tableKey) {
         List<GenTableColumnDto> cList = new ArrayList<GenTableColumnDto>();
         GenTableColumnDto c = null;
 
@@ -110,11 +111,12 @@ public class GeneratorServiceImpl implements GeneratorService {
                 c.setName(rs.getString("COLUMN_NAME"));
                 c.setComments(rs.getString("REMARKS"));
                 c.setJdbcType(buildJdbcType(rs.getString("TYPE_NAME"), String.valueOf(rs.getInt("COLUMN_SIZE"))));
-                // c.setJavaType(javaType);
-                // c.setJavaField(javaField);
+                c.setJavaType(buildJavaType(c.getJdbcType()));
+                c.setJavaField(CamelUtil.toFieldName(rs.getString("COLUMN_NAME")));
                 // c.setIsPk(isPk);
-                 c.setIsNull(GenConstants.YES.equals(rs.getString("IS_NULLABLE"))?GenConstants.Y:GenConstants.N);
-                 c.setIsInc(GenConstants.YES.equals(rs.getString("IS_AUTOINCREMENT"))?GenConstants.Y:GenConstants.N);
+                c.setIsNull(GenConstants.YES.equals(rs.getString("IS_NULLABLE")) ? GenConstants.Y : GenConstants.N);
+                c.setIsInc(GenConstants.YES.equals(rs.getString("IS_AUTOINCREMENT")) ? GenConstants.Y : GenConstants.N);
+                cList.add(c);
 
                 logger.info("列名->{} 类型名称->{} 列大小->{} 注释->{} 自增->{} 为空->{}", rs.getString("COLUMN_NAME"),
                         rs.getString("TYPE_NAME"), rs.getInt("COLUMN_SIZE"), rs.getString("REMARKS"),
@@ -123,6 +125,7 @@ public class GeneratorServiceImpl implements GeneratorService {
         } catch (SQLException | IllegalArgumentException e) {
             logger.info("获取指定表的所有列异常", e);
         }
+        return cList;
     }
 
     @Override
@@ -189,6 +192,44 @@ public class GeneratorServiceImpl implements GeneratorService {
         StringBuilder sb = new StringBuilder();
         sb.append(typeName).append("(").append(columnSize).append(")");
         return sb.toString();
+    }
+
+    /**
+     * 根据 jdbcType 构造 javaType
+     * 
+     * @param jdbcType
+     * @return
+     */
+    private String buildJavaType(String jdbcType) {
+
+        if ((StringUtils.startsWithIgnoreCase(jdbcType, "CHAR"))
+                || (StringUtils.startsWithIgnoreCase(jdbcType, "VARCHAR"))
+                || (StringUtils.startsWithIgnoreCase(jdbcType, "TEXT"))
+                || (StringUtils.startsWithIgnoreCase(jdbcType, "LONGTEXT"))
+                || (StringUtils.startsWithIgnoreCase(jdbcType, "NARCHAR"))) {
+            return "String";
+        } else if ((StringUtils.startsWithIgnoreCase(jdbcType, "DATE"))
+                || (StringUtils.startsWithIgnoreCase(jdbcType, "DATETIME"))
+                || (StringUtils.startsWithIgnoreCase(jdbcType, "TIMESTAMP"))) {
+            return "java.util.Date";
+        } else if ((StringUtils.startsWithIgnoreCase(jdbcType, "BIGINT"))
+                || (StringUtils.startsWithIgnoreCase(jdbcType, "NUMBER"))) {
+            String[] ss = StringUtils.split(StringUtils.substringBetween(jdbcType, "(", ")"), ",");
+            if ((ss != null) && (ss.length == 2) && (Integer.parseInt(ss[1]) > 0)) {
+                return "Double";
+            } else if ((ss != null) && (ss.length == 1) && (Integer.parseInt(ss[0]) <= 10)) {
+                return "Integer";
+            } else {
+                return "Long";
+            }
+        } else if (StringUtils.startsWithIgnoreCase(jdbcType, "DECIMAL")) {
+            return "java.math.BigDecimal";
+        } else if (StringUtils.startsWithIgnoreCase(jdbcType, "TINYINT")
+                || (StringUtils.startsWithIgnoreCase(jdbcType, "INT"))) {
+            return "Integer";
+        }
+
+        return "Object";
     }
 
 }

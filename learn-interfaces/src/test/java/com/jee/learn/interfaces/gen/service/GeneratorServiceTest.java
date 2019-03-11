@@ -31,7 +31,7 @@ public class GeneratorServiceTest {
 
     @Test
     public void selectTableColumnTest() {
-        generatorService.selectTableColumn("gen_table:业务表");
+        System.out.println(JsonMapper.toJson(generatorService.selectTableColumn("dual:dual")));
     }
 
     @Test

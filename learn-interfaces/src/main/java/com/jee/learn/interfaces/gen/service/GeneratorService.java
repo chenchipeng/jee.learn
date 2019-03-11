@@ -3,6 +3,7 @@ package com.jee.learn.interfaces.gen.service;
 import java.util.List;
 import java.util.Map;
 
+import com.jee.learn.interfaces.gen.dto.GenTableColumnDto;
 import com.jee.learn.interfaces.gen.dto.GenTableDto;
 
 /**
@@ -26,8 +27,9 @@ public interface GeneratorService {
      * 获取指定表的所有列
      * 
      * @param tableKey 表名+":"+注释
+     * @return 
      */
-    void selectTableColumn(String tableKey);
+    List<GenTableColumnDto> selectTableColumn(String tableKey);
 
     /**
      * 表名备注解析器
