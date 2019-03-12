@@ -74,7 +74,7 @@ public class GeneratorServiceImpl implements GeneratorService {
                 logger.debug("表名->{} 注释->{}", rs.getString(1), rs.getString(2));
                 tList.add(new GenTableDto(rs.getString(1), rs.getString(2)));
             }
-        } catch (SQLException e) {
+        } catch (SQLException | IllegalArgumentException e) {
             logger.info("获取当前所连接数据库中的所有表异常 sql={}", sql, e);
             return tList;
         } finally {
@@ -85,18 +85,19 @@ public class GeneratorServiceImpl implements GeneratorService {
 
     @Override
     public List<GenTableColumnDto> selectTableColumn(String tableName) {
-        // 检查表
-        List<GenTableDto> tables = selectDataTables(tableName);
-        if (tables == null) {
-            throw new IllegalArgumentException(tableName + "不存在");
-        }
-        // 获取主键信息
-        List<String> pkList = selecePrivateKey(tableName);
         // 定义结果集
         List<GenTableColumnDto> cList = new ArrayList<GenTableColumnDto>();
         GenTableColumnDto c = null;
 
         try {
+            // 检查表
+            List<GenTableDto> tables = selectDataTables(tableName);
+            if (tables == null) {
+                throw new IllegalArgumentException(tableName + "不存在");
+            }
+            // 获取主键信息
+            List<String> pkList = selecePrivateKey(tableName);
+
             Connection conn = dynamicDataSource.getConnection();
             DatabaseMetaData dbmd = conn.getMetaData();
             ResultSet rs = dbmd.getColumns(null, null, tableName, "%");
@@ -108,7 +109,7 @@ public class GeneratorServiceImpl implements GeneratorService {
                 c.setJdbcType(buildJdbcType(rs.getString("TYPE_NAME"), rs.getInt("COLUMN_SIZE"),
                         rs.getInt("DECIMAL_DIGITS")));
                 c.setJavaType(buildJavaType(c.getJdbcType()));
-                c.setJavaField(CamelUtil.toFieldName(rs.getString("COLUMN_NAME")));
+                c.setJavaField(toFieldName(rs.getString("COLUMN_NAME")));
                 c.setIsPk(isPK(pkList, rs.getString("COLUMN_NAME")));
                 c.setIsNull(GenConstants.YES.equals(rs.getString("IS_NULLABLE")) ? GenConstants.Y : GenConstants.N);
                 c.setIsInc(GenConstants.YES.equals(rs.getString("IS_AUTOINCREMENT")) ? GenConstants.Y : GenConstants.N);
@@ -145,6 +146,16 @@ public class GeneratorServiceImpl implements GeneratorService {
             close(stmt, rs);
         }
         return list;
+    }
+
+    @Override
+    public String toClassName(String str) {
+        return CamelUtil.toClassName(str);
+    }
+
+    @Override
+    public String toFieldName(String str) {
+        return CamelUtil.toFieldName(str);
     }
 
     /**

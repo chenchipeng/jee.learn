@@ -46,4 +46,20 @@ public interface GeneratorService {
      */
     List<String> selecePrivateKey(String tableName);
 
+    /**
+     * 驼峰格式的数据表名称转java类名
+     * 
+     * @param str
+     * @return
+     */
+    String toClassName(String str);
+
+    /**
+     * 驼峰格式的表字段名称转java属性名
+     * 
+     * @param str
+     * @return
+     */
+    String toFieldName(String str);
+
 }

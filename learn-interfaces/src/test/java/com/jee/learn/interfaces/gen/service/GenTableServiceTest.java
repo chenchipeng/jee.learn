@@ -34,13 +34,22 @@ public class GenTableServiceTest {
             e.printStackTrace();
         }
     }
-    
+
     @Test
     public void saveTest() {
         try {
             GenTable genTable = new GenTable();
             genTable.setName(String.valueOf(System.currentTimeMillis()));
             genTableService.save(genTable);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void selectDataTablesTest() {
+        try {
+            System.out.println(JsonMapper.toJson(genTableService.selectDataTables()));
         } catch (Exception e) {
             e.printStackTrace();
         }

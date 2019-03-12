@@ -18,6 +18,9 @@ public class GenTableDto {
     private String className; // 实体类名称
     private String parentTable; // 关联父表
     private String parentTableFk; // 关联父表外键
+    private List<GenTableColumnDto> columns;// 所包含的列
+
+    private String label;// 前端下拉显示内容
 
     private List<GenTableColumnDto> columnDtos;
 
@@ -85,6 +88,22 @@ public class GenTableDto {
 
     public void setColumnDtos(List<GenTableColumnDto> columnDtos) {
         this.columnDtos = columnDtos;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public List<GenTableColumnDto> getColumns() {
+        return columns;
+    }
+
+    public void setColumns(List<GenTableColumnDto> columns) {
+        this.columns = columns;
     }
 
 }

@@ -19,4 +19,46 @@ public class GenConstants {
 
     public static final int Y = 1;
     public static final int N = 0;
+
+    //////// 模板字段 ////////
+
+    public static final String ID = "id";
+    public static final String NAME = "name";
+    public static final String TITLE = "title";
+    public static final String REMARKS = "remarks";
+    public static final String CREATE_BY = "create_by";
+    public static final String CREATE_DATE = "create_date";
+    public static final String UPDATE_BY = "update_by";
+    public static final String UPDATE_DATE = "update_date";
+    public static final String DEL_FLAG = "del_flag";
+    
+    //////// 查询条件 ////////
+    
+    public enum QUERY_TYPE {
+        HAING("0", "发放中"), HAVED("1", "已发放");
+        private String value;
+        private String desc;
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public String getDesc() {
+            return desc;
+        }
+
+        public void setDesc(String desc) {
+            this.desc = desc;
+        }
+
+        private QUERY_TYPE(String value, String desc) {
+            this.value = value;
+            this.desc = desc;
+        }
+    }
+
 }

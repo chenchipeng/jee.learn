@@ -74,6 +74,13 @@ public class GenUtils {
 						|| (StringUtils.equalsIgnoreCase(column.getName(), "title"))) {
 					column.setQueryType("like");
 				}
+				
+				
+				
+				//------------------------------------
+				
+				
+				
 				if ((StringUtils.equalsIgnoreCase(column.getName(), "sort"))) {
 					column.setJavaType("Integer");
 				}

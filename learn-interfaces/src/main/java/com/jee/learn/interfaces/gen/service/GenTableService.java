@@ -1,6 +1,9 @@
 package com.jee.learn.interfaces.gen.service;
 
+import java.util.List;
+
 import com.jee.learn.interfaces.gen.domain.GenTable;
+import com.jee.learn.interfaces.gen.dto.GenTableDto;
 
 /**
  * GenTableService
@@ -26,5 +29,14 @@ public interface GenTableService {
      * @param entity
      */
     void save(GenTable entity);
+
+    //////// 获取数据库元数据 ///////
+
+    /**
+     * 获取数据表列表
+     * 
+     * @return
+     */
+    List<GenTableDto> selectDataTables();
 
 }
