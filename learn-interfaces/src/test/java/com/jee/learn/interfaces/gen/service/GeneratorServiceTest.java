@@ -31,12 +31,7 @@ public class GeneratorServiceTest {
 
     @Test
     public void selectTableColumnTest() {
-        System.out.println(JsonMapper.toJson(generatorService.selectTableColumn("dual:dual")));
-    }
-
-    @Test
-    public void analizeTableKeyTest() {
-        System.out.println(JsonMapper.toJson(generatorService.analizeTableKey("a:1")));
+        System.out.println(JsonMapper.toJson(generatorService.selectTableColumn("dual")));
     }
 
 }

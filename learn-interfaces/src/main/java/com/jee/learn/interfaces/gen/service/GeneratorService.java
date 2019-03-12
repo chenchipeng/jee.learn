@@ -1,7 +1,6 @@
 package com.jee.learn.interfaces.gen.service;
 
 import java.util.List;
-import java.util.Map;
 
 import com.jee.learn.interfaces.gen.dto.GenTableColumnDto;
 import com.jee.learn.interfaces.gen.dto.GenTableDto;
@@ -24,21 +23,27 @@ public interface GeneratorService {
     List<GenTableDto> selectDataTables();
 
     /**
-     * 获取指定表的所有列
+     * 获取当前所连接数据库中的指定表信息
      * 
-     * @param tableKey 表名+":"+注释
-     * @return 
-     */
-    List<GenTableColumnDto> selectTableColumn(String tableKey);
-
-    /**
-     * 表名备注解析器
-     * 
-     * @param tableKey
+     * @param tableName
      * @return
      */
-    Map<String, String> analizeTableKey(String tableKey);
+    List<GenTableDto> selectDataTables(String tableName);
 
+    /**
+     * 获取指定表的所有列
+     * 
+     * @param tableName
+     * @return
+     */
+    List<GenTableColumnDto> selectTableColumn(String tableName);
 
+    /**
+     * 获取指定表的主键
+     * 
+     * @param tableName
+     * @return
+     */
+    List<String> selecePrivateKey(String tableName);
 
 }

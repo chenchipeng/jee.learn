@@ -22,6 +22,7 @@ public class GenTableColumnDto {
     private Integer isPk; // 是否主键
     private Integer isNull; // 是否可为空
     private Integer isInc;// 是否自增
+    private Integer isUuid;// 是否使用uuid[0:否,1:是]
     private Integer isInsert; // 是否为插入字段
     private Integer isEdit; // 是否编辑字段
     private Integer isList; // 是否列表字段
@@ -110,6 +111,14 @@ public class GenTableColumnDto {
 
     public void setIsInc(Integer isInc) {
         this.isInc = isInc;
+    }
+
+    public Integer getIsUuid() {
+        return isUuid;
+    }
+
+    public void setIsUuid(Integer isUuid) {
+        this.isUuid = isUuid;
     }
 
     public Integer getIsInsert() {

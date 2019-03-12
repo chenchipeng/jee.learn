@@ -6,10 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,19 +33,15 @@ import com.jee.learn.interfaces.util.text.CamelUtil;
 @Component
 public class GeneratorServiceImpl implements GeneratorService {
 
-    private static final String SEMICOLON = ":";
-    private static final String TABLE_NAME = "name";
-    private static final String TABLE_COMMENT = "comment";
-
     /* 数据库类型 */
     private static final String ORACLE = "oracle";
     private static final String MSSQL = "mssql";
     private static final String MYSQL = "mysql";
 
     /* 获取表名和注释的sql */
-    private static final String ORACLE_TABLE_SELECT = "SELECT t.TABLE_NAME AS name, c.COMMENTS AS comments FROM user_tables t, user_tab_comments c WHERE t.table_name = c.table_name ORDER BY t.TABLE_NAME";
-    private static final String MSSQL_TABLE_SELECT = "ELECT t.name AS name,b.value AS comments FROM sys.objects t LEFT JOIN sys.extended_properties b ON b.major_id=t.object_id and b.minor_id=0 and b.class=1 AND b.name='MS_Description' WHERE t.type='U' ORDER BY t.name";
-    private static final String MYSQL_TABLE_SELECT = "SELECT t.TABLE_NAME AS name, t.TABLE_COMMENT AS comments FROM information_schema.`TABLES` t WHERE t.TABLE_SCHEMA = (select database()) ORDER BY t.TABLE_NAME";
+    private static final String ORACLE_TABLE_SELECT = "SELECT t.TABLE_NAME AS name, c.COMMENTS AS comments FROM user_tables t, user_tab_comments c WHERE t.table_name = c.table_name AND 1=1 ORDER BY t.TABLE_NAME";
+    private static final String MSSQL_TABLE_SELECT = "ELECT t.name AS name,b.value AS comments FROM sys.objects t LEFT JOIN sys.extended_properties b ON b.major_id=t.object_id and b.minor_id=0 and b.class=1 AND b.name='MS_Description' WHERE t.type='U' AND 1=1 ORDER BY t.name";
+    private static final String MYSQL_TABLE_SELECT = "SELECT t.TABLE_NAME AS name, t.TABLE_COMMENT AS comments FROM information_schema.`TABLES` t WHERE t.TABLE_SCHEMA = (select database()) AND 1=1 ORDER BY t.TABLE_NAME";
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -55,8 +50,14 @@ public class GeneratorServiceImpl implements GeneratorService {
 
     @Override
     public List<GenTableDto> selectDataTables() {
+        return selectDataTables(StringUtils.EMPTY);
+    }
+
+    @Override
+    public List<GenTableDto> selectDataTables(String tableName) {
         Statement stmt = null;
         ResultSet rs = null;
+        String sql = null;
         List<GenTableDto> tList = new ArrayList<GenTableDto>();
         try {
             Connection conn = dynamicDataSource.getConnection();
@@ -66,14 +67,15 @@ public class GeneratorServiceImpl implements GeneratorService {
             // 创建一个Statement语句对象
             stmt = conn.createStatement();
             // 执行sql语句
-            rs = stmt.executeQuery(tableSelecter(dbmd.getDatabaseProductName()));
+            sql = tableSelecter(dbmd.getDatabaseProductName(), tableName);
+            rs = stmt.executeQuery(sql);
             // 获取结果
             while (rs.next()) {
                 logger.debug("表名->{} 注释->{}", rs.getString(1), rs.getString(2));
                 tList.add(new GenTableDto(rs.getString(1), rs.getString(2)));
             }
         } catch (SQLException e) {
-            logger.info("获取当前所连接数据库中的所有表异常", e);
+            logger.info("获取当前所连接数据库中的所有表异常 sql={}", sql, e);
             return tList;
         } finally {
             close(stmt, rs);
@@ -82,82 +84,87 @@ public class GeneratorServiceImpl implements GeneratorService {
     }
 
     @Override
-    public List<GenTableColumnDto> selectTableColumn(String tableKey) {
+    public List<GenTableColumnDto> selectTableColumn(String tableName) {
+        // 检查表
+        List<GenTableDto> tables = selectDataTables(tableName);
+        if (tables == null) {
+            throw new IllegalArgumentException(tableName + "不存在");
+        }
+        // 获取主键信息
+        List<String> pkList = selecePrivateKey(tableName);
+        // 定义结果集
         List<GenTableColumnDto> cList = new ArrayList<GenTableColumnDto>();
         GenTableColumnDto c = null;
 
         try {
-            Map<String, String> map = analizeTableKey(tableKey);
-            if (map == null) {
-                throw new IllegalArgumentException("表名备注解析异常");
-            }
-
             Connection conn = dynamicDataSource.getConnection();
             DatabaseMetaData dbmd = conn.getMetaData();
+            ResultSet rs = dbmd.getColumns(null, null, tableName, "%");
 
-            ResultSet rs = dbmd.getColumns(null, null, map.get(TABLE_NAME), "%");
             while (rs.next()) {
-
-                // private String name; // 名称
-                // private String comments; // 描述
-                // private String jdbcType; // 列的数据类型的字节长度
-                // private String javaType; // JAVA类型
-                // private String javaField; // JAVA字段名
-                // private Integer isPk; // 是否主键
-                // private Integer isNull; // 是否可为空
-                // private Integer isInc;// 是否自增
-
                 c = new GenTableColumnDto();
                 c.setName(rs.getString("COLUMN_NAME"));
                 c.setComments(rs.getString("REMARKS"));
-                c.setJdbcType(buildJdbcType(rs.getString("TYPE_NAME"), String.valueOf(rs.getInt("COLUMN_SIZE"))));
+                c.setJdbcType(buildJdbcType(rs.getString("TYPE_NAME"), rs.getInt("COLUMN_SIZE"),
+                        rs.getInt("DECIMAL_DIGITS")));
                 c.setJavaType(buildJavaType(c.getJdbcType()));
                 c.setJavaField(CamelUtil.toFieldName(rs.getString("COLUMN_NAME")));
-                // c.setIsPk(isPk);
+                c.setIsPk(isPK(pkList, rs.getString("COLUMN_NAME")));
                 c.setIsNull(GenConstants.YES.equals(rs.getString("IS_NULLABLE")) ? GenConstants.Y : GenConstants.N);
                 c.setIsInc(GenConstants.YES.equals(rs.getString("IS_AUTOINCREMENT")) ? GenConstants.Y : GenConstants.N);
+                // 加入list
                 cList.add(c);
 
-                logger.info("列名->{} 类型名称->{} 列大小->{} 注释->{} 自增->{} 为空->{}", rs.getString("COLUMN_NAME"),
-                        rs.getString("TYPE_NAME"), rs.getInt("COLUMN_SIZE"), rs.getString("REMARKS"),
-                        rs.getString("IS_AUTOINCREMENT"), rs.getString("IS_NULLABLE"));
+                logger.debug("列名->{} 类型名称->{} 列大小->{} 小数点->{} 注释->{} 自增->{} 为空->{}", rs.getString("COLUMN_NAME"),
+                        rs.getString("TYPE_NAME"), rs.getInt("COLUMN_SIZE"), rs.getInt("DECIMAL_DIGITS"),
+                        rs.getString("REMARKS"), rs.getString("IS_AUTOINCREMENT"), rs.getString("IS_NULLABLE"));
             }
         } catch (SQLException | IllegalArgumentException e) {
             logger.info("获取指定表的所有列异常", e);
+            return cList;
         }
         return cList;
     }
 
     @Override
-    public Map<String, String> analizeTableKey(String tableKey) {
-        if (StringUtils.isBlank(tableKey)) {
-            return null;
+    public List<String> selecePrivateKey(String tableName) {
+        Statement stmt = null;
+        ResultSet rs = null;
+        List<String> list = new ArrayList<String>();
+        try {
+            Connection conn = dynamicDataSource.getConnection();
+            DatabaseMetaData dbmd = conn.getMetaData();
+            rs = dbmd.getPrimaryKeys(null, null, tableName);
+            while (rs.next()) {
+                list.add(rs.getString("COLUMN_NAME"));
+            }
+        } catch (SQLException e) {
+            logger.info("获取指定表 {} 的主键信息异常", tableName, e);
+            return list;
+        } finally {
+            close(stmt, rs);
         }
-        String[] ary = tableKey.split(SEMICOLON);
-        if (StringUtils.isBlank(ary[0])) {
-            return null;
-        }
-        Map<String, String> map = new HashMap<>(2);
-        map.put(TABLE_NAME, ary[0]);
-        map.put(TABLE_COMMENT, tableKey.substring(ary[0].length() + 1));
-        return map;
+        return list;
     }
 
     /**
      * 跟据数据库类型选择数据表元数据sql
      * 
      * @param productName
+     * @param tableName
      * @return
      */
-    private String tableSelecter(String productName) {
+    private String tableSelecter(String productName, String tableName) {
+        boolean b = StringUtils.isBlank(tableName);
+        String repKey = "1=1";
         if (ORACLE.equals(productName.toLowerCase())) {
-            return ORACLE_TABLE_SELECT;
+            return b ? ORACLE_TABLE_SELECT : ORACLE_TABLE_SELECT.replace(repKey, "t.TABLE_NAME = '" + tableName + "'");
         }
         if (MSSQL.equals(productName.toLowerCase())) {
-            return MSSQL_TABLE_SELECT;
+            return b ? MSSQL_TABLE_SELECT : MSSQL_TABLE_SELECT.replace(repKey, "t.name = '" + tableName + "'");
         }
         if (MYSQL.equals(productName.toLowerCase())) {
-            return MYSQL_TABLE_SELECT;
+            return b ? MYSQL_TABLE_SELECT : MYSQL_TABLE_SELECT.replace(repKey, "t.TABLE_NAME = '" + tableName + "'");
         }
         throw new IllegalArgumentException("unknown database product");
     }
@@ -186,11 +193,16 @@ public class GeneratorServiceImpl implements GeneratorService {
      * 
      * @param typeName
      * @param columnSize
+     * @param decimalDigits
      * @return
      */
-    private String buildJdbcType(String typeName, String columnSize) {
+    private String buildJdbcType(String typeName, int columnSize, int decimalDigits) {
         StringBuilder sb = new StringBuilder();
-        sb.append(typeName).append("(").append(columnSize).append(")");
+        sb.append(typeName).append("(").append(columnSize);
+        if (decimalDigits != 0) {
+            sb.append(",").append(decimalDigits);
+        }
+        sb.append(")");
         return sb.toString();
     }
 
@@ -227,9 +239,33 @@ public class GeneratorServiceImpl implements GeneratorService {
         } else if (StringUtils.startsWithIgnoreCase(jdbcType, "TINYINT")
                 || (StringUtils.startsWithIgnoreCase(jdbcType, "INT"))) {
             return "Integer";
+        } else if (StringUtils.startsWithIgnoreCase(jdbcType, "DOUBLE")
+                || (StringUtils.startsWithIgnoreCase(jdbcType, "FLOAT"))) {
+            return "Double";
         }
 
         return "Object";
+    }
+
+    /**
+     * 检查指定列是否为主键
+     * 
+     * @param pkList
+     * @param columnName
+     * @return 0:否, 1:是
+     */
+    private int isPK(List<String> pkList, String columnName) {
+        if (CollectionUtils.isEmpty(pkList) || StringUtils.isBlank(columnName)) {
+            return GenConstants.N;
+        }
+        int r = GenConstants.N;
+        for (String pk : pkList) {
+            if (pk.equals(columnName)) {
+                r = GenConstants.Y;
+                break;
+            }
+        }
+        return r;
     }
 
 }
