@@ -46,12 +46,4 @@ public class GenTableServiceTest {
         }
     }
 
-    @Test
-    public void selectDataTablesTest() {
-        try {
-            System.out.println(JsonMapper.toJson(genTableService.selectDataTables()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

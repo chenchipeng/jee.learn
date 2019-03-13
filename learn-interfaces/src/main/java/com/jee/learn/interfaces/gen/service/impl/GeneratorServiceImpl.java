@@ -1,5 +1,6 @@
 package com.jee.learn.interfaces.gen.service.impl;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import com.jee.learn.interfaces.config.datasource.dynamic.DynamicDataSource;
 import com.jee.learn.interfaces.gen.GenConstants;
+import com.jee.learn.interfaces.gen.GenConstants.QUERY_TYPE;
 import com.jee.learn.interfaces.gen.dto.GenTableColumnDto;
 import com.jee.learn.interfaces.gen.dto.GenTableDto;
 import com.jee.learn.interfaces.gen.service.GeneratorService;
@@ -109,7 +111,7 @@ public class GeneratorServiceImpl implements GeneratorService {
                 c.setJdbcType(buildJdbcType(rs.getString("TYPE_NAME"), rs.getInt("COLUMN_SIZE"),
                         rs.getInt("DECIMAL_DIGITS")));
                 c.setJavaType(buildJavaType(c.getJdbcType()));
-                c.setJavaField(toFieldName(rs.getString("COLUMN_NAME")));
+                c.setJavaField(CamelUtil.toFieldName(rs.getString("COLUMN_NAME")));
                 c.setIsPk(isPK(pkList, rs.getString("COLUMN_NAME")));
                 c.setIsNull(GenConstants.YES.equals(rs.getString("IS_NULLABLE")) ? GenConstants.Y : GenConstants.N);
                 c.setIsInc(GenConstants.YES.equals(rs.getString("IS_AUTOINCREMENT")) ? GenConstants.Y : GenConstants.N);
@@ -146,16 +148,6 @@ public class GeneratorServiceImpl implements GeneratorService {
             close(stmt, rs);
         }
         return list;
-    }
-
-    @Override
-    public String toClassName(String str) {
-        return CamelUtil.toClassName(str);
-    }
-
-    @Override
-    public String toFieldName(String str) {
-        return CamelUtil.toFieldName(str);
     }
 
     /**
@@ -209,11 +201,18 @@ public class GeneratorServiceImpl implements GeneratorService {
      */
     private String buildJdbcType(String typeName, int columnSize, int decimalDigits) {
         StringBuilder sb = new StringBuilder();
-        sb.append(typeName).append("(").append(columnSize);
-        if (decimalDigits != 0) {
-            sb.append(",").append(decimalDigits);
+        sb.append(typeName);
+        if (StringUtils.startsWithIgnoreCase(typeName, "CHAR") || StringUtils.startsWithIgnoreCase(typeName, "VARCHAR")
+                || StringUtils.startsWithIgnoreCase(typeName, "DECIMAL")
+                || StringUtils.startsWithIgnoreCase(typeName, "BIGINT")
+                || StringUtils.startsWithIgnoreCase(typeName, "NUMBER")) {
+            sb.append("(").append(columnSize);
+            if (decimalDigits != 0) {
+                sb.append(",").append(decimalDigits);
+            }
+            sb.append(")");
         }
-        sb.append(")");
+
         return sb.toString();
     }
 
@@ -277,6 +276,83 @@ public class GeneratorServiceImpl implements GeneratorService {
             }
         }
         return r;
+    }
+
+    //////// 封装数据库元数据 ///////
+
+   
+    @Override
+    public List<GenTableDto> getTabelList() {
+        List<GenTableDto> list = selectDataTables();
+        for (GenTableDto dto : list) {
+            dto.setLabel(dto.getName() + ":" + dto.getComments());
+        }
+        return list;
+    }
+
+    @Override
+    public GenTableDto getTebleInfo(String tableName) {
+        if (StringUtils.isBlank(tableName)) {
+            return null;
+        }
+        // 查找表
+        List<GenTableDto> tList = selectDataTables(tableName);
+        if (CollectionUtils.isEmpty(tList)) {
+            return null;
+        }
+        GenTableDto table = tList.get(0);
+        table.setClassName(CamelUtil.toClassName(tableName));
+        // 查找列
+        List<GenTableColumnDto> cList = selectTableColumn(tableName);
+        if (CollectionUtils.isEmpty(cList)) {
+            return null;
+        }
+        int sort = 0;
+        for (GenTableColumnDto c : cList) {
+            c.setSort(new BigDecimal(sort += 30));
+            c.setIsInsert(GenConstants.Y);
+
+            // private String showType; // 字段生成方案（文本框、文本域、下拉框、复选框、单选框、字典选择、人员选择、部门选择、区域选择）
+            // private String dictType; // 字典类型
+
+            c.setIsUuid(GenConstants.N);
+            if (c.getIsPk() == GenConstants.Y && "String".equals(c.getJavaType())) {
+                c.setIsUuid(GenConstants.Y);
+            }
+
+            c.setIsEdit(GenConstants.Y);
+            if (StringUtils.equalsIgnoreCase(c.getName(), GenConstants.ID)
+                    || StringUtils.equalsIgnoreCase(c.getName(), GenConstants.CREATE_BY)
+                    || StringUtils.equalsIgnoreCase(c.getName(), GenConstants.CREATE_DATE)
+                    || StringUtils.equalsIgnoreCase(c.getName(), GenConstants.DEL_FLAG)) {
+                c.setIsEdit(GenConstants.N);
+            }
+
+            c.setIsList(GenConstants.N);
+            if (StringUtils.equalsIgnoreCase(c.getName(), GenConstants.NAME)
+                    || StringUtils.equalsIgnoreCase(c.getName(), GenConstants.TITLE)
+                    || StringUtils.equalsIgnoreCase(c.getName(), GenConstants.UPDATE_DATE)) {
+                c.setIsList(GenConstants.Y);
+            }
+
+            c.setIsQuery(GenConstants.N);
+            if (StringUtils.equalsIgnoreCase(c.getName(), GenConstants.NAME)
+                    || StringUtils.equalsIgnoreCase(c.getName(), GenConstants.TITLE)) {
+                c.setIsQuery(GenConstants.Y);
+            }
+
+            c.setQueryType(QUERY_TYPE.EQUAL.getValue());
+            if (StringUtils.equalsIgnoreCase(c.getName(), GenConstants.NAME)
+                    || StringUtils.equalsIgnoreCase(c.getName(), GenConstants.TITLE)) {
+                c.setQueryType(QUERY_TYPE.LIKE.getValue());
+            }
+            if (StringUtils.equalsIgnoreCase(c.getName(), GenConstants.CREATE_DATE)
+                    || StringUtils.equalsIgnoreCase(c.getName(), GenConstants.UPDATE_DATE)) {
+                c.setQueryType(QUERY_TYPE.BETWEEN.getValue());
+            }
+        }
+        table.setColumnDtos(cList);
+        return table;
     }
 
 }

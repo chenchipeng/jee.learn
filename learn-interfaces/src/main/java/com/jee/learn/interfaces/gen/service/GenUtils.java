@@ -75,15 +75,11 @@ public class GenUtils {
 					column.setQueryType("like");
 				}
 				
-				
-				
-				//------------------------------------
-				
-				
-				
 				if ((StringUtils.equalsIgnoreCase(column.getName(), "sort"))) {
 					column.setJavaType("Integer");
 				}
+				
+				//------------------------------------
 
 				if (StringUtils.startsWithIgnoreCase(column.getName(), "user_id")) {
 					column.setJavaType(SysUser.class.getName());

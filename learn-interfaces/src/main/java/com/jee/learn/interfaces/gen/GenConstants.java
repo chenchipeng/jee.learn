@@ -31,11 +31,14 @@ public class GenConstants {
     public static final String UPDATE_BY = "update_by";
     public static final String UPDATE_DATE = "update_date";
     public static final String DEL_FLAG = "del_flag";
-    
+
     //////// 查询条件 ////////
-    
+
     public enum QUERY_TYPE {
-        HAING("0", "发放中"), HAVED("1", "已发放");
+
+        EQUAL("=", "等于"), NOT_EQUAL("!=", "不等于"), GREATER(">", "大于"), LESS("<", "小于"), GREATER_EQUAL(">=",
+                "大于等于"), LESS_EQUAL("<=", "小于等于"), BETWEEN("between", "BETWEEN"), LIKE("like", "LIKE");
+
         private String value;
         private String desc;
 

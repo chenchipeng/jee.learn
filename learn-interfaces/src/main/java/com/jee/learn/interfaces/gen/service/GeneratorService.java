@@ -47,19 +47,18 @@ public interface GeneratorService {
     List<String> selecePrivateKey(String tableName);
 
     /**
-     * 驼峰格式的数据表名称转java类名
+     * 获取数据表列表
      * 
-     * @param str
      * @return
      */
-    String toClassName(String str);
+    List<GenTableDto> getTabelList();
 
     /**
-     * 驼峰格式的表字段名称转java属性名
+     * 获取指定表的信息
      * 
-     * @param str
+     * @param tableName
      * @return
      */
-    String toFieldName(String str);
+    GenTableDto getTebleInfo(String tableName);
 
 }
