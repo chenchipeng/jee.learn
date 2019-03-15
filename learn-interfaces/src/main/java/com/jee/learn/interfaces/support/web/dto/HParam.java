@@ -1,5 +1,7 @@
 package com.jee.learn.interfaces.support.web.dto;
 
+import javax.validation.constraints.NotNull;
+
 import lombok.Data;
 
 /**
@@ -11,7 +13,9 @@ import lombok.Data;
 @Data
 public class HParam {
 
+    @NotNull
     private String t;
+    
     private String ip;
 
     private String k; // APPKEY

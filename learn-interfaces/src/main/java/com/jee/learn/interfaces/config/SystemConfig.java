@@ -18,7 +18,13 @@ import lombok.Data;
 @ConfigurationProperties(prefix = "system")
 public class SystemConfig {
 
-	/** 实体类所在包 */
-	private String entityBasePackage;
+    /** 实体类所在包 */
+    private String entityBasePackage;
+
+    /** 文件上传基础目录 */
+    private String fileuploadBasedir = "/data/file";
+
+    /** 文件访问基础url */
+    protected String fileContent = "http://127.0.0.1";
 
 }

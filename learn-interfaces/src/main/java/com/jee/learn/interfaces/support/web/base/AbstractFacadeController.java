@@ -26,7 +26,7 @@ import com.jee.learn.interfaces.util.security.MD5Util;
  *          2018年11月19日 上午10:51:31<br/>
  *          2019年3月1日 上午11:15:11
  */
-public abstract class AbstractFacadeController<R, D extends DParam> extends AbstractBaseController {
+public abstract class AbstractFacadeController<R, P extends DParam> extends AbstractBaseController {
 
     private static final char AMP = '&';
     private static final char EQ = '=';
@@ -41,7 +41,7 @@ public abstract class AbstractFacadeController<R, D extends DParam> extends Abst
      * @param rd
      * @param params
      */
-    protected abstract ResponseDto<R> handler(RequestParams<D> params);
+    protected abstract ResponseDto<R> handler(RequestParams<P> params);
 
     /**
      * 接口处理入口
@@ -50,9 +50,9 @@ public abstract class AbstractFacadeController<R, D extends DParam> extends Abst
      * @return
      */
     @SuppressWarnings("unchecked")
-    public CompletableFuture<ResponseDto<R>> execute(RequestParams<D> params) {
+    public CompletableFuture<ResponseDto<R>> execute(RequestParams<P> params) {
         if (logger.isDebugEnabled()) {
-            logger.debug("进入第三方接口处理 -> 请求参数：{}", params);
+            logger.debug("对外接口请求参数：{}", params);
         }
 
         // 参数校验
@@ -86,12 +86,12 @@ public abstract class AbstractFacadeController<R, D extends DParam> extends Abst
     }
 
     /**
-     * 参数校验 默认校验 H D T
+     * 参数校验 默认校验 H D T 是否为空
      * 
      * @param params
      * @return
      */
-    protected ResponseDto<R> checkRequestParams(RequestParams<D> params) {
+    protected ResponseDto<R> checkRequestParams(RequestParams<P> params) {
         if (params.getH() == null || params.getD() == null || StringUtils.isBlank(params.getH().getT())) {
             return new ResponseDto<>(WebConstants.PARAMETER_ERROR_CODE, WebConstants.PARAMETER_ERROR_MESSAGE);
         }
@@ -104,7 +104,7 @@ public abstract class AbstractFacadeController<R, D extends DParam> extends Abst
      * @param params
      * @return
      */
-    protected ResponseDto<R> checkSignature(RequestParams<D> params) {
+    protected ResponseDto<R> checkSignature(RequestParams<P> params) {
         // 检验appkey合法性
         if (!params.getH().getK().equals(APPKEY)) {
             return new ResponseDto<>(WebConstants.APP_IDENTITY_ERROR_CODE, WebConstants.APP_IDENTITY_ERROR_MESSAGE);
@@ -129,13 +129,13 @@ public abstract class AbstractFacadeController<R, D extends DParam> extends Abst
      * @param params
      * @return
      */
-    protected String getRedisKey(RequestParams<D> params) {
+    protected String getRedisKey(RequestParams<P> params) {
         return null;
     }
 
     /** 生成签名 */
     @SuppressWarnings("unchecked")
-    private String generateSignature(RequestParams<D> params) {
+    private String generateSignature(RequestParams<P> params) {
 
         // 1.参数块d转map对象
         Map<String, Object> map = BeanMapper.map(params.getD(), HashMap.class);

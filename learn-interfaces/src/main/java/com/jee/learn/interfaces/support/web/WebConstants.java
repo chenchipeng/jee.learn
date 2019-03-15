@@ -26,7 +26,13 @@ public class WebConstants {
 
     public static final String INVALID_TOKEN_CODE = "10002";
     public static final String INVALID_TOKEN_MESSAGE = "无效TOKEN";
-
+    
+    public static final String INVALID_FILE_CODE = "10003";
+    public static final String INVALID_FILE_MESSAGE = "无效文件";
+    
+    public static final String FILE_VALIDATE_CODE = "10004";
+    public static final String FILE_VALIDATE_MESSAGE = "文件校验不通过";
+    
     public static final String APP_IDENTITY_ERROR_CODE = "20001";
     public static final String APP_IDENTITY_ERROR_MESSAGE = "APPKEY错误";
     public static final String APP_SIGN_TIMEOUT_CODE = "20002";

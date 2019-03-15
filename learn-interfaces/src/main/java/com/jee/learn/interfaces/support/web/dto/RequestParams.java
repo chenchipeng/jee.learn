@@ -18,5 +18,8 @@ public class RequestParams<D extends DParam> {
     
     @Valid
     private D d;
+    
+    @Valid
+    private FileUploadParam f;
 
 }

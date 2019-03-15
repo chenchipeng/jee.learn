@@ -23,9 +23,9 @@ import com.jee.learn.interfaces.support.web.dto.ResponseDto;
  *          2018年9月15日 下午5:37:09<br/>
  *          2019年3月1日 上午11:15:11
  */
-public abstract class AbstractInnerController<R, D extends DParam> extends AbstractBaseController {
+public abstract class AbstractInnerController<R, P extends DParam> extends AbstractBaseController {
 
-    protected static final String WECHAT_ACCESS_TOKEN = "4d092ee240779ae8a34678593390422f"; // 请求token校验
+    protected static final String DEFAULT_WECHAT_ACCESS_TOKEN = "4d092ee240779ae8a34678593390422f"; // 请求token校验
 
     /**
      * 接口处理入口
@@ -33,7 +33,7 @@ public abstract class AbstractInnerController<R, D extends DParam> extends Abstr
      * @param params
      * @return
      */
-    public CompletableFuture<ResponseDto<R>> execute(RequestParams<D> params) {
+    public CompletableFuture<ResponseDto<R>> execute(RequestParams<P> params) {
         return execute(params, null, null);
     }
 
@@ -47,7 +47,7 @@ public abstract class AbstractInnerController<R, D extends DParam> extends Abstr
      * @return
      */
     @SuppressWarnings("unchecked")
-    public CompletableFuture<ResponseDto<R>> execute(RequestParams<D> params, HttpServletRequest request,
+    public CompletableFuture<ResponseDto<R>> execute(RequestParams<P> params, HttpServletRequest request,
             HttpServletResponse response) {
         if (logger.isDebugEnabled()) {
             logger.debug("API请求参数：{}", params);
@@ -95,7 +95,7 @@ public abstract class AbstractInnerController<R, D extends DParam> extends Abstr
      * @param params
      * @return
      */
-    protected ResponseDto<R> checkRequestParams(RequestParams<D> params) {
+    protected ResponseDto<R> checkRequestParams(RequestParams<P> params) {
         if (params.getH() == null || params.getD() == null || StringUtils.isBlank(params.getH().getT())) {
             return new ResponseDto<>(WebConstants.PARAMETER_ERROR_CODE, WebConstants.PARAMETER_ERROR_MESSAGE);
         }
@@ -108,7 +108,7 @@ public abstract class AbstractInnerController<R, D extends DParam> extends Abstr
      * @param params
      * @return
      */
-    protected ResponseDto<R> checkToken(RequestParams<D> params) {
+    protected ResponseDto<R> checkToken(RequestParams<P> params) {
         if (StringUtils.isBlank(params.getH().getT())) {
             return new ResponseDto<>(WebConstants.PARAMETER_ERROR_CODE, WebConstants.PARAMETER_ERROR_MESSAGE);
         }
@@ -125,7 +125,7 @@ public abstract class AbstractInnerController<R, D extends DParam> extends Abstr
      * @param params
      * @return
      */
-    protected Object getCurrentUser(RequestParams<D> params) {
+    protected Object getCurrentUser(RequestParams<P> params) {
         return new Object();
     }
 
@@ -135,7 +135,7 @@ public abstract class AbstractInnerController<R, D extends DParam> extends Abstr
      * @param rd
      * @param params
      */
-    protected abstract ResponseDto<R> handler(RequestParams<D> params);
+    protected abstract ResponseDto<R> handler(RequestParams<P> params);
 
     /**
      * 第四步获取redis缓存key，返回null表示不用缓存
@@ -143,12 +143,8 @@ public abstract class AbstractInnerController<R, D extends DParam> extends Abstr
      * @param params
      * @return
      */
-    protected String getRedisKey(RequestParams<D> params) {
+    protected String getRedisKey(RequestParams<P> params) {
         return null;
-    }
-
-    protected void getClientIP() {
-
     }
 
 }
