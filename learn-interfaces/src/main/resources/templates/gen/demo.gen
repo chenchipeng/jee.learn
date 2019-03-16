@@ -1,0 +1,5 @@
+[(${name})]
+[# th:each="item : ${items}"]
+	- [(${item})]
+[/]
+Hello! [# th:if="${25 &lt; age}"]Congratulations![/]

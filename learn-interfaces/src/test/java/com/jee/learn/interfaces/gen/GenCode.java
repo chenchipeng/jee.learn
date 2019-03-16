@@ -1,6 +1,6 @@
 package com.jee.learn.interfaces.gen;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +21,7 @@ import com.jee.learn.interfaces.gen.dto.GenTableDto;
 import com.jee.learn.interfaces.gen.service.GenTableColumnService;
 import com.jee.learn.interfaces.gen.service.GenTableService;
 import com.jee.learn.interfaces.gen.service.GeneratorService;
+import com.jee.learn.interfaces.gen.thymeleaf.ThymeleafService;
 import com.jee.learn.interfaces.util.mapper.BeanMapper;
 
 import lombok.extern.slf4j.Slf4j;
@@ -38,58 +39,63 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootTest(classes = LearnInterfaceApplication.class)
 public class GenCode {
 
-    @Autowired
-    private ThymeleafService thymeleafService;
+	@Autowired
+	private ThymeleafService thymeleafService;
 
-    @Autowired
-    private GeneratorService generatorService;
-    @Autowired
-    private GenTableService genTableService;
-    @Autowired
-    private GenTableColumnService genTableColumnService;
+	@Autowired
+	private GeneratorService generatorService;
+	@Autowired
+	private GenTableService genTableService;
+	@Autowired
+	private GenTableColumnService genTableColumnService;
 
-    @Test
-    public void genCodeFromTables() {
-        List<GenTableDto> tables = generatorService.getTabelList();
-        for (GenTableDto genTableDto : tables) {
-            genCodeFromTable(genTableDto.getName());
-        }
-    }
+	@Test
+	public void genCodeFromTables() {
+		List<GenTableDto> tables = generatorService.getTabelList();
+		for (GenTableDto genTableDto : tables) {
+			genCodeFromTable(genTableDto.getName());
+		}
+	}
 
-    @Test
-    @Transactional
-    @Rollback(false)
-    public void genCodeFromTable() {
-        genCodeFromTable("api_user");
-    }
+	@Test
+	@Transactional
+	@Rollback(false)
+	public void genCodeFromTable() {
+		genCodeFromTable("api_user");
+	}
 
-    private void genCodeFromTable(String tableName) {
-        GenTableDto tableDto = generatorService.getTebleInfo(tableName);
-        // 表
-        GenTable table = genTableService.findOneByName(tableName);
-        if (table == null) {
-            table = BeanMapper.map(tableDto, GenTable.class);
-            genTableService.save(table);
-        }
-        // 列
-        List<GenTableColumnDto> tableColumnDtos = tableDto.getColumnDtos();
-        for (GenTableColumnDto genTableColumnDto : tableColumnDtos) {
-            genTableColumnDto.setGenTableId(table.getId());
-            GenTableColumn column = BeanMapper.map(genTableColumnDto, GenTableColumn.class);
-            genTableColumnService.save(column);
-        }
-    }
+	private void genCodeFromTable(String tableName) {
+		GenTableDto tableDto = generatorService.getTebleInfo(tableName);
+		// 表
+		GenTable table = genTableService.findOneByName(tableName);
+		if (table == null) {
+			table = BeanMapper.map(tableDto, GenTable.class);
+			genTableService.save(table);
+		}
+		// 列
+		List<GenTableColumnDto> tableColumnDtos = tableDto.getColumnDtos();
+		for (GenTableColumnDto genTableColumnDto : tableColumnDtos) {
+			genTableColumnDto.setGenTableId(table.getId());
+			GenTableColumn column = BeanMapper.map(genTableColumnDto, GenTableColumn.class);
+			genTableColumnService.save(column);
+		}
+	}
 
-    public void writeToFile(GenTable table) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("name", "蔬菜列表");
-        map.put("array", new String[] { "土豆", "番茄", "白菜", "芹菜" });
+	@Test
+	public void writeToFile() {
+		List<String> list = new ArrayList<>(2);
+		list.add("a");
+		list.add("b");
+		Map<String, Object> map = new HashMap<>();
+		map.put("name", "xxx-"+System.currentTimeMillis());
+		map.put("items", list);
+		map.put("age", 30);
 
-        try {
-            thymeleafService.writeToFile("gen/demo", map, "result.java");
-        } catch (IOException e) {
-            log.info("", e);
-        }
-    }
+		try {
+			thymeleafService.writeToFile("demo", map, "result.java");
+		} catch (Exception e) {
+			log.info("", e);
+		}
+	}
 
 }
