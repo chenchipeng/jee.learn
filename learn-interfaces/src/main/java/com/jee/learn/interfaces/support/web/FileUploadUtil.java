@@ -46,8 +46,8 @@ public class FileUploadUtil {
     /**
      * 统一配置文件上传后的存放路径
      * 
-     * @param baseDir 形如 "/baseDir"
-     * @param relativeDir 形如 "/relativeDir"
+     * @param baseDir     基础路径, 形如 "/baseDir"
+     * @param relativeDir 指定文件夹, 形如 "/relativeDir"
      * @return 形如 "/baseDir/relativeDir/"
      */
     public static final String settingFilePath(String baseDir, String relativeDir) {
@@ -57,16 +57,16 @@ public class FileUploadUtil {
     /**
      * 统一配置文件上传后的存放路径
      * 
-     * @param baseDir 基础路径 形如 "/baseDir"
-     * @param userTag 用户标识(不带'/') 形如 "userTag"
-     * @param relativeDir 指定文件夹 形如 "/relativeDir"
+     * @param baseDir     基础路径, 形如 "/baseDir"
+     * @param userTag     用户标识路径, 形如 "/userTag"
+     * @param relativeDir 指定文件夹, 形如 "/relativeDir"
      * @return 形如 "/baseDir/userTag/relativeDir/"
      */
     public static final String settingFilePath(String baseDir, String userTag, String relativeDir) {
         StringBuffer sb = new StringBuffer();
         sb.append(baseDir);
-        if (StringUtils.isNotBlank(userTag)) {
-            sb.append(FILE_SEPARATOR).append(userTag);
+        if (StringUtils.isNotBlank(userTag) && !FILE_SEPARATOR.equals(userTag)) {
+            sb.append(userTag);
         }
         if (StringUtils.isNotBlank(relativeDir) && !FILE_SEPARATOR.equals(relativeDir)) {
             sb.append(relativeDir);
@@ -102,7 +102,8 @@ public class FileUploadUtil {
      * 文件类型校验
      * 
      * @param file
-     * @param contentType 文件对应的Content-Type类型, 例如 image/jpeg, image/gif, image/png
+     * @param contentType 文件对应的Content-Type类型, 例如 image/jpeg, image/gif,
+     *                    image/png
      * @return true is pass
      * @see 文件对应的Content-Type类型 https://www.cnblogs.com/liu-heng/p/7520564.html
      */
@@ -130,11 +131,12 @@ public class FileUploadUtil {
      * 文件大小校验<br/>
      * 使用该校验时, 注意检查配置项: <br/>
      * spring.servlet.multipart.max-file-size=1MB # Max file size. 单文件上传大小<br/>
-     * spring.servlet.multipart.max-request-size=10MB # Max request size. 上传请求总大小
+     * spring.servlet.multipart.max-request-size=10MB # Max request size.
+     * 上传请求总大小
      * 
      * @param file
      * @param fileSize 字节(b)
-     * @param fnc [0:不校验,1:等于,2:大于或等于3:小于或等于]
+     * @param fnc      [0:不校验,1:等于,2:大于或等于3:小于或等于]
      * @return true is pass
      */
     public static final boolean checkFileSize(File file, long fileSize, int fnc) {
@@ -168,7 +170,7 @@ public class FileUploadUtil {
      * @param file
      * @param width
      * @param height
-     * @param fnc [0:不校验,1:等于,2:大于或等于3:小于或等于]
+     * @param fnc    [0:不校验,1:等于,2:大于或等于3:小于或等于]
      * @return true is pass
      */
     public static final boolean checkImgPixel(File file, int width, int height, int fnc) {

@@ -13,7 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.jee.learn.interfaces.support.cache.CacheConstants;
 import com.jee.learn.interfaces.support.web.FileUploadUtil;
 import com.jee.learn.interfaces.support.web.WebConstants;
 import com.jee.learn.interfaces.support.web.dto.DParam;
@@ -21,6 +20,7 @@ import com.jee.learn.interfaces.support.web.dto.FileUploadDto;
 import com.jee.learn.interfaces.support.web.dto.HParam;
 import com.jee.learn.interfaces.support.web.dto.RequestParams;
 import com.jee.learn.interfaces.support.web.dto.ResponseDto;
+import com.jee.learn.interfaces.util.text.EscapeUtil;
 
 /**
  * 文件上传接口处理模板方法类<br/>
@@ -32,6 +32,8 @@ import com.jee.learn.interfaces.support.web.dto.ResponseDto;
  *          1.2019年3月14日 上午9:53:21 ccp 新建
  */
 public abstract class AbstractFileuploadController extends AbstractBaseController {
+
+    protected static final String FILE_UPLOAD_NONCE_STRING = "091d340b2e7d0f90d146d81824f1b346";
 
     @Value("${system.fileupload-basedir:/data/file}")
     protected String fileuploadBasedir;
@@ -58,7 +60,6 @@ public abstract class AbstractFileuploadController extends AbstractBaseControlle
      * @param response
      * @return
      */
-    @SuppressWarnings("unchecked")
     public CompletableFuture<ResponseDto<FileUploadDto>> execute(RequestParams<DParam> params,
             HttpServletRequest request, HttpServletResponse response) {
         logger.debug("文件上传请求参数：{}", params);
@@ -73,24 +74,12 @@ public abstract class AbstractFileuploadController extends AbstractBaseControlle
         if (!WebConstants.SUCCESS_CODE.equals(dto.getC())) {
             return CompletableFuture.completedFuture(dto);
         }
-        // 检查redis缓存
-        String redisKey = getRedisKey(params);
-        if (StringUtils.isNotBlank(redisKey)) {
-            dto = (ResponseDto<FileUploadDto>) redisService.getKeyValue(redisKey);
-            if (dto != null) {
-                return CompletableFuture.completedFuture(dto);
-            }
-        }
         // 获取客户端IP
         if (request != null && params != null && params.getH() != null) {
             params.getH().setIp(getIp(request));
         }
         // 业务处理
         dto = handler(params);
-        // 写入redis
-        if (StringUtils.isNotBlank(redisKey)) {
-            redisService.setKeyValue(redisKey, dto, CacheConstants.SIXTY);
-        }
         return CompletableFuture.completedFuture(dto);
     }
 
@@ -160,14 +149,13 @@ public abstract class AbstractFileuploadController extends AbstractBaseControlle
     }
 
     /**
-     * 第四步获取redis缓存key，返回null表示不用缓存
+     * 指定用户自有目录, 在子类中实现<br/>
+     * 建议根据用户token去查找用户, 然后使用用户全局标识来命名该目录, 尽量避免使用记录id<br/>
+     * 获取token参数 params.getH().getT() 已经过校验, 不为空
      * 
-     * @param params
-     * @return
+     * @return 形如 "/userTag"
      */
-    protected String getRedisKey(RequestParams<DParam> params) {
-        return null;
-    }
+    protected abstract String getUserTag(RequestParams<DParam> params);
 
     /**
      * 上传文件存放的路径, 在子类中指定
@@ -206,7 +194,9 @@ public abstract class AbstractFileuploadController extends AbstractBaseControlle
         String fileName = StringUtils.isBlank(key) ? file.getOriginalFilename() : key;
         // 文件存放路径
         String relativeDir = StringUtils.isBlank(getRelativeDir()) ? StringUtils.EMPTY : getRelativeDir();
-        String filePath = FileUploadUtil.settingFilePath(fileuploadBasedir, relativeDir) + fileName;
+        String userTag = getUserTag(params);
+        userTag = StringUtils.isBlank(userTag) ? StringUtils.EMPTY : userTag;
+        String filePath = FileUploadUtil.settingFilePath(fileuploadBasedir, userTag, relativeDir) + fileName;
         // 保存文件
         File f = new File(filePath);
         String etag = StringUtils.EMPTY;
@@ -229,11 +219,12 @@ public abstract class AbstractFileuploadController extends AbstractBaseControlle
         }
 
         // 构造返回值
-        String location = relativeDir + FileUploadUtil.FILE_SEPARATOR + fileName;
+        String location = new StringBuffer().append(userTag).append(relativeDir).append(FileUploadUtil.FILE_SEPARATOR)
+                .append(EscapeUtil.urlEncode(fileName)).toString();
         String url = fileContent + location;
         FileUploadDto d = new FileUploadDto();
         d.setETag(etag);
-        d.setLocation(location);
+        d.setLocation(EscapeUtil.urlDecode(location));
         d.setUrl(url);
         result.setD(d);
 

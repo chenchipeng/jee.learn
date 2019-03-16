@@ -25,8 +25,6 @@ import com.jee.learn.interfaces.support.web.dto.ResponseDto;
  */
 public abstract class AbstractInnerController<R, P extends DParam> extends AbstractBaseController {
 
-    protected static final String DEFAULT_WECHAT_ACCESS_TOKEN = "4d092ee240779ae8a34678593390422f"; // 请求token校验
-
     /**
      * 接口处理入口
      * 

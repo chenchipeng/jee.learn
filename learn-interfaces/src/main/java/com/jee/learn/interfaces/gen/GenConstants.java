@@ -36,8 +36,8 @@ public class GenConstants {
 
     public enum QUERY_TYPE {
 
-        EQUAL("=", "等于"), NOT_EQUAL("!=", "不等于"), GREATER(">", "大于"), LESS("<", "小于"), GREATER_EQUAL(">=",
-                "大于等于"), LESS_EQUAL("<=", "小于等于"), BETWEEN("between", "BETWEEN"), LIKE("like", "LIKE");
+        EQUAL("=", "等于"), NOT_EQUAL("!=", "不等于"), GREATER(">", "大于"), LESS("<", "小于"), GREATER_EQUAL(">=", "大于等于"),
+        LESS_EQUAL("<=", "小于等于"), BETWEEN("between", "BETWEEN"), LIKE("like", "LIKE");
 
         private String value;
         private String desc;
