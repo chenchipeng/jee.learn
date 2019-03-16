@@ -28,8 +28,9 @@ public class GenTableServiceTest {
     @Test
     public void findOneByIdTest() {
         try {
-            GenTable genTable = genTableService.findOneById("4028befe69511eac0169511ebb5f0000");
+            GenTable genTable = genTableService.findOneById("4028befe698564f50169856504d60000");
             System.out.println(JsonMapper.toJson(genTable));
+            genTableService.save(genTable);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -41,6 +42,7 @@ public class GenTableServiceTest {
             GenTable genTable = new GenTable();
             genTable.setName(String.valueOf(System.currentTimeMillis()));
             genTableService.save(genTable);
+            System.out.println(genTable.getId());
         } catch (Exception e) {
             e.printStackTrace();
         }
