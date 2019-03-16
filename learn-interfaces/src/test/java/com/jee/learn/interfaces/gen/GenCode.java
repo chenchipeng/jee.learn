@@ -1,6 +1,9 @@
 package com.jee.learn.interfaces.gen;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +23,8 @@ import com.jee.learn.interfaces.gen.service.GenTableService;
 import com.jee.learn.interfaces.gen.service.GeneratorService;
 import com.jee.learn.interfaces.util.mapper.BeanMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 代码生成
  * 
@@ -28,9 +33,13 @@ import com.jee.learn.interfaces.util.mapper.BeanMapper;
  *          修改记录:<br/>
  *          1.2019年3月16日 下午5:04:34 ccp 新建
  */
+@Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = LearnInterfaceApplication.class)
 public class GenCode {
+
+    @Autowired
+    private ThymeleafService thymeleafService;
 
     @Autowired
     private GeneratorService generatorService;
@@ -68,6 +77,18 @@ public class GenCode {
             genTableColumnDto.setGenTableId(table.getId());
             GenTableColumn column = BeanMapper.map(genTableColumnDto, GenTableColumn.class);
             genTableColumnService.save(column);
+        }
+    }
+
+    public void writeToFile(GenTable table) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", "蔬菜列表");
+        map.put("array", new String[] { "土豆", "番茄", "白菜", "芹菜" });
+
+        try {
+            thymeleafService.writeToFile("gen/demo", map, "result.java");
+        } catch (IOException e) {
+            log.info("", e);
         }
     }
 
