@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jee.learn.interfaces.gen.GenConstants;
-import com.jee.learn.interfaces.gen.domain.GenTable;
-import com.jee.learn.interfaces.gen.repository.GenTableRepository;
-import com.jee.learn.interfaces.gen.service.GenTableService;
+import com.jee.learn.interfaces.gen.domain.GenTableColumn;
+import com.jee.learn.interfaces.gen.repository.GenTableColumnRepository;
+import com.jee.learn.interfaces.gen.service.GenTableColumnService;
 import com.jee.learn.interfaces.util.time.ClockUtil;
 
 /**
@@ -21,24 +21,19 @@ import com.jee.learn.interfaces.util.time.ClockUtil;
  */
 @Service
 @Transactional(readOnly = true)
-public class GenTableServiceImpl implements GenTableService {
+public class GenTableColumnServiceImpl implements GenTableColumnService {
 
     @Autowired
-    private GenTableRepository genTableRepository;
+    private GenTableColumnRepository genTableColumnRepository;
 
     @Override
-    public GenTable findOneById(String id) {
-        return StringUtils.isBlank(id) ? null : genTableRepository.findOneById(id);
-    }
-    
-    @Override
-    public GenTable findOneByName(String name) {
-        return StringUtils.isBlank(name) ? null : genTableRepository.findOneByName(name);
+    public GenTableColumn findOneById(String id) {
+        return StringUtils.isBlank(id) ? null : genTableColumnRepository.findOneById(id);
     }
 
     @Transactional(readOnly = false)
     @Override
-    public void save(GenTable entity) {
+    public void save(GenTableColumn entity) {
         entity.setCreateBy(
                 StringUtils.isBlank(entity.getCreateBy()) ? GenConstants.SYSTEM_ADMIN_ID : entity.getCreateBy());
         entity.setUpdateBy(
@@ -46,9 +41,7 @@ public class GenTableServiceImpl implements GenTableService {
 
         entity.setCreateDate(StringUtils.isBlank(entity.getId()) ? ClockUtil.currentDate() : entity.getCreateDate());
         entity.setUpdateDate(ClockUtil.currentDate());
-        genTableRepository.save(entity);
+        genTableColumnRepository.save(entity);
     }
-
-   
 
 }

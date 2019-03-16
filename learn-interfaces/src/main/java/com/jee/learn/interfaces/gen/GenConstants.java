@@ -14,6 +14,8 @@ public class GenConstants {
         throw new IllegalStateException("Utility class");
     }
 
+    public static final String SYSTEM_ADMIN_ID = "1";
+
     public static final String YES = "YES";
     public static final String NO = "NO";
 

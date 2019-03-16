@@ -22,4 +22,12 @@ public interface GenTableRepository extends JpaRepository<GenTable, String> {
      */
     GenTable findOneById(String id);
 
+    /**
+     * 根据name查询一条记录
+     * 
+     * @param name
+     * @return
+     */
+    GenTable findOneByName(String name);
+
 }

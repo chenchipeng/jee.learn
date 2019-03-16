@@ -21,6 +21,14 @@ public interface GenTableService {
     GenTable findOneById(String id);
 
     /**
+     * 根据name查询一条记录
+     * 
+     * @param name
+     * @return
+     */
+    GenTable findOneByName(String name);
+
+    /**
      * 保存一条记录
      * 
      * @param entity

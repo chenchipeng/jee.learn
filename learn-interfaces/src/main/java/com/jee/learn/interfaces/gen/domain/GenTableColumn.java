@@ -3,6 +3,7 @@ package com.jee.learn.interfaces.gen.domain;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -69,6 +70,7 @@ public class GenTableColumn implements java.io.Serializable {
         this.id = id;
     }
 
+    @Column(name = "gen_table_id")
     public String getGenTableId() {
         return genTableId;
     }
@@ -93,6 +95,7 @@ public class GenTableColumn implements java.io.Serializable {
         this.comments = comments;
     }
 
+    @Column(name = "jdbc_type")
     public String getJdbcType() {
         return jdbcType;
     }
@@ -101,6 +104,7 @@ public class GenTableColumn implements java.io.Serializable {
         this.jdbcType = jdbcType;
     }
 
+    @Column(name = "java_type")
     public String getJavaType() {
         return javaType;
     }
@@ -109,6 +113,7 @@ public class GenTableColumn implements java.io.Serializable {
         this.javaType = javaType;
     }
 
+    @Column(name = "java_field")
     public String getJavaField() {
         return javaField;
     }
@@ -117,6 +122,7 @@ public class GenTableColumn implements java.io.Serializable {
         this.javaField = javaField;
     }
 
+    @Column(name = "is_pk")
     public Integer getIsPk() {
         return isPk;
     }
@@ -125,6 +131,7 @@ public class GenTableColumn implements java.io.Serializable {
         this.isPk = isPk;
     }
 
+    @Column(name = "is_null")
     public Integer getIsNull() {
         return isNull;
     }
@@ -133,6 +140,7 @@ public class GenTableColumn implements java.io.Serializable {
         this.isNull = isNull;
     }
 
+    @Column(name = "is_inc")
     public Integer getIsInc() {
         return isInc;
     }
@@ -140,7 +148,8 @@ public class GenTableColumn implements java.io.Serializable {
     public void setIsInc(Integer isInc) {
         this.isInc = isInc;
     }
-    
+
+    @Column(name = "is_uuid")
     public Integer getIsUuid() {
         return isUuid;
     }
@@ -149,6 +158,7 @@ public class GenTableColumn implements java.io.Serializable {
         this.isUuid = isUuid;
     }
 
+    @Column(name = "is_insert")
     public Integer getIsInsert() {
         return isInsert;
     }
@@ -157,6 +167,7 @@ public class GenTableColumn implements java.io.Serializable {
         this.isInsert = isInsert;
     }
 
+    @Column(name = "is_edit")
     public Integer getIsEdit() {
         return isEdit;
     }
@@ -165,6 +176,7 @@ public class GenTableColumn implements java.io.Serializable {
         this.isEdit = isEdit;
     }
 
+    @Column(name = "is_list")
     public Integer getIsList() {
         return isList;
     }
@@ -173,6 +185,7 @@ public class GenTableColumn implements java.io.Serializable {
         this.isList = isList;
     }
 
+    @Column(name = "is_query")
     public Integer getIsQuery() {
         return isQuery;
     }
@@ -181,6 +194,7 @@ public class GenTableColumn implements java.io.Serializable {
         this.isQuery = isQuery;
     }
 
+    @Column(name = "query_type")
     public String getQueryType() {
         return queryType;
     }
@@ -189,6 +203,7 @@ public class GenTableColumn implements java.io.Serializable {
         this.queryType = queryType;
     }
 
+    @Column(name = "show_type")
     public String getShowType() {
         return showType;
     }
@@ -197,6 +212,7 @@ public class GenTableColumn implements java.io.Serializable {
         this.showType = showType;
     }
 
+    @Column(name = "dict_type")
     public String getDictType() {
         return dictType;
     }
@@ -221,6 +237,7 @@ public class GenTableColumn implements java.io.Serializable {
         this.sort = sort;
     }
 
+    @Column(name = "create_by")
     public String getCreateBy() {
         return createBy;
     }
@@ -229,6 +246,7 @@ public class GenTableColumn implements java.io.Serializable {
         this.createBy = createBy;
     }
 
+    @Column(name = "create_date")
     public Date getCreateDate() {
         return createDate;
     }
@@ -237,6 +255,7 @@ public class GenTableColumn implements java.io.Serializable {
         this.createDate = createDate;
     }
 
+    @Column(name = "update_by")
     public String getUpdateBy() {
         return updateBy;
     }
@@ -245,6 +264,7 @@ public class GenTableColumn implements java.io.Serializable {
         this.updateBy = updateBy;
     }
 
+    @Column(name = "update_date")
     public Date getUpdateDate() {
         return updateDate;
     }
@@ -261,6 +281,7 @@ public class GenTableColumn implements java.io.Serializable {
         this.remarks = remarks;
     }
 
+    @Column(name = "del_flag")
     public Integer getDelFlag() {
         return delFlag;
     }

@@ -19,7 +19,7 @@ import com.jee.learn.interfaces.support.web.dto.RequestParams;
 import com.jee.learn.interfaces.support.web.dto.ResponseDto;
 
 /**
- * gen.new.tableInfo 获取数据表列表
+ * gen.new.tableInfo 获取数据表信息
  * 
  * @author ccp
  * @version 1.0<br/>
