@@ -1,6 +1,7 @@
 package com.jee.learn.interfaces.gen;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import com.jee.learn.interfaces.gen.service.GenTableService;
 import com.jee.learn.interfaces.gen.service.GeneratorService;
 import com.jee.learn.interfaces.gen.thymeleaf.ThymeleafService;
 import com.jee.learn.interfaces.util.mapper.BeanMapper;
+import com.jee.learn.interfaces.util.time.DateFormatUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -49,7 +51,10 @@ public class GenCode {
 	@Autowired
 	private GenTableColumnService genTableColumnService;
 
+	/** 写入所有表的元数据 */
 	@Test
+	@Transactional
+	@Rollback(false)
 	public void genCodeFromTables() {
 		List<GenTableDto> tables = generatorService.getTabelList();
 		for (GenTableDto genTableDto : tables) {
@@ -57,6 +62,7 @@ public class GenCode {
 		}
 	}
 
+	/** 写入指定表的元数据 */
 	@Test
 	@Transactional
 	@Rollback(false)
@@ -64,6 +70,7 @@ public class GenCode {
 		genCodeFromTable("api_user");
 	}
 
+	/** 元数据写入实现 */
 	private void genCodeFromTable(String tableName) {
 		GenTableDto tableDto = generatorService.getTebleInfo(tableName);
 		// 表
@@ -81,13 +88,14 @@ public class GenCode {
 		}
 	}
 
+	/** thymeleaf模板测试 */
 	@Test
 	public void writeToFile() {
 		List<String> list = new ArrayList<>(2);
 		list.add("a");
 		list.add("b");
 		Map<String, Object> map = new HashMap<>();
-		map.put("name", "xxx-"+System.currentTimeMillis());
+		map.put("name", "xxx-" + System.currentTimeMillis());
 		map.put("items", list);
 		map.put("age", 30);
 
@@ -96,6 +104,7 @@ public class GenCode {
 		} catch (Exception e) {
 			log.info("", e);
 		}
+		System.out.println(DateFormatUtil.formatDate(DateFormatUtil.PATTERN_DEFAULT_ON_SECOND, new Date()));
 	}
 
 }
