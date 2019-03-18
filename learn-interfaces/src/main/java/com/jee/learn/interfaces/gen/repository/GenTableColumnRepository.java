@@ -1,5 +1,7 @@
 package com.jee.learn.interfaces.gen.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.jee.learn.interfaces.gen.domain.GenTableColumn;
@@ -21,5 +23,13 @@ public interface GenTableColumnRepository extends JpaRepository<GenTableColumn, 
      * @return
      */
     GenTableColumn findOneById(String id);
+
+    /**
+     * 根据genTableId查询
+     * 
+     * @param genTableId
+     * @return
+     */
+    List<GenTableColumn> findByGenTableId(String genTableId);
 
 }

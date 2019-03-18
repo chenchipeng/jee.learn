@@ -1,5 +1,8 @@
 package com.jee.learn.interfaces.gen.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +32,14 @@ public class GenTableColumnServiceImpl implements GenTableColumnService {
     @Override
     public GenTableColumn findOneById(String id) {
         return StringUtils.isBlank(id) ? null : genTableColumnRepository.findOneById(id);
+    }
+
+    @Override
+    public List<GenTableColumn> findByGenTableId(String genTableId) {
+        if (StringUtils.isBlank(genTableId)) {
+            return new ArrayList<GenTableColumn>(1);
+        }
+        return genTableColumnRepository.findByGenTableId(genTableId);
     }
 
     @Transactional(readOnly = false)

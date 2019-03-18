@@ -66,4 +66,10 @@ public class GenConstants {
         }
     }
 
+    //////// 表功能类型 ////////
+
+    public static final String CURD = "curd"; // 单表
+    public static final String CURD_MANY = "curd_many"; // 一对多
+    public static final String TREE_TABLE = "tree_table"; // 树表
+
 }

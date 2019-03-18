@@ -1,9 +1,3 @@
-[(${name})]
-[# th:each="item : ${items}"]
-	- [(${item})]
-[/]
-Hello! [# th:if="${25 &lt; age}"]Congratulations![/]
-
 package com.jee.learn.interfaces.gen.domain;
 
 import java.io.Serializable;
@@ -94,5 +88,22 @@ public class GenScheme implements Serializable {
 
     @Column(name = "del_flag")
     private String delFlag; // 删除标记[0:未删除,1:已删除]
+
+    public GenScheme() {
+        super();
+    }
+
+    public GenScheme(String name, String category, String packageName, String moduleName, String functionName,
+            String functionNameSimple, String functionAuthor, String genTableId) {
+        super();
+        this.name = name;
+        this.category = category;
+        this.packageName = packageName;
+        this.moduleName = moduleName;
+        this.functionName = functionName;
+        this.functionNameSimple = functionNameSimple;
+        this.functionAuthor = functionAuthor;
+        this.genTableId = genTableId;
+    }
 
 }

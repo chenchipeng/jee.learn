@@ -1,0 +1,52 @@
+package [(${scheme.packageName})].[(${scheme.moduleName})].domain;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.GenericGenerator;
+
+import lombok.Data;
+
+/**
+ * [(${table.className})]<br/>
+ * The persistent class for the [(${table.name})] database table.
+ * 
+ * @author [(${scheme.functionAuthor})], gen
+ * @version [(${version})]
+ */
+@Data
+@Entity
+@Table(name = "[(${table.name})]")
+@NamedQuery(name = "[(${table.className})].findAll", query = "SELECT t FROM [(${table.className})] t")
+@DynamicInsert
+@DynamicUpdate
+public class [(${table.className})] implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
+    [# th:each="item : ${columns}"]
+    [# th:if="${1 == item.isPk}"]
+    @Id
+    [# th:if="${1 == item.isUuid}"]@GenericGenerator(name = "[(${table.className})]Generator", strategy = "uuid")
+    @GeneratedValue(generator = "[(${table.className})]Generator")[/]
+    [# th:if="${0 == item.isUuid}"]@GeneratedValue(strategy = GenerationType.IDENTITY)[/]
+    [/]
+    [# th:if="${'DATETIME' == item.jdbcType}"]@Temporal(TemporalType.TIMESTAMP)[/]
+    @Column(name = "[(${item.name})]")
+    private [(${item.javaType})] [(${item.javaField})]; // [(${item.comments})]
+    [/]
+
+    public [(${table.className})]() {
+        super();
+    }
+
+}

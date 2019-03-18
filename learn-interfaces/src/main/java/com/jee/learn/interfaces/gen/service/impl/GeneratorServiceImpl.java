@@ -78,7 +78,7 @@ public class GeneratorServiceImpl implements GeneratorService {
             }
         } catch (SQLException | IllegalArgumentException e) {
             logger.info("获取当前所连接数据库中的所有表异常 sql={}", sql, e);
-            return tList;
+            return null;
         } finally {
             close(stmt, rs);
         }
@@ -91,18 +91,21 @@ public class GeneratorServiceImpl implements GeneratorService {
         List<GenTableColumnDto> cList = new ArrayList<GenTableColumnDto>();
         GenTableColumnDto c = null;
 
-        try {
-            // 检查表
-            List<GenTableDto> tables = selectDataTables(tableName);
-            if (tables == null) {
-                throw new IllegalArgumentException(tableName + "不存在");
-            }
-            // 获取主键信息
-            List<String> pkList = selecePrivateKey(tableName);
+        // 检查表
+        List<GenTableDto> tables = selectDataTables(tableName);
+        if (tables == null) {
+            throw new IllegalArgumentException(tableName + "不存在");
+        }
+        // 获取主键信息
+        List<String> pkList = selecePrivateKey(tableName);
+        if (pkList == null) {
+            throw new IllegalArgumentException(tableName + "查询主键异常");
+        }
 
+        try {
             Connection conn = dynamicDataSource.getConnection();
             DatabaseMetaData dbmd = conn.getMetaData();
-            ResultSet rs = dbmd.getColumns(null, null, tableName, "%");
+            ResultSet rs = dbmd.getColumns(conn.getCatalog(), null, tableName, "%");
 
             while (rs.next()) {
                 c = new GenTableColumnDto();
@@ -124,7 +127,7 @@ public class GeneratorServiceImpl implements GeneratorService {
             }
         } catch (SQLException | IllegalArgumentException e) {
             logger.info("获取指定表的所有列异常", e);
-            return cList;
+            return null;
         }
         return cList;
     }
@@ -137,13 +140,14 @@ public class GeneratorServiceImpl implements GeneratorService {
         try {
             Connection conn = dynamicDataSource.getConnection();
             DatabaseMetaData dbmd = conn.getMetaData();
-            rs = dbmd.getPrimaryKeys(null, null, tableName);
+            rs = dbmd.getPrimaryKeys(conn.getCatalog(), null, tableName);
             while (rs.next()) {
                 list.add(rs.getString("COLUMN_NAME"));
+                logger.debug("{} 的主键有 {}", tableName, rs.getString("COLUMN_NAME"));
             }
         } catch (SQLException e) {
             logger.info("获取指定表 {} 的主键信息异常", tableName, e);
-            return list;
+            return null;
         } finally {
             close(stmt, rs);
         }
@@ -280,7 +284,6 @@ public class GeneratorServiceImpl implements GeneratorService {
 
     //////// 封装数据库元数据 ///////
 
-   
     @Override
     public List<GenTableDto> getTabelList() {
         List<GenTableDto> list = selectDataTables();
@@ -312,7 +315,8 @@ public class GeneratorServiceImpl implements GeneratorService {
             c.setSort(new BigDecimal(sort += 30));
             c.setIsInsert(GenConstants.Y);
 
-            // private String showType; // 字段生成方案（文本框、文本域、下拉框、复选框、单选框、字典选择、人员选择、部门选择、区域选择）
+            // private String showType; //
+            // 字段生成方案（文本框、文本域、下拉框、复选框、单选框、字典选择、人员选择、部门选择、区域选择）
             // private String dictType; // 字典类型
 
             c.setIsUuid(GenConstants.N);

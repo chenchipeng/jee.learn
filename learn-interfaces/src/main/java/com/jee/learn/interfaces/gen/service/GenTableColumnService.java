@@ -1,5 +1,7 @@
 package com.jee.learn.interfaces.gen.service;
 
+import java.util.List;
+
 import com.jee.learn.interfaces.gen.domain.GenTableColumn;
 
 /**
@@ -19,6 +21,14 @@ public interface GenTableColumnService {
      * @return
      */
     GenTableColumn findOneById(String id);
+
+    /**
+     * 根据genTableId查询
+     * 
+     * @param genTableId
+     * @return
+     */
+    List<GenTableColumn> findByGenTableId(String genTableId);
 
     /**
      * 保存一条记录
