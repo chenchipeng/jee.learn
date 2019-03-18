@@ -1,0 +1,48 @@
+package [(${scheme.packageName})].service.[(${scheme.moduleName})];
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.jee.learn.interfaces.gen.GenConstants;
+import [(${scheme.packageName})].domain.[(${scheme.moduleName})].[(${table.className})];
+import [(${scheme.packageName})].repository.[(${scheme.moduleName})].[(${table.className})]Repository;
+import [(${scheme.packageName})].service.[(${scheme.moduleName})].[(${table.className})]Service;
+import com.jee.learn.interfaces.util.time.ClockUtil;
+
+/**
+ * [(${table.comments})] [(${table.className})]Service
+ * 
+ * @author [(${scheme.functionAuthor})], gen
+ * @version [(${version})]
+ */
+@Service
+@Transactional(readOnly = true)
+public class [(${table.className})]ServiceImpl implements [(${table.className})]Service {
+
+    @Autowired
+    private [(${table.className})]Repository entityRepository;
+
+    @Override
+    public [(${table.className})] findOneBy[(${pk.classType})]([(${pk.javaType})] [(${pk.javaField})]) {
+        return id == null ? null : entityRepository.findOneBy[(${pk.classType})]([(${pk.javaField})]);
+    }
+
+    @Transactional(readOnly = false)
+    @Override
+    public void save([(${table.className})] entity) {
+        if (entity == null){
+            return;
+        }
+        /*entity.setCreateBy(
+                StringUtils.isBlank(entity.getCreateBy()) ? GenConstants.SYSTEM_ADMIN_ID : entity.getCreateBy());
+        entity.setUpdateBy(
+                StringUtils.isBlank(entity.getUpdateBy()) ? GenConstants.SYSTEM_ADMIN_ID : entity.getUpdateBy());
+
+        entity.setCreateDate(StringUtils.isBlank(entity.getId()) ? ClockUtil.currentDate() : entity.getCreateDate());
+        entity.setUpdateDate(ClockUtil.currentDate());*/
+        entityRepository.save(entity);
+    }
+
+}

@@ -1,4 +1,4 @@
-package [(${scheme.packageName})].[(${scheme.moduleName})].domain;
+package [(${scheme.packageName})].domain.[(${scheme.moduleName})];
 
 import java.io.Serializable;
 
@@ -18,7 +18,7 @@ import org.hibernate.annotations.GenericGenerator;
 import lombok.Data;
 
 /**
- * [(${table.className})]<br/>
+ * [(${table.comments})] [(${table.className})]<br/>
  * The persistent class for the [(${table.name})] database table.
  * 
  * @author [(${scheme.functionAuthor})], gen
@@ -38,12 +38,10 @@ public class [(${table.className})] implements Serializable {
     @Id
     [# th:if="${1 == item.isUuid}"]@GenericGenerator(name = "[(${table.className})]Generator", strategy = "uuid")
     @GeneratedValue(generator = "[(${table.className})]Generator")[/]
-    [# th:if="${0 == item.isUuid}"]@GeneratedValue(strategy = GenerationType.IDENTITY)[/]
-    [/]
+    [# th:if="${0 == item.isUuid}"]@GeneratedValue(strategy = GenerationType.IDENTITY)[/][/]
     [# th:if="${'DATETIME' == item.jdbcType}"]@Temporal(TemporalType.TIMESTAMP)[/]
     @Column(name = "[(${item.name})]")
-    private [(${item.javaType})] [(${item.javaField})]; // [(${item.comments})]
-    [/]
+    private [(${item.javaType})] [(${item.javaField})]; // [(${item.comments})][/]
 
     public [(${table.className})]() {
         super();

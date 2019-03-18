@@ -1,0 +1,23 @@
+package [(${scheme.packageName})].repository.[(${scheme.moduleName})];
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import [(${scheme.packageName})].domain.[(${scheme.moduleName})].[(${table.className})];
+
+/**
+ * [(${table.comments})] [(${table.className})]Repository
+ * 
+ * @author [(${scheme.functionAuthor})], gen
+ * @version [(${version})]
+ */
+public interface [(${table.className})]Repository extends JpaRepository<[(${table.className})], [(${pk.javaField})]> {
+
+    /**
+     * 根据[(${pk.javaField})]查询一条记录
+     * 
+     * @param [(${pk.javaField})]
+     * @return
+     */
+    [(${table.className})] findOneBy[(${pk.classType})] ([(${pk.javaType})] [(${pk.javaField})]);
+
+}

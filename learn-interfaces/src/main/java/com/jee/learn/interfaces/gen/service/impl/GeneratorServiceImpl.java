@@ -118,6 +118,7 @@ public class GeneratorServiceImpl implements GeneratorService {
                 c.setIsPk(isPK(pkList, rs.getString("COLUMN_NAME")));
                 c.setIsNull(GenConstants.YES.equals(rs.getString("IS_NULLABLE")) ? GenConstants.Y : GenConstants.N);
                 c.setIsInc(GenConstants.YES.equals(rs.getString("IS_AUTOINCREMENT")) ? GenConstants.Y : GenConstants.N);
+                c.setClassType(CamelUtil.toClassName(rs.getString("COLUMN_NAME")));
                 // 加入list
                 cList.add(c);
 

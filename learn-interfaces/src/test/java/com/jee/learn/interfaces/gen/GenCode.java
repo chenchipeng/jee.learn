@@ -67,6 +67,7 @@ public class GenCode {
         }
     }
 
+    // 第一, 写入指定表数据
     /** 写入指定表的元数据 */
     @Test
     @Transactional
@@ -94,14 +95,19 @@ public class GenCode {
         }
     }
 
+    // 第二, 配置生成方案
     /** 写入生成方案 */
     @Test
     @Transactional
     @Rollback(false)
     public void schemeSetting() {
-        String txt = "生成方案";
-        String tid = "4028befe698eef8a01698eef9bda0000";
+        GenTable table = genTableService.findOneByName("gen_template");
+        if (table == null) {
+            log.info("无法查找指定表");
+            return;
+        }
 
+        String txt = "生成方案";
         String name = txt; // 名称
         String category = GenConstants.CURD; // 分类
         String packageName = "com.jee.learn.interfaces"; // 生成包路径
@@ -109,7 +115,7 @@ public class GenCode {
         String functionName = txt; // 生成功能名
         String functionNameSimple = txt; // 生成功能名(简写)
         String functionAuthor = "ccp"; // 生成功能作者
-        String genTableId = tid; // 生成表编号
+        String genTableId = table.getId(); // 生成表编号
 
         GenScheme entity = new GenScheme(name, category, packageName, moduleName, functionName, functionNameSimple,
                 functionAuthor, genTableId);
@@ -137,38 +143,55 @@ public class GenCode {
         log.debug("日期格式化测试  -> {}", DateFormatUtil.formatDate(DateFormatUtil.PATTERN_DEFAULT_ON_SECOND, new Date()));
     }
 
+    // 第三, 生成代码文件
     /** thymeleaf模板测试 */
     @Test
     public void writeToFile() {
-        String tid = "4028befe698eef8a01698eef9bda0000";
-        String templet = "entity";// 模板文件
-        String path = "src/main/java/com/jee/learn/interfaces/gen/domain/";// 输出路径
-
-        GenScheme scheme = genSchemeService.findOneByGenTableId(tid);
-        if (scheme == null) {
-            log.info("GenScheme IS NULL");
-            return;
-        }
-        GenTable table = genTableService.findOneById(tid);
+        GenTable table = genTableService.findOneByName("gen_template");
         if (table == null) {
-            log.info("GenTable IS NULL");
+            log.info("代码生成失败! GenTable IS NULL");
             return;
         }
-        List<GenTableColumn> columns = genTableColumnService.findByGenTableId(tid);
+        GenScheme scheme = genSchemeService.findOneByGenTableId(table.getId());
+        if (scheme == null) {
+            log.info("代码生成失败! GenScheme IS NULL");
+            return;
+        }
+        List<GenTableColumn> columns = genTableColumnService.findByGenTableId(table.getId());
         if (CollectionUtils.isEmpty(columns)) {
-            log.info("List<GenTableColumn> IS EMPTY");
+            log.info("代码生成失败! List<GenTableColumn> IS EMPTY");
             return;
         }
 
-        Map<String, Object> map = new HashMap<>(4);
+        List<GenTableColumn> pks = genTableColumnService.findPrimaryKey(table.getId());
+        GenTableColumn pk = null;
+        if (CollectionUtils.isNotEmpty(pks)) {
+            pk = pks.get(0);
+            if (pks.size() > 1) {
+                pk.setJavaField("idGroup");
+                pk.setJavaType("Object");
+                log.info("{} 存在组合主键, repository需要手工修改");
+            }
+        }
+
+        Map<String, Object> map = new HashMap<>(5);
         map.put("version", DateFormatUtil.formatDate(DateFormatUtil.PATTERN_DEFAULT_ON_SECOND, new Date()));
         map.put("scheme", scheme);
         map.put("table", table);
         map.put("columns", columns);
+        map.put("pk", pk);
+
+        String entityPath = "gen/" + table.getClassName() + ".java";
+        String repositoryPath = "gen/" + table.getClassName() + "Repository.java";
+        String servicePath = "gen/" + table.getClassName() + "Service.java";
+        String serviceImplPath = "gen/" + table.getClassName() + "ServiceImpl.java";
         try {
-            thymeleafService.writeToFile(templet, map, path + table.getClassName() + ".java");
+            thymeleafService.writeToFile("entity", map, entityPath);
+            thymeleafService.writeToFile("repository", map, repositoryPath);
+            thymeleafService.writeToFile("service", map, servicePath);
+            thymeleafService.writeToFile("serviceImpl", map, serviceImplPath);
         } catch (Exception e) {
-            log.info("thymeleaf generator reveive a exception", e);
+            log.info("代码生成异常! thymeleaf generator reveive a exception", e);
         }
     }
 

@@ -55,4 +55,12 @@ public class GenTableColumnServiceImpl implements GenTableColumnService {
         genTableColumnRepository.save(entity);
     }
 
+    @Override
+    public List<GenTableColumn> findPrimaryKey(String genTableId) {
+        if (StringUtils.isBlank(genTableId)) {
+            return new ArrayList<GenTableColumn>(1);
+        }
+        return genTableColumnRepository.findPrimaryKey(genTableId);
+    }
+
 }

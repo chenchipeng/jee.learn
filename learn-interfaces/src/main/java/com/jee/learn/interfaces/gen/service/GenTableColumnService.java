@@ -36,5 +36,13 @@ public interface GenTableColumnService {
      * @param entity
      */
     void save(GenTableColumn entity);
+    
+    /**
+     * 查找主键
+     * 
+     * @param genTableId
+     * @return
+     */
+    List<GenTableColumn> findPrimaryKey(String genTableId);
 
 }

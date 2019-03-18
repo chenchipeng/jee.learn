@@ -54,6 +54,7 @@ public class GenTableColumn implements java.io.Serializable {
     private Date updateDate; // 更新时间
     private String remarks; // 备注信息
     private Integer delFlag; // 删除标记（0：正常；1：删除）
+    private String classType; // JAVA属性类名
 
     public GenTableColumn() {
         super();
@@ -289,5 +290,15 @@ public class GenTableColumn implements java.io.Serializable {
     public void setDelFlag(Integer delFlag) {
         this.delFlag = delFlag;
     }
+
+    @Column(name = "class_type")
+    public String getClassType() {
+        return classType;
+    }
+
+    public void setClassType(String classType) {
+        this.classType = classType;
+    }
+    
 
 }

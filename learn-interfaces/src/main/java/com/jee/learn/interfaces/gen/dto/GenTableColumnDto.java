@@ -32,6 +32,7 @@ public class GenTableColumnDto {
     private String dictType; // 字典类型
     private String settings; // 其它设置（扩展字段JSON）
     private BigDecimal sort; // 排序（升序）
+    private String classType; // JAVA属性类名
 
     public String getId() {
         return id;
@@ -191,6 +192,14 @@ public class GenTableColumnDto {
 
     public void setSort(BigDecimal sort) {
         this.sort = sort;
+    }
+
+    public String getClassType() {
+        return classType;
+    }
+
+    public void setClassType(String classType) {
+        this.classType = classType;
     }
 
 }

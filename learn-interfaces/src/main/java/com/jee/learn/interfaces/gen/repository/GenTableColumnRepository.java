@@ -3,6 +3,7 @@ package com.jee.learn.interfaces.gen.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import com.jee.learn.interfaces.gen.domain.GenTableColumn;
 
@@ -31,5 +32,14 @@ public interface GenTableColumnRepository extends JpaRepository<GenTableColumn, 
      * @return
      */
     List<GenTableColumn> findByGenTableId(String genTableId);
+
+    /**
+     * 查找主键
+     * 
+     * @param genTableId
+     * @return
+     */
+    @Query("SELECT a FROM GenTableColumn a WHERE a.delFlag = 0 AND a.isPk = 1")
+    List<GenTableColumn> findPrimaryKey(String genTableId);
 
 }
