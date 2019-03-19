@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : localhost
+ Source Server         : 127.0.0.1
  Source Server Type    : MySQL
- Source Server Version : 50520
+ Source Server Version : 50528
  Source Host           : localhost:3306
  Source Schema         : learn
 
  Target Server Type    : MySQL
- Target Server Version : 50520
+ Target Server Version : 50528
  File Encoding         : 65001
 
- Date: 17/03/2019 23:58:37
+ Date: 19/03/2019 16:59:48
 */
 
 SET NAMES utf8mb4;
@@ -94,7 +94,7 @@ CREATE TABLE `gen_scheme`  (
   `function_name_simple` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '生成功能名（简写）',
   `function_author` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '生成功能作者',
   `gen_table_id` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '生成表编号',
-  `is_export` tinyint(4) NULL DEFAULT NULL COMMENT '是否导入导出',
+  `is_export` tinyint(4) NULL DEFAULT 0 COMMENT '是否导入导出',
   `create_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建者',
   `create_date` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '更新者',
@@ -103,7 +103,12 @@ CREATE TABLE `gen_scheme`  (
   `del_flag` tinyint(4) NOT NULL DEFAULT 0 COMMENT '删除标记（0：正常；1：删除）',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `gen_scheme_del_flag`(`del_flag`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_bin COMMENT = '生成方案' ROW_FORMAT = Compact;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '生成方案' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of gen_scheme
+-- ----------------------------
+INSERT INTO `gen_scheme` VALUES ('4028befe698ef10d01698ef11f850000', '生成方案', 'curd', 'com.jee.learn.interfaces', 'gen', NULL, '生成方案', '生成方案', 'ccp', '4028befe698eef8a01698eef9bda0000', 0, '1', '2019-03-18 03:56:00', '1', '2019-03-18 03:56:00', NULL, 0);
 
 -- ----------------------------
 -- Table structure for gen_table
@@ -125,25 +130,25 @@ CREATE TABLE `gen_table`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `gen_table_name`(`name`) USING BTREE,
   INDEX `gen_table_del_flag`(`del_flag`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_bin COMMENT = '业务表' ROW_FORMAT = Compact;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '业务表' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of gen_table
 -- ----------------------------
-INSERT INTO `gen_table` VALUES ('4028befe6985f4f6016985f5065a0000', 'api_user', '会员', 'ApiUser', NULL, NULL, '1', '2019-03-16 18:03:41', '1', '2019-03-16 18:03:41', NULL, 0);
+INSERT INTO `gen_table` VALUES ('4028befe698eef8a01698eef9bda0000', 'gen_template', '代码模板表', 'GenTemplate', NULL, NULL, '1', '2019-03-18 03:54:21', '1', '2019-03-18 03:54:21', NULL, 0);
 
 -- ----------------------------
 -- Table structure for gen_table_column
 -- ----------------------------
 DROP TABLE IF EXISTS `gen_table_column`;
 CREATE TABLE `gen_table_column`  (
-  `id` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '编号',
-  `gen_table_id` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '归属表编号',
-  `name` varchar(200) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '名称',
-  `comments` varchar(500) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '描述',
-  `jdbc_type` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '列的数据类型的字节长度',
-  `java_type` varchar(500) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT 'JAVA类型',
-  `java_field` varchar(200) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT 'JAVA字段名',
+  `id` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '编号',
+  `gen_table_id` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '归属表编号',
+  `name` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '名称',
+  `comments` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '描述',
+  `jdbc_type` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '列的数据类型的字节长度',
+  `java_type` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'JAVA类型',
+  `java_field` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'JAVA字段名',
   `is_pk` tinyint(4) NULL DEFAULT NULL COMMENT '是否主键',
   `is_inc` tinyint(4) NULL DEFAULT NULL COMMENT '是否自增',
   `is_uuid` tinyint(4) NULL DEFAULT NULL COMMENT '是否使用uuid[0:否,1:是]',
@@ -152,37 +157,40 @@ CREATE TABLE `gen_table_column`  (
   `is_edit` tinyint(4) NULL DEFAULT NULL COMMENT '是否编辑字段',
   `is_list` tinyint(4) NULL DEFAULT NULL COMMENT '是否列表字段',
   `is_query` tinyint(4) NULL DEFAULT NULL COMMENT '是否查询字段',
-  `query_type` varchar(200) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '查询方式（等于、不等于、大于、小于、范围、左LIKE、右LIKE、左右LIKE）',
-  `show_type` varchar(200) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '字段生成方案（文本框、文本域、下拉框、复选框、单选框、字典选择、人员选择、部门选择、区域选择）',
-  `dict_type` varchar(200) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '字典类型',
-  `settings` varchar(2000) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '其它设置（扩展字段JSON）',
+  `query_type` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '查询方式（等于、不等于、大于、小于、范围、左LIKE、右LIKE、左右LIKE）',
+  `show_type` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '字段生成方案（文本框、文本域、下拉框、复选框、单选框、字典选择、人员选择、部门选择、区域选择）',
+  `dict_type` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '字典类型',
+  `settings` varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '其它设置（扩展字段JSON）',
   `sort` decimal(10, 0) NULL DEFAULT NULL COMMENT '排序（升序）',
-  `create_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '创建者',
+  `create_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建者',
   `create_date` datetime NULL DEFAULT NULL COMMENT '创建时间',
-  `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '更新者',
+  `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '更新者',
   `update_date` datetime NULL DEFAULT NULL COMMENT '更新时间',
-  `remarks` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '备注信息',
+  `remarks` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注信息',
   `del_flag` tinyint(4) NOT NULL DEFAULT 0 COMMENT '删除标记（0：正常；1：删除）',
+  `class_type` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'JAVA属性类名',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `gen_table_column_table_id`(`gen_table_id`) USING BTREE,
   INDEX `gen_table_column_name`(`name`) USING BTREE,
   INDEX `gen_table_column_sort`(`sort`) USING BTREE,
   INDEX `gen_table_column_del_flag`(`del_flag`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_bin COMMENT = '业务表字段' ROW_FORMAT = Compact;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '业务表字段' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of gen_table_column
 -- ----------------------------
-INSERT INTO `gen_table_column` VALUES ('4028befe6985f866016985f8771b0000', '4028befe6985f4f6016985f5065a0000', 'id', '主键', 'VARCHAR(64)', 'String', 'id', 1, 0, 1, 0, 1, 0, 0, 0, '=', NULL, NULL, NULL, 30, '1', '2019-03-16 18:07:26', '1', '2019-03-16 18:07:26', NULL, 0);
-INSERT INTO `gen_table_column` VALUES ('4028befe6985f866016985f877240001', '4028befe6985f4f6016985f5065a0000', 'login_name', '登录名', 'VARCHAR(50)', 'String', 'loginName', 0, 0, 0, 1, 1, 1, 0, 0, '=', NULL, NULL, NULL, 60, '1', '2019-03-16 18:07:27', '1', '2019-03-16 18:07:27', NULL, 0);
-INSERT INTO `gen_table_column` VALUES ('4028befe6985f866016985f877240002', '4028befe6985f4f6016985f5065a0000', 'password', '密码', 'VARCHAR(256)', 'String', 'password', 0, 0, 0, 1, 1, 1, 0, 0, '=', NULL, NULL, NULL, 90, '1', '2019-03-16 18:07:27', '1', '2019-03-16 18:07:27', NULL, 0);
-INSERT INTO `gen_table_column` VALUES ('4028befe6985f866016985f877260003', '4028befe6985f4f6016985f5065a0000', 'is_enable', '是否可用', 'VARCHAR(1)', 'String', 'isEnable', 0, 0, 0, 1, 1, 1, 0, 0, '=', NULL, NULL, NULL, 120, '1', '2019-03-16 18:07:27', '1', '2019-03-16 18:07:27', NULL, 0);
-INSERT INTO `gen_table_column` VALUES ('4028befe6985f866016985f877270004', '4028befe6985f4f6016985f5065a0000', 'remarks', '备注', 'TEXT', 'String', 'remarks', 0, 0, 0, 1, 1, 1, 0, 0, '=', NULL, NULL, NULL, 150, '1', '2019-03-16 18:07:27', '1', '2019-03-16 18:07:27', NULL, 0);
-INSERT INTO `gen_table_column` VALUES ('4028befe6985f866016985f877290005', '4028befe6985f4f6016985f5065a0000', 'create_by', '创建者', 'VARCHAR(64)', 'String', 'createBy', 0, 0, 0, 1, 1, 0, 0, 0, '=', NULL, NULL, NULL, 180, '1', '2019-03-16 18:07:27', '1', '2019-03-16 18:07:27', NULL, 0);
-INSERT INTO `gen_table_column` VALUES ('4028befe6985f866016985f8772a0006', '4028befe6985f4f6016985f5065a0000', 'create_date', '创建时间', 'DATETIME', 'java.util.Date', 'createDate', 0, 0, 0, 1, 1, 0, 0, 0, 'between', NULL, NULL, NULL, 210, '1', '2019-03-16 18:07:27', '1', '2019-03-16 18:07:27', NULL, 0);
-INSERT INTO `gen_table_column` VALUES ('4028befe6985f866016985f8772b0007', '4028befe6985f4f6016985f5065a0000', 'update_by', '更新者', 'VARCHAR(64)', 'String', 'updateBy', 0, 0, 0, 1, 1, 1, 0, 0, '=', NULL, NULL, NULL, 240, '1', '2019-03-16 18:07:27', '1', '2019-03-16 18:07:27', NULL, 0);
-INSERT INTO `gen_table_column` VALUES ('4028befe6985f866016985f8772b0008', '4028befe6985f4f6016985f5065a0000', 'update_date', '更新时间', 'DATETIME', 'java.util.Date', 'updateDate', 0, 0, 0, 1, 1, 1, 1, 0, 'between', NULL, NULL, NULL, 270, '1', '2019-03-16 18:07:27', '1', '2019-03-16 18:07:27', NULL, 0);
-INSERT INTO `gen_table_column` VALUES ('4028befe6985f866016985f8772c0009', '4028befe6985f4f6016985f5065a0000', 'del_flag', '删除标记(是否删除)[0:否,1:是]', 'VARCHAR(1)', 'String', 'delFlag', 0, 0, 0, 1, 1, 0, 0, 0, '=', NULL, NULL, NULL, 300, '1', '2019-03-16 18:07:27', '1', '2019-03-16 18:07:27', NULL, 0);
+INSERT INTO `gen_table_column` VALUES ('4028befe698eef8a01698eef9bf30001', '4028befe698eef8a01698eef9bda0000', 'id', '编号', 'VARCHAR(64)', 'String', 'id', 1, 0, 1, 0, 1, 0, 0, 0, '=', NULL, NULL, NULL, 30, '1', '2019-03-18 03:54:21', '1', '2019-03-18 03:54:21', NULL, 0, 'Id');
+INSERT INTO `gen_table_column` VALUES ('4028befe698eef8a01698eef9bf40002', '4028befe698eef8a01698eef9bda0000', 'name', '名称', 'VARCHAR(200)', 'String', 'name', 0, 0, 0, 1, 1, 1, 1, 1, 'like', NULL, NULL, NULL, 60, '1', '2019-03-18 03:54:21', '1', '2019-03-18 03:54:21', NULL, 0, NULL);
+INSERT INTO `gen_table_column` VALUES ('4028befe698eef8a01698eef9bf50003', '4028befe698eef8a01698eef9bda0000', 'category', '分类', 'VARCHAR(2000)', 'String', 'category', 0, 0, 0, 1, 1, 1, 0, 0, '=', NULL, NULL, NULL, 90, '1', '2019-03-18 03:54:21', '1', '2019-03-18 03:54:21', NULL, 0, NULL);
+INSERT INTO `gen_table_column` VALUES ('4028befe698eef8a01698eef9bf60004', '4028befe698eef8a01698eef9bda0000', 'file_path', '生成文件路径', 'VARCHAR(500)', 'String', 'filePath', 0, 0, 0, 1, 1, 1, 0, 0, '=', NULL, NULL, NULL, 120, '1', '2019-03-18 03:54:21', '1', '2019-03-18 03:54:21', NULL, 0, NULL);
+INSERT INTO `gen_table_column` VALUES ('4028befe698eef8a01698eef9bf60005', '4028befe698eef8a01698eef9bda0000', 'file_name', '生成文件名', 'VARCHAR(200)', 'String', 'fileName', 0, 0, 0, 1, 1, 1, 0, 0, '=', NULL, NULL, NULL, 150, '1', '2019-03-18 03:54:21', '1', '2019-03-18 03:54:21', NULL, 0, NULL);
+INSERT INTO `gen_table_column` VALUES ('4028befe698eef8a01698eef9bf70006', '4028befe698eef8a01698eef9bda0000', 'content', '内容', 'TEXT', 'String', 'content', 0, 0, 0, 1, 1, 1, 0, 0, '=', NULL, NULL, NULL, 180, '1', '2019-03-18 03:54:21', '1', '2019-03-18 03:54:21', NULL, 0, NULL);
+INSERT INTO `gen_table_column` VALUES ('4028befe698eef8a01698eef9bf80007', '4028befe698eef8a01698eef9bda0000', 'create_by', '创建者', 'VARCHAR(64)', 'String', 'createBy', 0, 0, 0, 1, 1, 0, 0, 0, '=', NULL, NULL, NULL, 210, '1', '2019-03-18 03:54:21', '1', '2019-03-18 03:54:21', NULL, 0, NULL);
+INSERT INTO `gen_table_column` VALUES ('4028befe698eef8a01698eef9bf80008', '4028befe698eef8a01698eef9bda0000', 'create_date', '创建时间', 'DATETIME', 'java.util.Date', 'createDate', 0, 0, 0, 1, 1, 0, 0, 0, 'between', NULL, NULL, NULL, 240, '1', '2019-03-18 03:54:21', '1', '2019-03-18 03:54:21', NULL, 0, NULL);
+INSERT INTO `gen_table_column` VALUES ('4028befe698eef8a01698eef9bf90009', '4028befe698eef8a01698eef9bda0000', 'update_by', '更新者', 'VARCHAR(64)', 'String', 'updateBy', 0, 0, 0, 1, 1, 1, 0, 0, '=', NULL, NULL, NULL, 270, '1', '2019-03-18 03:54:21', '1', '2019-03-18 03:54:21', NULL, 0, NULL);
+INSERT INTO `gen_table_column` VALUES ('4028befe698eef8a01698eef9bf9000a', '4028befe698eef8a01698eef9bda0000', 'update_date', '更新时间', 'DATETIME', 'java.util.Date', 'updateDate', 0, 0, 0, 1, 1, 1, 1, 0, 'between', NULL, NULL, NULL, 300, '1', '2019-03-18 03:54:21', '1', '2019-03-18 03:54:21', NULL, 0, NULL);
+INSERT INTO `gen_table_column` VALUES ('4028befe698eef8a01698eef9bfa000b', '4028befe698eef8a01698eef9bda0000', 'remarks', '备注信息', 'VARCHAR(255)', 'String', 'remarks', 0, 0, 0, 1, 1, 1, 0, 0, '=', NULL, NULL, NULL, 330, '1', '2019-03-18 03:54:21', '1', '2019-03-18 03:54:21', NULL, 0, NULL);
+INSERT INTO `gen_table_column` VALUES ('4028befe698eef8a01698eef9bfb000c', '4028befe698eef8a01698eef9bda0000', 'del_flag', '删除标记（0：正常；1：删除）', 'TINYINT', 'Integer', 'delFlag', 0, 0, 0, 0, 1, 0, 0, 0, '=', NULL, NULL, NULL, 360, '1', '2019-03-18 03:54:21', '1', '2019-03-18 03:54:21', NULL, 0, NULL);
 
 -- ----------------------------
 -- Table structure for gen_template
@@ -203,7 +211,7 @@ CREATE TABLE `gen_template`  (
   `del_flag` tinyint(4) NOT NULL DEFAULT 0 COMMENT '删除标记（0：正常；1：删除）',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `gen_template_del_falg`(`del_flag`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_bin COMMENT = '代码模板表' ROW_FORMAT = Compact;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '代码模板表' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for sys_area
@@ -233,24 +241,24 @@ CREATE TABLE `sys_area`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_dict`;
 CREATE TABLE `sys_dict`  (
-  `id` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '编号',
-  `value` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '数据值',
-  `label` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '标签名',
-  `type` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '类型',
-  `description` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '描述',
+  `id` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '编号',
+  `value` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '数据值',
+  `label` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '标签名',
+  `type` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '类型',
+  `description` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '描述',
   `sort` decimal(10, 0) NOT NULL COMMENT '排序（升序）',
-  `parent_id` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT '0' COMMENT '父级编号',
-  `create_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '创建者',
+  `parent_id` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '父级编号',
+  `create_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '创建者',
   `create_date` datetime NOT NULL COMMENT '创建时间',
-  `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '更新者',
+  `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '更新者',
   `update_date` datetime NOT NULL COMMENT '更新时间',
-  `remarks` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '备注信息',
-  `del_flag` char(1) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '0' COMMENT '删除标记',
+  `remarks` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注信息',
+  `del_flag` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `sys_dict_value`(`value`) USING BTREE,
   INDEX `sys_dict_label`(`label`) USING BTREE,
   INDEX `sys_dict_del_flag`(`del_flag`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_bin COMMENT = '字典表' ROW_FORMAT = Compact;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '字典表' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of sys_dict
