@@ -61,4 +61,30 @@ public interface GeneratorService {
      */
     GenTableDto getTebleInfo(String tableName);
 
+    /**
+     * 元数据写入
+     * 
+     * @param tableName
+     */
+    void genCodeFromTable(String tableName);
+
+    /**
+     * 写入生成方案
+     * 
+     * @param tableName      表名
+     * @param packageName    主包名
+     * @param moduleName     模块名
+     * @param functionAuthor 作者
+     * @return
+     */
+    boolean schemeSetting(String tableName, String packageName, String moduleName, String functionAuthor);
+
+    /**
+     * thymeleaf生成代码文件
+     * 
+     * @param tableName
+     * @return
+     */
+    boolean writeToFile(String tableName);
+
 }

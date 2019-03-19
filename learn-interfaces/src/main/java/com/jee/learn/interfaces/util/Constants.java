@@ -14,11 +14,4 @@ public class Constants {
         throw new IllegalStateException("Utility class");
     }
 
-    //////// 保存时自动填充数据的字段 ////////
-    
-    public static final String CREATE_BY = "create_by";
-    public static final String CREATE_DATE = "create_date";
-    public static final String UPDATE_BY = "update_by";
-    public static final String UPDATE_DATE = "update_date";
-
 }

@@ -35,13 +35,8 @@ public class [(${table.className})]ServiceImpl implements [(${table.className})]
         if (entity == null){
             return;
         }
-        /*entity.setCreateBy(
-                StringUtils.isBlank(entity.getCreateBy()) ? GenConstants.SYSTEM_ADMIN_ID : entity.getCreateBy());
-        entity.setUpdateBy(
-                StringUtils.isBlank(entity.getUpdateBy()) ? GenConstants.SYSTEM_ADMIN_ID : entity.getUpdateBy());
-
         entity.setCreateDate(StringUtils.isBlank(entity.getId()) ? ClockUtil.currentDate() : entity.getCreateDate());
-        entity.setUpdateDate(ClockUtil.currentDate());*/
+        entity.setUpdateDate(ClockUtil.currentDate());
         entityRepository.save(entity);
     }
 

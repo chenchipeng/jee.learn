@@ -41,6 +41,14 @@ public class GenTableColumnServiceImpl implements GenTableColumnService {
         }
         return genTableColumnRepository.findByGenTableId(genTableId);
     }
+    
+    @Override
+    public GenTableColumn findOneByGenTableIdAndName(String genTableId,String name) {
+        if (StringUtils.isAnyBlank(genTableId,name)) {
+            return null;
+        }
+        return genTableColumnRepository.findOneByGenTableIdAndName(genTableId,name);
+    }
 
     @Transactional(readOnly = false)
     @Override

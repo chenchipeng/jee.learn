@@ -45,4 +45,13 @@ public interface GenTableColumnService {
      */
     List<GenTableColumn> findPrimaryKey(String genTableId);
 
+    /**
+     * 根据genTableId和name查询一条记录
+     * 
+     * @param genTableId
+     * @param name
+     * @return
+     */
+    GenTableColumn findOneByGenTableIdAndName(String genTableId, String name);
+
 }

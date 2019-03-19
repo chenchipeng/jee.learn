@@ -42,4 +42,13 @@ public interface GenTableColumnRepository extends JpaRepository<GenTableColumn, 
     @Query("SELECT a FROM GenTableColumn a WHERE a.delFlag = 0 AND a.isPk = 1")
     List<GenTableColumn> findPrimaryKey(String genTableId);
 
+    /**
+     * 根据genTableId和name查询一条记录
+     * 
+     * @param genTableId
+     * @param name
+     * @return
+     */
+    GenTableColumn findOneByGenTableIdAndName(String genTableId, String name);
+
 }

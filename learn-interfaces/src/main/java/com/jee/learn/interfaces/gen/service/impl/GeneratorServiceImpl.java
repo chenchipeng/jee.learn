@@ -7,7 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -15,14 +18,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.jee.learn.interfaces.config.datasource.dynamic.DynamicDataSource;
 import com.jee.learn.interfaces.gen.GenConstants;
 import com.jee.learn.interfaces.gen.GenConstants.QUERY_TYPE;
+import com.jee.learn.interfaces.gen.domain.GenScheme;
+import com.jee.learn.interfaces.gen.domain.GenTable;
+import com.jee.learn.interfaces.gen.domain.GenTableColumn;
 import com.jee.learn.interfaces.gen.dto.GenTableColumnDto;
 import com.jee.learn.interfaces.gen.dto.GenTableDto;
+import com.jee.learn.interfaces.gen.service.GenSchemeService;
+import com.jee.learn.interfaces.gen.service.GenTableColumnService;
+import com.jee.learn.interfaces.gen.service.GenTableService;
 import com.jee.learn.interfaces.gen.service.GeneratorService;
+import com.jee.learn.interfaces.gen.thymeleaf.ThymeleafService;
+import com.jee.learn.interfaces.util.io.FileUtil;
+import com.jee.learn.interfaces.util.mapper.BeanMapper;
 import com.jee.learn.interfaces.util.text.CamelUtil;
+import com.jee.learn.interfaces.util.time.DateFormatUtil;
 
 /**
  * 数据库源数据service
@@ -49,6 +63,15 @@ public class GeneratorServiceImpl implements GeneratorService {
 
     @Autowired
     private DynamicDataSource dynamicDataSource;
+    @Autowired
+    private ThymeleafService thymeleafService;
+
+    @Autowired
+    private GenTableService genTableService;
+    @Autowired
+    private GenTableColumnService genTableColumnService;
+    @Autowired
+    private GenSchemeService genSchemeService;
 
     @Override
     public List<GenTableDto> selectDataTables() {
@@ -358,6 +381,114 @@ public class GeneratorServiceImpl implements GeneratorService {
         }
         table.setColumnDtos(cList);
         return table;
+    }
+
+    //////// 写入数据库源数据并生成文件 ////////
+
+    @Transactional(readOnly = false)
+    @Override
+    public void genCodeFromTable(String tableName) {
+        GenTableDto tableDto = getTebleInfo(tableName);
+        // 表
+        GenTable table = genTableService.findOneByName(tableName);
+        if (table == null) {
+            table = BeanMapper.map(tableDto, GenTable.class);
+            genTableService.save(table);
+        }
+        logger.info("{} id = {}", tableName, table.getId());
+        // 列
+        List<GenTableColumnDto> tableColumnDtos = tableDto.getColumnDtos();
+        for (GenTableColumnDto genTableColumnDto : tableColumnDtos) {
+            if (genTableColumnService.findOneByGenTableIdAndName(table.getId(), genTableColumnDto.getName()) != null) {
+                continue;
+            }
+            genTableColumnDto.setGenTableId(table.getId());
+            GenTableColumn column = BeanMapper.map(genTableColumnDto, GenTableColumn.class);
+            genTableColumnService.save(column);
+        }
+    }
+
+    @Transactional(readOnly = false)
+    @Override
+    public boolean schemeSetting(String tableName, String packageName, String moduleName, String functionAuthor) {
+        GenTable table = genTableService.findOneByName(tableName);
+        if (table == null) {
+            logger.info("无法查找指定表");
+            return false;
+        }
+        if (genSchemeService.findOneByGenTableId(table.getId()) != null) {
+            return true;
+        }
+
+        GenScheme entity = new GenScheme(table.getComments(), GenConstants.CURD, packageName, moduleName,
+                table.getComments(), table.getComments(), functionAuthor, table.getId());
+        genSchemeService.save(entity);
+        return true;
+    }
+
+    @Transactional(readOnly = false)
+    @Override
+    public boolean writeToFile(String tableName) {
+        GenTable table = genTableService.findOneByName(tableName);
+        if (table == null) {
+            logger.info("代码生成失败! GenTable IS NULL");
+            return false;
+        }
+        GenScheme scheme = genSchemeService.findOneByGenTableId(table.getId());
+        if (scheme == null) {
+            logger.info("代码生成失败! GenScheme IS NULL");
+            return false;
+        }
+        List<GenTableColumn> columns = genTableColumnService.findByGenTableId(table.getId());
+        if (CollectionUtils.isEmpty(columns)) {
+            logger.info("代码生成失败! List<GenTableColumn> IS EMPTY");
+            return false;
+        }
+
+        List<GenTableColumn> pks = genTableColumnService.findPrimaryKey(table.getId());
+        GenTableColumn pk = null;
+        if (CollectionUtils.isNotEmpty(pks)) {
+            pk = pks.get(0);
+            if (pks.size() > 1) {
+                pk.setJavaField("idGroup");
+                pk.setJavaType("Object");
+                pk.setComments("存在组合主键, repository需要手工修改");
+                logger.info("{} {}", tableName, pk.getComments());
+            }
+        }
+
+        Map<String, Object> map = new HashMap<>(5);
+        map.put("version", DateFormatUtil.formatDate(DateFormatUtil.PATTERN_DEFAULT_ON_SECOND, new Date()));
+        map.put("scheme", scheme);
+        map.put("table", table);
+        map.put("columns", columns);
+        map.put("pk", pk);
+
+        // TODO 这里需要走配置
+        String[] dirs = { "gen/domain/", "gen/repository/", "gen/service/", "gen/service/impl/" };
+        try {
+            for (String dir : dirs) {
+                FileUtil.makesureDirExists(dir);
+            }
+        } catch (Exception e) {
+            logger.info("目录创建异常", e);
+            return false;
+        }
+
+        String entityPath = dirs[0] + table.getClassName() + ".java";
+        String repositoryPath = dirs[1] + table.getClassName() + "Repository.java";
+        String servicePath = dirs[2] + table.getClassName() + "Service.java";
+        String serviceImplPath = dirs[3] + table.getClassName() + "ServiceImpl.java";
+        try {
+            thymeleafService.writeToFile("entity", map, entityPath);
+            thymeleafService.writeToFile("repository", map, repositoryPath);
+            thymeleafService.writeToFile("service", map, servicePath);
+            thymeleafService.writeToFile("serviceImpl", map, serviceImplPath);
+        } catch (Exception e) {
+            logger.info("代码生成异常! thymeleaf generator reveive a exception", e);
+            return false;
+        }
+        return true;
     }
 
 }
