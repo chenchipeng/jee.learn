@@ -32,6 +32,8 @@
 		<module>learn-mybatis</module>
 		<module>learn-jpa</module>
         <module>learn-thymeleaf</module>
+        <module>learn-jwt</module>
+        <module>learn-geteway</module>
 	</modules>
 
 	<!-- 设定主仓库，按设定顺序进行查找。 -->
