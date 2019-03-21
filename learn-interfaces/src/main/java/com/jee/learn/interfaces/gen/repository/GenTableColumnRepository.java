@@ -39,7 +39,7 @@ public interface GenTableColumnRepository extends JpaRepository<GenTableColumn, 
      * @param genTableId
      * @return
      */
-    @Query("SELECT a FROM GenTableColumn a WHERE a.delFlag = 0 AND a.isPk = 1")
+    @Query("SELECT a FROM GenTableColumn a WHERE a.delFlag = 0 AND a.isPk = 1 AND a.genTableId = :genTableId")
     List<GenTableColumn> findPrimaryKey(String genTableId);
 
     /**

@@ -106,7 +106,7 @@ public class GenCode {
     @Test
     public void genFile() {
         boolean isContinue = true;
-        String tableName = "gen_template";
+        String tableName = "sd_user";
         generatorService.genCodeFromTable(tableName);
         isContinue = generatorService.schemeSetting(tableName, "com.jee.learn.interfaces", "gen", "ccp");
         if (!isContinue) {
