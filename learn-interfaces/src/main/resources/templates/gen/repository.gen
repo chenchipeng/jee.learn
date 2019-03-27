@@ -10,7 +10,7 @@ import [(${scheme.packageName})].domain.[(${scheme.moduleName})].[(${table.class
  * @author [(${scheme.functionAuthor})], gen
  * @version [(${version})]
  */
-public interface [(${table.className})]Repository extends JpaRepository<[(${table.className})], [(${pk.javaField})]> {
+public interface [(${table.className})]Repository extends JpaRepository<[(${table.className})], [(${pk.javaType})]> {
 
     /**
      * 根据[(${pk.javaField})]查询一条记录

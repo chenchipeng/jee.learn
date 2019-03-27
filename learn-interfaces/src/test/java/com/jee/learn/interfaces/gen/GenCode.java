@@ -99,16 +99,16 @@ public class GenCode {
     /** thymeleaf生成代码文件 */
     @Test
     public void writeToFile() {
-        generatorService.writeToFile("gen_template");
+        generatorService.writeToFile("sd_user");
     }
 
     /** 代码生成 */
     @Test
     public void genFile() {
         boolean isContinue = true;
-        String tableName = "sd_user";
+        String tableName = "sd_poster_level";
         generatorService.genCodeFromTable(tableName);
-        isContinue = generatorService.schemeSetting(tableName, "com.jee.learn.interfaces", "gen", "ccp");
+        isContinue = generatorService.schemeSetting(tableName, "cn.chnskin.ppx.interfaces", "sd", "ccp");
         if (!isContinue) {
             return;
         }
