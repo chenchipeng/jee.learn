@@ -1,6 +1,5 @@
 package [(${scheme.packageName})].service.[(${scheme.moduleName})];
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +34,7 @@ public class [(${table.className})]ServiceImpl implements [(${table.className})]
         if (entity == null){
             return;
         }
-        entity.setCreateDate(StringUtils.isBlank(entity.getId()) ? ClockUtil.currentDate() : entity.getCreateDate());
+        entity.setCreateDate(entity.getCreateDate() == null ? ClockUtil.currentDate() : entity.getCreateDate());
         entity.setUpdateDate(ClockUtil.currentDate());
         entityRepository.save(entity);
     }
