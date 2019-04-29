@@ -106,13 +106,34 @@ public class GenCode {
     @Test
     public void genFile() {
         boolean isContinue = true;
-        String tableName = "sd_poster_level";
+        String tableName = "sys_user_role";
         generatorService.genCodeFromTable(tableName);
-        isContinue = generatorService.schemeSetting(tableName, "cn.chnskin.ppx.interfaces", "sd", "ccp");
+        isContinue = generatorService.schemeSetting(tableName, "net.jee.manager", "sys", "ccp");
         if (!isContinue) {
             return;
         }
         generatorService.writeToFile(tableName);
+    }
+
+    @Test
+    public void genFiles() {
+        String tables = "sys_area,sys_dict,sys_log,sys_menu,sys_office,sys_role,sys_role_menu,sys_role_office,sys_user,sys_user_role";
+        String packageName = "net.jee.manager";
+        String modelName = "sys";
+        String author = "ccp";
+
+        boolean isContinue = true;
+        String[] ary = tables.split(",");
+        for (int i = 0; i < ary.length; i++) {
+            String tableName = ary[i];
+            generatorService.genCodeFromTable(tableName);
+            isContinue = generatorService.schemeSetting(tableName, packageName, modelName, author);
+            if (!isContinue) {
+                return;
+            }
+            generatorService.writeToFile(tableName);
+        }
+
     }
 
 }
