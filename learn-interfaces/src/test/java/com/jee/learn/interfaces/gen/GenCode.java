@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -106,9 +108,9 @@ public class GenCode {
     @Test
     public void genFile() {
         boolean isContinue = true;
-        String tableName = "sys_user_role";
+        String tableName = "qrtz_cron_triggers";
         generatorService.genCodeFromTable(tableName);
-        isContinue = generatorService.schemeSetting(tableName, "net.jee.manager", "sys", "ccp");
+        isContinue = generatorService.schemeSetting(tableName, "com.chnskin.micro.user", "user", "ccp");
         if (!isContinue) {
             return;
         }
@@ -118,22 +120,38 @@ public class GenCode {
     @Test
     public void genFiles() {
         String tables = "sys_area,sys_dict,sys_log,sys_menu,sys_office,sys_role,sys_role_menu,sys_role_office,sys_user,sys_user_role";
+        // String tables = "sys_area";
         String packageName = "net.jee.manager";
         String modelName = "sys";
         String author = "ccp";
 
-        boolean isContinue = true;
+        ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
+
         String[] ary = tables.split(",");
         for (int i = 0; i < ary.length; i++) {
             String tableName = ary[i];
-            generatorService.genCodeFromTable(tableName);
-            isContinue = generatorService.schemeSetting(tableName, packageName, modelName, author);
-            if (!isContinue) {
-                return;
-            }
-            generatorService.writeToFile(tableName);
-        }
 
+            singleThreadExecutor.execute(() -> {
+                try {
+                    generatorService.genCodeFromTable(tableName);
+                    boolean b = generatorService.schemeSetting(tableName, packageName, modelName, author);
+                    if (b) {
+                        generatorService.writeToFile(tableName);
+                    }
+                    Thread.sleep(1000);
+                } catch (Exception e) {
+                    log.info("{} is error", tableName, e);
+                }
+            });
+        }
+        singleThreadExecutor.shutdown();
+        try {
+            while (!singleThreadExecutor.isTerminated()) {
+                Thread.sleep(1000);
+            }
+        } catch (Exception e) {
+            log.info("", e);
+        }
     }
 
 }

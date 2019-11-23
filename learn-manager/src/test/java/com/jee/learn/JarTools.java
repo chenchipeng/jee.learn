@@ -66,6 +66,7 @@ public class JarTools {
             JarFile jar = new JarFile(file);
             jar.close();
         } catch (Exception e) {
+            System.err.println(file.getAbsolutePath());
             e.printStackTrace();
             return true;
         }

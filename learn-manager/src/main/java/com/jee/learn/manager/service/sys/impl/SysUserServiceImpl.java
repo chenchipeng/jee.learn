@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jee.learn.manager.config.datasource.dynamic.TargetDataSource;
 import com.jee.learn.manager.config.shiro.security.CustomCredentialsMatcher;
 import com.jee.learn.manager.config.shiro.security.CustomPrincipal;
 import com.jee.learn.manager.domain.sys.SysUser;
@@ -30,6 +31,11 @@ public class SysUserServiceImpl extends EntityServiceImpl<SysUser, String> imple
     }
     
     
+@TargetDataSource
+    @Override
+    public SysUser findOne(String id) {
+        return super.findOne(id);
+    }
 
     @Override
     public void saveOrUpdate(SysUser entity) {

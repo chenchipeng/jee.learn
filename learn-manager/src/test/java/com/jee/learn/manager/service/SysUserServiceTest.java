@@ -25,7 +25,7 @@ public class SysUserServiceTest {
     @Test
     public void findOneTest() {
         SysUser user = sysUserService.findOne("1");
-        log.debug("{}", user.getLoginName());
+        log.debug("{}", user.getSign());
     }
 
     @Test
